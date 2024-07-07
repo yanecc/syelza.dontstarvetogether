@@ -11,12 +11,12 @@ local prefabs =
 
 local function define(inst)
 	if inst and TheWorld.state.isnight then
-		inst.components.edible.healthvalue = 5
-		inst.components.edible.hungervalue = 40
+		inst.components.edible.healthvalue = 60
+		inst.components.edible.hungervalue = 20
 		inst.components.edible.sanityvalue = 0
 	else
-		inst.components.edible.healthvalue = -75
-		inst.components.edible.hungervalue = -40
+		inst.components.edible.healthvalue = -90
+		inst.components.edible.hungervalue = -20
 		inst.components.edible.sanityvalue = 0
 	end
 end
@@ -25,7 +25,7 @@ local function OnEat(inst, eater)
 	if eater and eater.components.sanity then
 		local currentSanity = eater.components.sanity.current
 		local maxSanity = eater.components.sanity.max
-		local lostSanity = max_sanity - current_sanity
+		local lostSanity = maxSanity - currentSanity
 		eater.components.sanity:DoDelta(lostSanity / 2)
 	end
 end

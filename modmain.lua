@@ -1153,18 +1153,18 @@ AddCharacterRecipe("fhl_hsf",
     { Ingredient("feather_robin", 1), Ingredient("feather_crow", 1), Ingredient("ancient_soul", 3) }, TECH.NONE,
     { product = "fhl_hsf", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_bz", { Ingredient("honey", 4), Ingredient("bird_egg", 2), Ingredient("watermelon", 2) },
+AddCharacterRecipe("fhl_bz", { Ingredient("honey", 4), Ingredient("bird_egg", 4), Ingredient("watermelon", 2) },
     TECH.NONE, { product = "fhl_bz", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_cake", { Ingredient("goatmilk", 1), Ingredient("bird_egg", 1), Ingredient("pumpkin", 1) },
-    TECH.NONE, { product = "fhl_cake", builder_tag = "fhl" })
+AddCharacterRecipe("fhl_cake", { Ingredient("bird_egg", 2), Ingredient("pumpkin", 1) }, TECH.NONE,
+    { product = "fhl_cake", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_x_1",
-    { Ingredient("berries", 2), Ingredient("froglegs_cooked", 1), Ingredient("petals_evil", 2) }, TECH.NONE,
+    { Ingredient("berries", 2), Ingredient("froglegs_cooked", 2), Ingredient("petals_evil", 1) }, TECH.NONE,
     { product = "fhl_x", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_x_2",
-    { Ingredient("berries_juicy", 2), Ingredient("froglegs_cooked", 1), Ingredient("petals_evil", 2) }, TECH.NONE,
+    { Ingredient("berries_juicy", 2), Ingredient("froglegs_cooked", 2), Ingredient("petals_evil", 1) }, TECH.NONE,
     { product = "fhl_x", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_cy_1", { Ingredient("cactus_meat_cooked", 1), Ingredient("ice", 1) }, TECH.NONE,
