@@ -11,20 +11,17 @@ local function fn()
 	local inst = CreateEntity()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
-	--inst.entity:AddSoundEmitter()
-	--inst.entity:AddPhysics()
 	inst.entity:AddNetwork()
 	inst.entity:AddLight()
 
 	MakeInventoryPhysics(inst)
 	RemovePhysicsColliders(inst)
 
-	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-
 	inst:AddTag("plant")
 	inst.AnimState:SetBank("fhl_tree")
 	inst.AnimState:SetBuild("fhl_tree")
 	inst.AnimState:PlayAnimation("dropped_banana")
+	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
 	inst.Light:Enable(true)
 	inst.Light:SetRadius(.5)
@@ -37,13 +34,19 @@ local function fn()
 		return inst
 	end
 
-	inst:AddComponent("edible")
-	inst.components.edible.foodtype = "ELEMENTAL"
-	inst.components.edible.hungervalue = 2
-	inst:AddComponent("tradable")
-
+	inst:AddComponent("stackable")
 	inst:AddComponent("inspectable")
+	inst:AddComponent("tradable")
 	inst:AddComponent("lootdropper")
+	inst:AddComponent("deployable")
+	inst:AddComponent("inventoryitem")
+	inst:AddComponent("fuel")
+
+	inst.components.tradable.goldvalue = 4
+	inst.components.tradable.rocktribute = 2
+
+	inst.components.lootdropper:SetLoot({ "twigs", "cutgrass" })
+	inst.components.lootdropper:AddChanceLoot("cave_banana", 0.5)
 
 	local function OnDeploy(inst, pt)
 		local tree = SpawnPrefab("cave_banana_tree")
@@ -53,19 +56,12 @@ local function fn()
 			tree.SoundEmitter:PlaySound("dontstarve/wilson/plant_tree")
 		end
 	end
-	inst:AddComponent("deployable")
 	inst.components.deployable.ondeploy = OnDeploy
 	inst.components.deployable.mode = DEPLOYMODE.PLANT
 	inst.components.deployable.min_spacing = 6
 
-	inst:AddComponent("stackable")
-	inst:AddComponent("inventoryitem")
 	inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_tree.xml"
-	inst:AddComponent("fuel")
 	inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
-
-	--inst:AddComponent("bait")
-	--inst:AddTag("molebait")
 
 	return inst
 end

@@ -3,8 +3,8 @@ local STRINGS = GLOBAL.STRINGS
 local resolvefilepath = GLOBAL.resolvefilepath
 local Ingredient = GLOBAL.Ingredient
 local RECIPETABS = GLOBAL.RECIPETABS
-Recipe = GLOBAL.Recipe
-TECH = GLOBAL.TECH
+local Recipe = GLOBAL.Recipe
+local TECH = GLOBAL.TECH
 local ACTIONS = GLOBAL.ACTIONS
 local TheNet = GLOBAL.TheNet
 local next = GLOBAL.next
@@ -30,6 +30,7 @@ PrefabFiles = {
     "fhl_bz",
     "fhl_cake",
     "fhl_x",
+    "fhl_x2",
     "fhl_cy",
     "personal_licking",
     "personal_licking_eyebone",
@@ -105,6 +106,10 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.NAMES.FHL_X = "黑夜祝福X型"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X = "这是...一瓶药水?"
     STRINGS.RECIPE_DESC.FHL_X = "祝您长命百岁!"
+
+    STRINGS.NAMES.FHL_X2 = "黑夜祝福X型"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X2 = "这是...一瓶药水?"
+    STRINGS.RECIPE_DESC.FHL_X2 = "祝您长命百岁!"
 
     STRINGS.NAMES.FHL_CY = "放松茶叶"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_CY = "看起来不错？"
@@ -185,6 +190,10 @@ else
     STRINGS.NAMES.FHL_X = "Black Night Blessing Type-X"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X = "This is... a potion?"
     STRINGS.RECIPE_DESC.FHL_X = "I wish you a long life!"
+
+    STRINGS.NAMES.FHL_X2 = "Black Night Blessing Type-X"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X2 = "This is... a potion?"
+    STRINGS.RECIPE_DESC.FHL_X2 = "I wish you a long life!"
 
     STRINGS.NAMES.FHL_CY = "Relax tea"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_CY = "looks great."
@@ -277,6 +286,10 @@ Assets = {
     Asset("ANIM", "anim/dy_x.zip"),
     Asset("IMAGE", "images/inventoryimages/fhl_x.tex"),
     Asset("ATLAS", "images/inventoryimages/fhl_x.xml"),
+
+    Asset("ANIM", "anim/dy_x.zip"),
+    Asset("IMAGE", "images/inventoryimages/fhl_x2.tex"),
+    Asset("ATLAS", "images/inventoryimages/fhl_x2.xml"),
 
     Asset("ANIM", "anim/fhl_cy.zip"),
     Asset("IMAGE", "images/inventoryimages/fhl_cy.tex"),
@@ -1082,8 +1095,29 @@ end
 AddMinimapAtlas("images/inventoryimages/personal_licking.xml")
 
 
+-- local function OnFullMoon(inst)
+--     if GLOBAL.TheWorld.state.isfullmoon then
+--         for _, v in pairs(AllPlayers) do
+--             local inv = v.components.inventory
+--             if inv then
+--                 local items = inv:FindItems(function(item) return item.prefab == "fhl_x" end)
+--                 for _, item in ipairs(items) do
+--                     local evil_petals = SpawnPrefab("fhl_x2")
+--                     if evil_petals then
+--                         evil_petals:SetPrefabNameOverride("fhl_x")
+--                         inv:RemoveItem(item, true)
+--                         item:Remove()
+--                         inv:GiveItem(evil_petals)
+--                     end
+--                 end
+--             end
+--         end
+--     end
+-- end
 
-
+-- AddPrefabPostInit("world", function(inst)
+--     inst:WatchWorldState("isfullmoon", OnFullMoon)
+-- end)
 
 
 TUNING.LEVELUP_FAIL_PROBABILITY = GetModConfigData("fhl_levelup_fail_probability")

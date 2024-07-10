@@ -43,7 +43,8 @@ end
 
 local function ShouldSleep(inst)
     --print(inst, "ShouldSleep", DefaultSleepTest(inst), not inst.sg:HasStateTag("open"), inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE))
-    return DefaultSleepTest(inst) and not inst.sg:HasStateTag("open") and inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE) and not TheWorld.state.isfullmoon
+    return DefaultSleepTest(inst) and not inst.sg:HasStateTag("open") and
+        inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE) and not TheWorld.state.isfullmoon
 end
 
 
@@ -59,6 +60,7 @@ end
 
 local function OnClose(inst)
     if not inst.components.health:IsDead() and inst.sg.currentstate.name ~= "transition" then
+        inst.sg.statemem.closing = true
         inst.sg:GoToState("close")
     end
 end
@@ -78,15 +80,15 @@ local function MorphShadowlicking(inst)
     inst.AnimState:SetBuild("licking_shadow_build")
     inst:AddTag("spoiler")
 
-	if TUNING.LIKEORNOT then
-		inst.components.container:WidgetSetup("licking")
-	else
-		inst.components.container:WidgetSetup("shadowchester")
-	end
+    if TUNING.LIKEORNOT then
+        inst.components.container:WidgetSetup("licking")
+    else
+        inst.components.container:WidgetSetup("shadowchester")
+    end
 
     --inst.components.container:WidgetSetup("shadowchester")
 
-    local leader = inst.components.follower.leader    
+    local leader = inst.components.follower.leader
     if leader ~= nil then
         inst.components.follower.leader:MorphShadowEyebone()
     end
@@ -98,6 +100,7 @@ end
 
 local function MorphSnowlicking(inst)
     inst.AnimState:SetBuild("licking_snow_build")
+    inst:RemoveTag("spoiler")
     inst:AddTag("fridge")
 
     local leader = inst.components.follower.leader
@@ -117,7 +120,7 @@ local function MorphNormallicking(inst)
 
     inst.components.container:WidgetSetup("chester")
 
-    local leader = inst.components.follower.leader    
+    local leader = inst.components.follower.leader
     if leader ~= nil then
         inst.components.follower.leader:MorphNormalEyebone()
     end
@@ -170,7 +173,7 @@ local function DoMorph(inst, fn)
     inst.MorphChester = nil
     inst:StopWatchingWorldState("isfullmoon", CheckForMorph)
     inst:RemoveEventCallback("onclose", CheckForMorph)
-    fn(inst) 
+    fn(inst)
 end
 local function Morphlicking(inst)
     local canShadow, canSnow = CanMorph(inst)
@@ -211,7 +214,7 @@ local function create_licking()
     --print("licking - create_licking")
 
     local inst = CreateEntity()
-    
+
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
@@ -231,7 +234,7 @@ local function create_licking()
     inst:AddTag("scarytoprey")
     inst:AddTag("personal_licking")
     inst:AddTag("notraptrigger")
-	
+
     inst:AddTag("_named")
 
     inst.MiniMapEntity:SetIcon("personal_licking.tex")
@@ -245,27 +248,27 @@ local function create_licking()
     inst.Transform:SetFourFaced()
 
     inst._isshadowlicking = net_bool(inst.GUID, "_isshadowlicking", "onisshadowlickingdirty")
-	
-	if TUNING.OPENLI and TheWorld.state.isnight then
-		local light = inst.entity:AddLight()
-		inst:AddComponent("lighttweener")
-		inst.components.lighttweener:StartTween(light, 1, 0.5, 0.7, {237/255, 237/255, 209/255}, 0)
-		light:Enable(true)
-	end
+
+    if TUNING.OPENLI then
+        local light = inst.entity:AddLight()
+        inst:AddComponent("lighttweener")
+        inst.components.lighttweener:StartTween(light, 5, 0.8, 0.5, { 240 / 255, 160 / 255, 200 / 255 }, 0)
+        light:Enable(true)
+    end
 
     inst.entity:SetPristine()
-	
+
     if not TheWorld.ismastersim then
-		inst:DoTaskInTime(0.1, function(inst)
-			inst.replica.container:WidgetSetup(inst._isshadowlicking:value() and "shadowchester" or "chester")
-		end)
+        inst:DoTaskInTime(0.1, function(inst)
+            inst.replica.container:WidgetSetup(inst._isshadowlicking:value() and "shadowchester" or "chester")
+        end)
         inst._clientshadowmorphed = false
         inst:ListenForEvent("onisshadowlickingdirty", OnIsShadowlickingDirty)
         return inst
     end
-	
-	-- licking will not be saved normally. He is saved with the player.
-	inst.persists = false
+
+    -- licking will not be saved normally. He is saved with the player.
+    inst.persists = false
 
     ------------------------------------------
 
@@ -310,7 +313,7 @@ local function create_licking()
     inst.components.sleeper.testperiod = GetRandomWithVariance(6, 2)
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWakeUp)
-	
+
     inst:AddComponent("named")
 
     MakeHauntableDropFirstItem(inst)
@@ -333,12 +336,12 @@ local function create_licking()
     inst.MorphChester = Morphlicking
     inst:WatchWorldState("isfullmoon", CheckForMorph)
     inst:ListenForEvent("onclose", CheckForMorph)
-	
+
     inst.sounds = sounds
 
     inst.OnSave = OnSave
     inst.OnPreLoad = OnPreLoad
-			
+
     return inst
 end
 
