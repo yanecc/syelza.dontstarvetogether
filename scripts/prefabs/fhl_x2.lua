@@ -4,19 +4,12 @@ local Assets =
 	Asset("ATLAS", "images/inventoryimages/fhl_x2.xml"),
 }
 
-local prefabs =
-{
-	"spoiled_food",
-}
-
 local function OnEat(inst, eater)
-	if eater and eater.components.health and eater.components.hunger and eater.components.sanity then
+	if eater and eater.components.health and eater.components.sanity then
 		local lostHealth = eater.components.health:GetMaxWithPenalty() - eater.components.health.currenthealth
-		local lostHunger = eater.components.hunger.max - eater.components.hunger.current
 		local lostSanity = eater.components.sanity.max - eater.components.sanity.current
 
 		eater.components.health:DoDelta(math.ceil(lostHealth / 2))
-		eater.components.hunger:DoDelta(math.max(math.ceil(lostHunger / 2), 30))
 		eater.components.sanity:DoDelta(math.ceil(lostSanity / 2))
 	end
 end
@@ -50,7 +43,7 @@ local function fn(Sim)
 	inst:AddComponent("edible")
 	inst.components.edible.foodtype = "MEAT"
 	inst.components.edible.healthvalue = 0
-	inst.components.edible.hungervalue = 0
+	inst.components.edible.hungervalue = 40
 	inst.components.edible.sanityvalue = 0
 	inst.components.edible:SetOnEatenFn(OnEat)
 

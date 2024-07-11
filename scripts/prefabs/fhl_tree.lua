@@ -45,7 +45,7 @@ local function fn()
 	inst.components.tradable.goldvalue = 4
 	inst.components.tradable.rocktribute = 2
 
-	inst.components.lootdropper:SetLoot({ "twigs", "cutgrass" })
+	inst.components.lootdropper:SetLoot({ "twigs", "twigs", "ancient_soul", "ancient_soul" })
 	inst.components.lootdropper:AddChanceLoot("cave_banana", 0.5)
 
 	local function OnDeploy(inst, pt)

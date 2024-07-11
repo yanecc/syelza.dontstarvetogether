@@ -1091,33 +1091,37 @@ GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
     end
 end
 
-
 AddMinimapAtlas("images/inventoryimages/personal_licking.xml")
 
 
--- local function OnFullMoon(inst)
---     if GLOBAL.TheWorld.state.isfullmoon then
---         for _, v in pairs(AllPlayers) do
---             local inv = v.components.inventory
---             if inv then
---                 local items = inv:FindItems(function(item) return item.prefab == "fhl_x" end)
---                 for _, item in ipairs(items) do
---                     local evil_petals = SpawnPrefab("fhl_x2")
---                     if evil_petals then
---                         evil_petals:SetPrefabNameOverride("fhl_x")
---                         inv:RemoveItem(item, true)
---                         item:Remove()
---                         inv:GiveItem(evil_petals)
---                     end
---                 end
---             end
---         end
---     end
--- end
+local function UseFullMoonRecipe()
+    AddRecipePostInit("fhl_x_1", function(recipe)
+        recipe.product = "fhl_x2"
+    end)
+    AddRecipePostInit("fhl_x_2", function(recipe)
+        recipe.product = "fhl_x2"
+    end)
+end
 
--- AddPrefabPostInit("world", function(inst)
---     inst:WatchWorldState("isfullmoon", OnFullMoon)
--- end)
+local function RestoreOriginalRecipe()
+    AddRecipePostInit("fhl_x_1", function(recipe)
+        recipe.product = "fhl_x"
+    end)
+    AddRecipePostInit("fhl_x_2", function(recipe)
+        recipe.product = "fhl_x"
+    end)
+end
+
+AddPrefabPostInit("world", function(inst)
+    inst:WatchWorldState("isfullmoon", function(inst, isfullmoon)
+        if isfullmoon then
+            UseFullMoonRecipe()
+        else
+            RestoreOriginalRecipe()
+        end
+    end)
+end)
+
 
 
 TUNING.LEVELUP_FAIL_PROBABILITY = GetModConfigData("fhl_levelup_fail_probability")
@@ -1190,7 +1194,10 @@ AddCharacterRecipe("fhl_hsf",
 AddCharacterRecipe("fhl_bz", { Ingredient("honey", 4), Ingredient("bird_egg", 4), Ingredient("watermelon", 2) },
     TECH.NONE, { product = "fhl_bz", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_cake", { Ingredient("bird_egg", 2), Ingredient("pumpkin", 1) }, TECH.NONE,
+AddCharacterRecipe("fhl_cake_1", { Ingredient("bird_egg", 2), Ingredient("pumpkin", 1) }, TECH.NONE,
+    { product = "fhl_cake", builder_tag = "fhl" })
+
+AddCharacterRecipe("fhl_cake_2", { Ingredient("bird_egg", 2), Ingredient("carrot", 2) }, TECH.NONE,
     { product = "fhl_cake", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_x_1",
@@ -1201,10 +1208,7 @@ AddCharacterRecipe("fhl_x_2",
     { Ingredient("berries_juicy", 2), Ingredient("froglegs_cooked", 2), Ingredient("petals_evil", 1) }, TECH.NONE,
     { product = "fhl_x", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_cy_1", { Ingredient("cactus_meat_cooked", 1), Ingredient("ice", 1) }, TECH.NONE,
-    { product = "fhl_cy", builder_tag = "fhl" })
-
-AddCharacterRecipe("fhl_cy_2", { Ingredient("foliage", 2), Ingredient("ice", 1) }, TECH.NONE,
+AddCharacterRecipe("fhl_cy", { Ingredient("cactus_meat_cooked", 1), Ingredient("ice", 1) }, TECH.NONE,
     { product = "fhl_cy", builder_tag = "fhl" })
 
 AddCharacterRecipe("ancient_gem", { Ingredient("ancient_soul", 18), Ingredient("goldnugget", 12) }, TECH.NONE,

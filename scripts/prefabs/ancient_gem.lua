@@ -39,6 +39,8 @@ local function fn()
 	inst.components.edible.foodtype = "ELEMENTAL"
 	inst.components.edible.hungervalue = 2
 	inst:AddComponent("tradable")
+	inst.components.tradable.goldvalue = 6
+	inst.components.tradable.rocktribute = 4
 
 	inst:AddComponent("inspectable")
 
@@ -49,6 +51,8 @@ local function fn()
 	end
 	inst:AddComponent("deployable")
 	inst.components.deployable.ondeploy = OnDeploy
+	inst.components.deployable.min_spacing = 8
+	inst.components.deployable:SetDeployMode(DEPLOYMODE.DEFAULT)
 
 	inst:AddComponent("stackable")
 	inst:AddComponent("inventoryitem")
@@ -60,4 +64,5 @@ local function fn()
 	return inst
 end
 
-return Prefab("common/inventory/ancient_gem", fn, assets)
+return Prefab("common/inventory/ancient_gem", fn, assets),
+	MakePlacer("common/ancient_gem_placer", "ancient_altar", "ancient_altar", "idle")
