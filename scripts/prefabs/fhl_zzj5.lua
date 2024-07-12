@@ -24,7 +24,7 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + 60
+        inst.components.finiteuses.current = inst.components.finiteuses.current + 80
         if inst.components.finiteuses:GetPercent() > 1 then
             inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
         end

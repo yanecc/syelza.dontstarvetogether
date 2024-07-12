@@ -50,7 +50,7 @@ end)
 local KEY_DOWN = GLOBAL.KEY_DOWN
 AddModRPCHandler(modname, "DOWN", function(player)
 	if not player:HasTag("playerghost") and player.prefab == "fhl" then
-		if player.jnd > 0 and player.components.health.absorb < 0.9 then
+		if player.jnd > 0 and player.components.health.absorb < 0.8 then
 			player.jnd = player.jnd - 1
 			player.components.health.absorb = player.components.health.absorb + 0.05
 			player.components.talker:Say("伤害减免已提升5%!\nDamage reduction is increased by 5%!")

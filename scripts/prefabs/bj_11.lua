@@ -48,7 +48,7 @@ local function fn()
 
 	inst.components.tool:SetAction(ACTIONS.DIG)  --可挖掘
 
-	inst.components.tool:SetAction(ACTIONS.HAMMER) --可重击
+	inst.components.tool:SetAction(ACTIONS.HAMMER) --可锤击
 
 	inst:AddInherentAction(ACTIONS.TERRAFORM)    --可铲草
 

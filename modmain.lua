@@ -1111,8 +1111,14 @@ local function RestoreOriginalRecipe()
         recipe.product = "fhl_x"
     end)
 end
+local function CheckFullMoon()
+    if GLOBAL.TheWorld.state.isfullmoon then
+        UseFullMoonRecipe()
+    end
+end
 
 AddPrefabPostInit("world", function(inst)
+    inst:ListenForEvent("ms_playerjoined", CheckFullMoon)
     inst:WatchWorldState("isfullmoon", function(inst, isfullmoon)
         if isfullmoon then
             UseFullMoonRecipe()
@@ -1121,7 +1127,6 @@ AddPrefabPostInit("world", function(inst)
         end
     end)
 end)
-
 
 
 TUNING.LEVELUP_FAIL_PROBABILITY = GetModConfigData("fhl_levelup_fail_probability")
@@ -1166,32 +1171,33 @@ RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex"
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
 
-AddCharacterRecipe("fhl_zzj", { Ingredient("ancient_soul", 1), Ingredient("goldnugget", 3) }, TECH.NONE,
+AddCharacterRecipe("fhl_zzj", { Ingredient("ancient_soul", 1), Ingredient("goldnugget", 2) }, TECH.NONE,
     { product = "fhl_zzj", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_zzj1", { Ingredient("fhl_zzj", 1), Ingredient("ancient_soul", 1), Ingredient("goldnugget", 5) },
+AddCharacterRecipe("fhl_zzj1", { Ingredient("fhl_zzj", 1), Ingredient("ancient_soul", 2), Ingredient("goldnugget", 4) },
     TECH.NONE, { product = "fhl_zzj1", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_zzj2", { Ingredient("fhl_zzj1", 1), Ingredient("ancient_soul", 3), Ingredient("goldnugget", 7) },
+AddCharacterRecipe("fhl_zzj2", { Ingredient("fhl_zzj1", 1), Ingredient("ancient_soul", 4), Ingredient("goldnugget", 8) },
     TECH.NONE, { product = "fhl_zzj2", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_zzj3",
-    { Ingredient("fhl_zzj2", 1), Ingredient("ancient_soul", 5), Ingredient("goldnugget", 9), Ingredient("bluegem", 3) },
+AddCharacterRecipe("fhl_zzj3", { Ingredient("fhl_zzj2", 1), Ingredient("ancient_soul", 5), Ingredient("goldnugget", 10) },
     TECH.NONE, { product = "fhl_zzj3", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_zzj4",
-    { Ingredient("fhl_zzj3", 1), Ingredient("ancient_soul", 8), Ingredient("goldnugget", 12), Ingredient("bluegem", 5) },
+AddCharacterRecipe("fhl_zzj4", { Ingredient("fhl_zzj3", 1), Ingredient("ancient_soul", 8), Ingredient("goldnugget", 16) },
     TECH.NONE, { product = "fhl_zzj4", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_zzj5",
-    { Ingredient("fhl_zzj4", 1), Ingredient("ancient_soul", 18), Ingredient("goldnugget", 15), Ingredient("bluegem", 7) },
+    { Ingredient("fhl_zzj4", 1), Ingredient("ancient_soul", 10), Ingredient("goldnugget", 20) },
     TECH.NONE, { product = "fhl_zzj5", builder_tag = "fhl" })
+
+AddCharacterRecipe("fhl_bb", { Ingredient("cutgrass", 5), Ingredient("twigs", 5), Ingredient("ancient_soul", 8) },
+    TECH.NONE, { product = "fhl_bb", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_hsf",
     { Ingredient("feather_robin", 1), Ingredient("feather_crow", 1), Ingredient("ancient_soul", 3) }, TECH.NONE,
     { product = "fhl_hsf", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_bz", { Ingredient("honey", 4), Ingredient("bird_egg", 4), Ingredient("watermelon", 2) },
+AddCharacterRecipe("fhl_bz", { Ingredient("honey", 4), Ingredient("bird_egg", 4), Ingredient("cave_banana", 2) },
     TECH.NONE, { product = "fhl_bz", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_cake_1", { Ingredient("bird_egg", 2), Ingredient("pumpkin", 1) }, TECH.NONE,
@@ -1211,17 +1217,15 @@ AddCharacterRecipe("fhl_x_2",
 AddCharacterRecipe("fhl_cy", { Ingredient("cactus_meat_cooked", 1), Ingredient("ice", 1) }, TECH.NONE,
     { product = "fhl_cy", builder_tag = "fhl" })
 
-AddCharacterRecipe("ancient_gem", { Ingredient("ancient_soul", 18), Ingredient("goldnugget", 12) }, TECH.NONE,
-    { product = "ancient_gem", builder_tag = "fhl" })
+AddCharacterRecipe("ancient_gem",
+    { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("purplegem", 2) },
+    TECH.NONE, { product = "ancient_gem", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 3), Ingredient("ancient_soul", 3) }, TECH.NONE,
+AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 3), Ingredient("ancient_soul", 1) }, TECH.NONE,
     { product = "fhl_tree", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_bb", { Ingredient("cutgrass", 5), Ingredient("twigs", 5), Ingredient("ancient_soul", 8) },
-    TECH.NONE, { product = "fhl_bb", builder_tag = "fhl" })
-
 AddCharacterRecipe("bj_11",
-    { Ingredient("cutgrass", 5), Ingredient("twigs", 2), Ingredient("ancient_soul", 1), Ingredient("goldnugget", 1) },
+    { Ingredient("twigs", 6), Ingredient("ancient_soul", 6), Ingredient("goldnugget", 6) },
     TECH.NONE, { product = "bj_11", builder_tag = "fhl" })
 
 -- ----BOOK----
