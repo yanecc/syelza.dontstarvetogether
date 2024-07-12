@@ -4,6 +4,11 @@ local Assets =
     Asset("ATLAS", "images/inventoryimages/fhl_x.xml"),
 }
 
+local prefabs =
+{
+    "spoiled_food",
+}
+
 local function OnFullMoon(inst)
     if not TheWorld.state.isfullmoon then return end
     for _, player in ipairs(AllPlayers) do

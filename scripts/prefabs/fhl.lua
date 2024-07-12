@@ -126,7 +126,7 @@ local function applyupgrades(inst)
 		"\n你还有" .. (inst.jnd) .. "点技能点!\n加点帮助请按R,当前状态请按T!" ..
 		"\nyou have " .. (inst.jnd) .. " skill points!\nClick R for help, Click T for State!")
 
-	if inst.level == 10 then
+	if inst.level >= 10 then
 		inst.components.talker:Say("W.W Level Max!\n你还有" .. (inst.level) ..
 			"\n你还有" .. (inst.jnd) .. "点技能点!\n加点帮助请按R,当前状态请按T!" ..
 			"\nyou have " .. (inst.jnd) .. " skill points!\nClick R for help, Click T for State!")
@@ -156,10 +156,10 @@ end
 
 
 local function oneat(inst, food)
-	local jgeat = TUNING.JGEAT                                    -- 吃浆果升级
-	local jgeatsl = TUNING.JGEATSL                                -- 吃浆果升级的临界值
-	local levelmax = inst.level == 10                             -- 是否已满级
-	local levelup_fail_probability = TUNING.LEVELUP_FAIL_PROBABILITY -- 升级失败的概率
+	local jgeat = TUNING.JGEAT                       -- 吃浆果升级
+	local jgeatsl = TUNING.JGEATSL                   -- 吃浆果升级的临界值
+	local levelmax = inst.level == 10                -- 是否已满级
+	local failureFactor = TUNING.LEVELUP_FAILURE_FACTOR -- 升级失败的概率
 
 	if (food and food.components.edible) then
 		-- 包括 浆果 烤浆果 多汁浆果 烤多汁浆果
@@ -182,7 +182,7 @@ local function oneat(inst, food)
 		if (food.prefab == "dragonchilisalad" or food.prefab == "dragonpie" or food.prefab == "dragonfruit" or food.prefab == "dragonfruit_cooked" or inst.eatsj == true) then
 			if (levelmax) then
 				inst.components.talker:Say("QWQ 满级了!\nQWQ level Max!")
-			elseif math.random() > levelup_fail_probability * math.tan(inst.level * 0.1) then
+			elseif math.random() > failureFactor * math.tan(inst.level * 0.1) then
 				-- inst.jnd 技能点
 				inst.level = inst.level + 1
 				inst.jnd = inst.jnd + 1

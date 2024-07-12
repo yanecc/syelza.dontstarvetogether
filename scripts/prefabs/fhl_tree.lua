@@ -20,7 +20,7 @@ local function fn()
 	inst:AddTag("plant")
 	inst.AnimState:SetBank("fhl_tree")
 	inst.AnimState:SetBuild("fhl_tree")
-	inst.AnimState:PlayAnimation("dropped_banana")
+	inst.AnimState:PlayAnimation("idle")
 	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
 	inst.Light:Enable(true)
@@ -45,7 +45,7 @@ local function fn()
 	inst.components.tradable.goldvalue = 4
 	inst.components.tradable.rocktribute = 2
 
-	inst.components.lootdropper:SetLoot({ "twigs", "twigs", "ancient_soul", "ancient_soul" })
+	inst.components.lootdropper:SetLoot({ "twigs", "twigs", "ancient_soul" })
 	inst.components.lootdropper:AddChanceLoot("cave_banana", 0.5)
 
 	local function OnDeploy(inst, pt)

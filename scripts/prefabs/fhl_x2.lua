@@ -4,6 +4,11 @@ local Assets =
 	Asset("ATLAS", "images/inventoryimages/fhl_x2.xml"),
 }
 
+local prefabs =
+{
+	"spoiled_food",
+}
+
 local function OnEat(inst, eater)
 	if eater and eater.components.health and eater.components.sanity then
 		local lostHealth = eater.components.health:GetMaxWithPenalty() - eater.components.health.currenthealth

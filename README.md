@@ -2,14 +2,18 @@
 
 New Syelza mod for Don't Starve Together
 
+https://steamcommunity.com/sharedfiles/filedetails/?id=3287427802
+
 ## Features
 
 - [x] Expand the dragon fruit food recipes
+- [x] Remake the X juice (full moon blessing)
 - [x] Speed up the growth process (max level 10)
 - [x] Level down by eating the powcake
-- [x] Remake the X juice (full moon blessing)
+- [x] Apply a new method to calculate upgrade probability
+  - $P = 1 - \text{failure_factor} \cdot \tan(\text{player_level} \cdot 0.1)$
 
-## Character Recipes
+## Character Food Recipes
 
 ```
 health hungry sanity

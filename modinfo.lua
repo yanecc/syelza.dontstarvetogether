@@ -2,7 +2,7 @@ name = "Syelza风幻龙 (new)"
 description =
 "\n居于塞尔菲亚镇掌握符文之力的圣龙\n击杀怪物掉落符文结晶\n黑夜中提高移速,适度降低受到的伤害,稍微提高饥饿速度,稍微降低攻击力.\n白天稍微降低受到的伤害,适度提高攻击力,适度降低饥饿速度\n吃火龙果和浆果升级!(满级10,等级越高,升级几率越低)\n专属武器金芜菁之杖(附带冰柱/着火(是夜)特效,触发几率自选)\n移动速度随等级提高加快!\n是图书管理员的朋友\n\n重做内容:\n1. 风幻专属食品黑夜祝福X将会在月圆夜得到祝福\n2. 加快成长速度,可以食用芝士蛋糕主动降级(刷技能点)\n3. 专属制作物配方及属性平衡性调整\n4. 希雅蕾丝树枝和耀古之晶放置适配几何布局MOD\n5. 修正风幻的苹果(狗箱)发光效果及始终生效"
 author = "Sunrise"
-version = "2.0.0"
+version = "2.0.2"
 
 --------更新网址
 forumthread = ""
@@ -57,7 +57,7 @@ configuration_options = {
 	},
 
 	{
-		name = "fhl_levelup_fail_probability",
+		name = "fhl_levelup_failure_factor",
 		label = "升级失败的计算因子（与失败概率正相关）",
 		hover = "Probability of levelup failure",
 		options = {

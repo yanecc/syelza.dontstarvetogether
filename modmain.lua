@@ -1129,7 +1129,7 @@ AddPrefabPostInit("world", function(inst)
 end)
 
 
-TUNING.LEVELUP_FAIL_PROBABILITY = GetModConfigData("fhl_levelup_fail_probability")
+TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
 
 TUNING.GJBL = GetModConfigData("zzj_gjbl")
 TUNING.JGEAT = GetModConfigData("fhl_jgeat")
@@ -1221,7 +1221,7 @@ AddCharacterRecipe("ancient_gem",
     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("purplegem", 2) },
     TECH.NONE, { product = "ancient_gem", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 3), Ingredient("ancient_soul", 1) }, TECH.NONE,
+AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 4), Ingredient("ancient_soul", 1) }, TECH.NONE,
     { product = "fhl_tree", builder_tag = "fhl" })
 
 AddCharacterRecipe("bj_11",
