@@ -37,16 +37,12 @@ local function fn()
 	inst:AddComponent("stackable")
 	inst:AddComponent("inspectable")
 	inst:AddComponent("tradable")
-	inst:AddComponent("lootdropper")
 	inst:AddComponent("deployable")
 	inst:AddComponent("inventoryitem")
 	inst:AddComponent("fuel")
 
 	inst.components.tradable.goldvalue = 4
 	inst.components.tradable.rocktribute = 2
-
-	inst.components.lootdropper:SetLoot({ "twigs", "twigs", "ancient_soul" })
-	inst.components.lootdropper:AddChanceLoot("cave_banana", 0.5)
 
 	local function OnDeploy(inst, pt)
 		local tree = SpawnPrefab("cave_banana_tree")

@@ -9,13 +9,29 @@ local prefabs =
 	"spoiled_food",
 }
 
-local function OnEat(inst, eater)
-	if eater and eater.components.health and eater.components.sanity then
-		local lostHealth = eater.components.health:GetMaxWithPenalty() - eater.components.health.currenthealth
-		local lostSanity = eater.components.sanity.max - eater.components.sanity.current
+-- local function OnEat(inst, eater)
+-- 	if eater and eater.components.health and eater.components.sanity then
+-- 		local lostHealth = eater.components.health:GetMaxWithPenalty() - eater.components.health.currenthealth
+-- 		local lostSanity = eater.components.sanity.max - eater.components.sanity.current
 
-		eater.components.health:DoDelta(math.ceil(lostHealth / 2))
-		eater.components.sanity:DoDelta(math.ceil(lostSanity / 2))
+-- 		eater.components.health:DoDelta(math.ceil(lostHealth / 2))
+-- 		eater.components.sanity:DoDelta(math.ceil(lostSanity / 2))
+-- 	end
+-- end
+local function OnEat(inst, eater)
+	if eater.components.health and eater.components.sanity then
+		local function RestoreBuff()
+			local restore_percent = math.random(6, 16) / 100
+			if eater.components.sanity:GetPercent() < eater.components.health:GetPercent() then
+				eater.components.sanity:DoDelta(math.ceil(eater.components.sanity.max * restore_percent))
+			else
+				eater.components.health:DoDelta(math.ceil(eater.components.health:GetMaxWithPenalty() * restore_percent))
+			end
+		end
+
+		for i = 1, 10 do
+			inst:DoTaskInTime(2 * i - 1, RestoreBuff)
+		end
 	end
 end
 

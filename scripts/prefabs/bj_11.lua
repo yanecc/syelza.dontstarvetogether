@@ -50,7 +50,31 @@ local function fn()
 
 	inst.components.tool:SetAction(ACTIONS.HAMMER) --可锤击
 
-	inst:AddInherentAction(ACTIONS.TERRAFORM)    --可铲草
+	inst:AddInherentAction(ACTIONS.TERRAFORM)    --可锄草
+
+	inst:AddComponent("farmtiller")              --可犁地（九格）
+	inst.components.farmtiller.Till = function(self, pt, doer)
+		local tilling = false
+		local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
+		for x = -1, 1 do
+			for y = -1, 1 do
+				local till_x = tile_x + x * 1.3
+				local till_y = tile_z + y * 1.3
+				if TheWorld.Map:CanTillSoilAtPoint(till_x, 0, till_y, false) then
+					TheWorld.Map:CollapseSoilAtPoint(till_x, 0, till_y)
+					SpawnPrefab("farm_soil").Transform:SetPosition(till_x, 0, till_y)
+					tilling = true
+				end
+			end
+		end
+		if tilling then
+			if doer ~= nil then
+				doer:PushEvent("tilling")
+			end
+			return true
+		end
+		return false
+	end
 
 	inst:AddComponent("weapon")
 	inst.components.weapon:SetDamage(15)

@@ -108,7 +108,7 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.RECIPE_DESC.FHL_X = "祝您长命百岁!"
 
     STRINGS.NAMES.FHL_X2 = "黑夜祝福X型"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X2 = "这是...一瓶药水?"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X2 = "像月亮一样...冰冰凉凉"
     STRINGS.RECIPE_DESC.FHL_X2 = "祝您长命百岁!"
 
     STRINGS.NAMES.FHL_CY = "放松茶叶"
@@ -184,15 +184,15 @@ else
     STRINGS.RECIPE_DESC.FHL_BZ = "Delicious rainbow cake"
 
     STRINGS.NAMES.FHL_CAKE = "Pumpkin Pudding"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_CAKE = "It seems delicious.."
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_CAKE = "It seems delicious."
     STRINGS.RECIPE_DESC.FHL_CAKE = "Simple dim sum"
 
     STRINGS.NAMES.FHL_X = "Black Night Blessing Type-X"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X = "This is... a potion?"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X = "This is ... a potion?"
     STRINGS.RECIPE_DESC.FHL_X = "I wish you a long life!"
 
     STRINGS.NAMES.FHL_X2 = "Black Night Blessing Type-X"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X2 = "This is... a potion?"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_X2 = "It's cold ... like the moon."
     STRINGS.RECIPE_DESC.FHL_X2 = "I wish you a long life!"
 
     STRINGS.NAMES.FHL_CY = "Relax tea"
@@ -200,7 +200,7 @@ else
     STRINGS.RECIPE_DESC.FHL_CY = "Drinks to restore life and brainpower"
 
     STRINGS.NAMES.PERSONAL_LICKING = "Syelza's Apple"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING = "This is...Calabash Baby?"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING = "This is ... Calabash Baby?"
     STRINGS.NAMES.PERSONAL_LICKING_EYEBONE = "Syelza's Bell"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING_EYEBONE = "The sound of the bell is nice."
 

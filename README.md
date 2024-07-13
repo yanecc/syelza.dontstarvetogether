@@ -11,7 +11,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3287427802
 - [x] Speed up the growth process (max level 10)
 - [x] Level down by eating the powcake
 - [x] Apply a new method to calculate upgrade probability
-  - $P = 1 - \text{failure_factor} \cdot \tan(\text{player_level} \cdot 0.1)$
+  - $P = 1 - \text{FailureFactor} \cdot \tan(\text{PlayerLevel} \cdot 0.1)$
 
 ## Character Food Recipes
 
@@ -30,10 +30,10 @@ health hungry sanity
 1熟仙人掌肉 1冰
 
 黑夜祝福X（满月物品栏和背包中的变X2，月圆夜制作得到X2）
--90 40 -60
+-90 40 -3/4currentSanity
 2（多汁）浆果 2熟蛙腿 1深色花瓣
 
-黑夜祝福X2（仅在月圆夜可制作）
-health_loss/2 40 sanity_loss/2
+黑夜祝福X2（仅在月圆夜可制作，食用后每2秒恢复上限6%-16%的生命或理智，持续20秒，低者优先）
+0 40 0
 2（多汁）浆果 2熟蛙腿 1深色花瓣
 ```

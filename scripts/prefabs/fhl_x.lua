@@ -26,6 +26,13 @@ local function OnFullMoon(inst)
     end
 end
 
+local function OnEat(inst, eater)
+    if eater.components.sanity then
+        local currentSanity = eater.components.sanity.current
+        eater.components.sanity:DoDelta(-currentSanity * 0.75)
+    end
+end
+
 local function fn(Sim)
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -58,7 +65,8 @@ local function fn(Sim)
     inst.components.edible.foodtype = "MEAT"
     inst.components.edible.healthvalue = -90
     inst.components.edible.hungervalue = 40
-    inst.components.edible.sanityvalue = -60
+    inst.components.edible.sanityvalue = 0
+    inst.components.edible:SetOnEatenFn(OnEat)
 
     inst:AddComponent("inspectable")
 
