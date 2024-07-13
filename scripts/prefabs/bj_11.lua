@@ -1,96 +1,96 @@
 local assets =
 {
-	Asset("ANIM", "anim/fhl_zzj.zip"),
-	Asset("ANIM", "anim/swap_fhl_zzj.zip"),
+    Asset("ANIM", "anim/fhl_zzj.zip"),
+    Asset("ANIM", "anim/swap_fhl_zzj.zip"),
 
-	Asset("ATLAS", "images/inventoryimages/bj_11.xml"),
-	Asset("IMAGE", "images/inventoryimages/bj_11.tex"),
+    Asset("ATLAS", "images/inventoryimages/bj_11.xml"),
+    Asset("IMAGE", "images/inventoryimages/bj_11.tex"),
 }
 
 local prefabs = {
 }
 
 local function onequip(inst, owner)
-	owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
-	owner.AnimState:Show("ARM_carry")
-	owner.AnimState:Hide("ARM_normal")
+    owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
+    owner.AnimState:Show("ARM_carry")
+    owner.AnimState:Hide("ARM_normal")
 end
 
 local function OnUnequip(inst, owner)
-	owner.AnimState:Hide("ARM_carry")
-	owner.AnimState:Show("ARM_normal")
+    owner.AnimState:Hide("ARM_carry")
+    owner.AnimState:Show("ARM_normal")
 end
 
 local function fn()
-	local inst = CreateEntity()
-	local trans = inst.entity:AddTransform()
-	local anim = inst.entity:AddAnimState()
-	local sound = inst.entity:AddSoundEmitter()
-	MakeInventoryPhysics(inst)
-	inst.entity:AddNetwork()
+    local inst = CreateEntity()
+    local trans = inst.entity:AddTransform()
+    local anim = inst.entity:AddAnimState()
+    local sound = inst.entity:AddSoundEmitter()
+    MakeInventoryPhysics(inst)
+    inst.entity:AddNetwork()
 
-	anim:SetBank("fhl_zzj")
-	anim:SetBuild("fhl_zzj")
-	anim:PlayAnimation("idle")
+    anim:SetBank("fhl_zzj")
+    anim:SetBuild("fhl_zzj")
+    anim:PlayAnimation("idle")
 
-	inst:AddTag("sharp")
+    inst:AddTag("sharp")
 
-	inst.entity:SetPristine()
-	if not TheWorld.ismastersim then
-		return inst
-	end
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
 
-	inst:AddComponent("tool")
+    inst:AddComponent("tool")
 
-	inst.components.tool:SetAction(ACTIONS.CHOP, 5) --可砍树
+    inst.components.tool:SetAction(ACTIONS.CHOP, 5) --可砍树
 
-	inst.components.tool:SetAction(ACTIONS.MINE, 5) --可挖矿
+    inst.components.tool:SetAction(ACTIONS.MINE, 5) --可挖矿
 
-	inst.components.tool:SetAction(ACTIONS.DIG)  --可挖掘
+    inst.components.tool:SetAction(ACTIONS.DIG)     --可挖掘
 
-	inst.components.tool:SetAction(ACTIONS.HAMMER) --可锤击
+    inst.components.tool:SetAction(ACTIONS.HAMMER)  --可锤击
 
-	inst:AddInherentAction(ACTIONS.TERRAFORM)    --可锄草
+    inst:AddInherentAction(ACTIONS.TERRAFORM)       --可锄草
 
-	inst:AddComponent("farmtiller")              --可犁地（九格）
-	inst.components.farmtiller.Till = function(self, pt, doer)
-		local tilling = false
-		local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
-		for x = -1, 1 do
-			for y = -1, 1 do
-				local till_x = tile_x + x * 1.3
-				local till_y = tile_z + y * 1.3
-				if TheWorld.Map:CanTillSoilAtPoint(till_x, 0, till_y, false) then
-					TheWorld.Map:CollapseSoilAtPoint(till_x, 0, till_y)
-					SpawnPrefab("farm_soil").Transform:SetPosition(till_x, 0, till_y)
-					tilling = true
-				end
-			end
-		end
-		if tilling then
-			if doer ~= nil then
-				doer:PushEvent("tilling")
-			end
-			return true
-		end
-		return false
-	end
+    inst:AddComponent("farmtiller")                 --可犁地（九格）
+    inst.components.farmtiller.Till = function(self, pt, doer)
+        local tilling = false
+        local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
+        for x = -1, 1 do
+            for y = -1, 1 do
+                local till_x = tile_x + x * 1.3
+                local till_y = tile_z + y * 1.3
+                if TheWorld.Map:CanTillSoilAtPoint(till_x, 0, till_y, false) then
+                    TheWorld.Map:CollapseSoilAtPoint(till_x, 0, till_y)
+                    SpawnPrefab("farm_soil").Transform:SetPosition(till_x, 0, till_y)
+                    tilling = true
+                end
+            end
+        end
+        if tilling then
+            if doer ~= nil then
+                doer:PushEvent("tilling")
+            end
+            return true
+        end
+        return false
+    end
 
-	inst:AddComponent("weapon")
-	inst.components.weapon:SetDamage(15)
+    inst:AddComponent("weapon")
+    inst.components.weapon:SetDamage(15)
 
-	inst:AddComponent("inspectable")
+    inst:AddComponent("inspectable")
 
-	inst:AddComponent("inventoryitem")
-	inst.components.inventoryitem.atlasname = "images/inventoryimages/bj_11.xml"
-	inst.components.inventoryitem.imagename = "bj_11"
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/bj_11.xml"
+    inst.components.inventoryitem.imagename = "bj_11"
 
-	inst:AddComponent("equippable")
-	inst.components.equippable:SetOnEquip(onequip)
-	inst.components.equippable:SetOnUnequip(OnUnequip)
-	inst.components.equippable.walkspeedmult = 1.0
+    inst:AddComponent("equippable")
+    inst.components.equippable:SetOnEquip(onequip)
+    inst.components.equippable:SetOnUnequip(OnUnequip)
+    inst.components.equippable.walkspeedmult = 1.0
 
-	return inst
+    return inst
 end
 
 return Prefab("common/inventory/bj_11", fn, assets)

@@ -1,68 +1,68 @@
 local assets =
 {
-	Asset("ANIM", "anim/ancient_gem.zip"),
+    Asset("ANIM", "anim/ancient_gem.zip"),
 
-	Asset("ATLAS", "images/inventoryimages/ancient_gem.xml"),
-	Asset("IMAGE", "images/inventoryimages/ancient_gem.tex"),
+    Asset("ATLAS", "images/inventoryimages/ancient_gem.xml"),
+    Asset("IMAGE", "images/inventoryimages/ancient_gem.tex"),
 }
 
 local function fn()
-	local inst = CreateEntity()
-	inst.entity:AddTransform()
-	inst.entity:AddAnimState()
-	--inst.entity:AddSoundEmitter()
-	--inst.entity:AddPhysics()
-	inst.entity:AddNetwork()
-	inst.entity:AddLight()
+    local inst = CreateEntity()
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    --inst.entity:AddSoundEmitter()
+    --inst.entity:AddPhysics()
+    inst.entity:AddNetwork()
+    inst.entity:AddLight()
 
-	MakeInventoryPhysics(inst)
-	RemovePhysicsColliders(inst)
+    MakeInventoryPhysics(inst)
+    RemovePhysicsColliders(inst)
 
-	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
-	inst.AnimState:SetBank("ancient_gem")
-	inst.AnimState:SetBuild("ancient_gem")
-	inst.AnimState:PlayAnimation("idle")
+    inst.AnimState:SetBank("ancient_gem")
+    inst.AnimState:SetBuild("ancient_gem")
+    inst.AnimState:PlayAnimation("idle")
 
-	inst.Light:Enable(true)
-	inst.Light:SetRadius(.5)
-	inst.Light:SetFalloff(.7)
-	inst.Light:SetIntensity(.5)
-	inst.Light:SetColour(238 / 255, 155 / 255, 143 / 255)
+    inst.Light:Enable(true)
+    inst.Light:SetRadius(.5)
+    inst.Light:SetFalloff(.7)
+    inst.Light:SetIntensity(.5)
+    inst.Light:SetColour(238 / 255, 155 / 255, 143 / 255)
 
-	inst.entity:SetPristine()
-	if not TheWorld.ismastersim then
-		return inst
-	end
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
 
-	inst:AddComponent("edible")
-	inst.components.edible.foodtype = "ELEMENTAL"
-	inst.components.edible.hungervalue = 2
-	inst:AddComponent("tradable")
-	inst.components.tradable.goldvalue = 8
-	inst.components.tradable.rocktribute = 8
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = "ELEMENTAL"
+    inst.components.edible.hungervalue = 2
+    inst:AddComponent("tradable")
+    inst.components.tradable.goldvalue = 8
+    inst.components.tradable.rocktribute = 8
 
-	inst:AddComponent("inspectable")
+    inst:AddComponent("inspectable")
 
-	-- 建造远古祭坛
-	local function OnDeploy(inst, pt)
-		SpawnPrefab("ancient_altar").Transform:SetPosition(pt.x, pt.y, pt.z)
-		inst.components.stackable:Get():Remove()
-	end
-	inst:AddComponent("deployable")
-	inst.components.deployable.ondeploy = OnDeploy
-	inst.components.deployable.min_spacing = 8
-	inst.components.deployable:SetDeployMode(DEPLOYMODE.DEFAULT)
+    -- 建造远古祭坛
+    local function OnDeploy(inst, pt)
+        SpawnPrefab("ancient_altar").Transform:SetPosition(pt.x, pt.y, pt.z)
+        inst.components.stackable:Get():Remove()
+    end
+    inst:AddComponent("deployable")
+    inst.components.deployable.ondeploy = OnDeploy
+    inst.components.deployable.min_spacing = 8
+    inst.components.deployable:SetDeployMode(DEPLOYMODE.DEFAULT)
 
-	inst:AddComponent("stackable")
-	inst:AddComponent("inventoryitem")
-	inst.components.inventoryitem.atlasname = "images/inventoryimages/ancient_gem.xml"
+    inst:AddComponent("stackable")
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/ancient_gem.xml"
 
-	--inst:AddComponent("bait")
-	--inst:AddTag("molebait")
+    --inst:AddComponent("bait")
+    --inst:AddTag("molebait")
 
-	return inst
+    return inst
 end
 
 return Prefab("common/inventory/ancient_gem", fn, assets),
-	MakePlacer("common/ancient_gem_placer", "ancient_altar", "ancient_altar", "idle")
+    MakePlacer("common/ancient_gem_placer", "ancient_altar", "ancient_altar", "idle")

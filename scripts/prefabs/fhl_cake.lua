@@ -1,64 +1,64 @@
 local Assets =
 {
-	Asset("ANIM", "anim/cake.zip"),
-	Asset("ATLAS", "images/inventoryimages/fhl_cake.xml"),
+    Asset("ANIM", "anim/cake.zip"),
+    Asset("ATLAS", "images/inventoryimages/fhl_cake.xml"),
 }
 
 local prefabs =
 {
-	"spoiled_food",
+    "spoiled_food",
 }
 
 local function fn(Sim)
-	local inst = CreateEntity()
-	inst.entity:AddTransform()
-	inst.entity:AddAnimState()
-	inst.entity:AddNetwork()
+    local inst = CreateEntity()
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
 
-	MakeInventoryPhysics(inst)
-	MakeSmallBurnable(inst)
-	MakeSmallPropagator(inst)
+    MakeInventoryPhysics(inst)
+    MakeSmallBurnable(inst)
+    MakeSmallPropagator(inst)
 
-	inst.AnimState:SetBank("cake")
-	inst.AnimState:SetBuild("cake")
-	inst.AnimState:PlayAnimation("idle")
+    inst.AnimState:SetBank("cake")
+    inst.AnimState:SetBuild("cake")
+    inst.AnimState:PlayAnimation("idle")
 
-	inst:AddTag("preparedfood")
-	inst:AddTag("honeyed")
+    inst:AddTag("preparedfood")
+    inst:AddTag("honeyed")
 
-	--if not TheNet:GetIsServer() then
-	--    return inst
-	--end
+    --if not TheNet:GetIsServer() then
+    --    return inst
+    --end
 
-	inst.entity:SetPristine()
-	if not TheWorld.ismastersim then
-		return inst
-	end
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
 
-	inst:AddComponent("edible")
-	inst.components.edible.foodtype = "GOODIES"
-	inst.components.edible.healthvalue = 5
-	inst.components.edible.hungervalue = 66
-	inst.components.edible.sanityvalue = 10
+    inst:AddComponent("edible")
+    inst.components.edible.foodtype = "GOODIES"
+    inst.components.edible.healthvalue = 5
+    inst.components.edible.hungervalue = 66
+    inst.components.edible.sanityvalue = 10
 
-	inst:AddComponent("inspectable")
+    inst:AddComponent("inspectable")
 
-	inst:AddComponent("inventoryitem")
-	inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_cake.xml"
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_cake.xml"
 
-	inst:AddComponent("stackable")
-	inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
+    inst:AddComponent("stackable")
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
 
-	inst:AddComponent("perishable")
-	inst.components.perishable:SetPerishTime(TUNING.PERISH_PRESERVED * 10)
-	inst.components.perishable:StartPerishing()
-	inst.components.perishable.onperishreplacement = "spoiled_food"
+    inst:AddComponent("perishable")
+    inst.components.perishable:SetPerishTime(TUNING.PERISH_PRESERVED * 10)
+    inst.components.perishable:StartPerishing()
+    inst.components.perishable.onperishreplacement = "spoiled_food"
 
-	inst:AddComponent("bait")
+    inst:AddComponent("bait")
 
-	inst:AddComponent("tradable")
+    inst:AddComponent("tradable")
 
-	return inst
+    return inst
 end
 
 
