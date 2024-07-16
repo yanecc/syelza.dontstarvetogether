@@ -118,8 +118,8 @@ local function applyupgrades(inst)
     inst.components.health.maxhealth = 150 + upgrades * 15            --300
     inst.components.sanity.max = 150 + upgrades * 15                  --300
 
-    inst.components.locomotor.walkspeed = math.ceil(7 + upgrades / 3) --10
-    inst.components.locomotor.runspeed = math.ceil(9 + upgrades / 3)  --12
+    inst.components.locomotor.walkspeed = math.ceil(7 + upgrades / 4) --10
+    inst.components.locomotor.runspeed = math.ceil(9 + upgrades / 4)  --12
 
 
     inst.components.talker:Say("QWQ Level now: " .. (inst.level) ..

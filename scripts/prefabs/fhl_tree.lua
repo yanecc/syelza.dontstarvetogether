@@ -36,14 +36,12 @@ local function fn()
 
     inst:AddComponent("stackable")
     inst:AddComponent("inspectable")
-    inst:AddComponent("tradable")
-    inst:AddComponent("deployable")
-    inst:AddComponent("inventoryitem")
-    inst:AddComponent("fuel")
 
+    inst:AddComponent("tradable")
     inst.components.tradable.goldvalue = 4
     inst.components.tradable.rocktribute = 2
 
+    inst:AddComponent("deployable")
     local function OnDeploy(inst, pt)
         local tree = SpawnPrefab("cave_banana_tree")
         if tree then
@@ -56,7 +54,10 @@ local function fn()
     inst.components.deployable.mode = DEPLOYMODE.PLANT
     inst.components.deployable.min_spacing = 6
 
+    inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_tree.xml"
+
+    inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
 
     return inst

@@ -46,6 +46,8 @@ local function fn()
 
     inst.components.tool:SetAction(ACTIONS.MINE, 5) --可挖矿
 
+    inst.components.tool:EnableToughWork(true)      --可强力开采
+
     inst.components.tool:SetAction(ACTIONS.DIG)     --可挖掘
 
     inst.components.tool:SetAction(ACTIONS.HAMMER)  --可锤击

@@ -6,22 +6,13 @@ local Assets =
 
 local prefabs =
 {
-    "spoiled_food",
+    "fhl_x",
 }
 
--- local function OnEat(inst, eater)
---  if eater and eater.components.health and eater.components.sanity then
---      local lostHealth = eater.components.health:GetMaxWithPenalty() - eater.components.health.currenthealth
---      local lostSanity = eater.components.sanity.max - eater.components.sanity.current
-
---      eater.components.health:DoDelta(math.ceil(lostHealth / 2))
---      eater.components.sanity:DoDelta(math.ceil(lostSanity / 2))
---  end
--- end
 local function OnEat(inst, eater)
     if eater.components.health and eater.components.sanity then
         local function RestoreBuff()
-            local restore_percent = math.random(6, 15) / 100
+            local restore_percent = math.random(5, 15) / 100
             if eater.components.sanity:GetPercent() < eater.components.health:GetPercent() then
                 eater.components.sanity:DoDelta(math.ceil(eater.components.sanity.max * restore_percent))
             else
@@ -50,6 +41,7 @@ local function fn(Sim)
     inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("preparedfood")
+    inst:AddTag("saltbox_valid")
     inst:AddTag("honeyed")
 
     --if not TheNet:GetIsServer() then
@@ -77,9 +69,9 @@ local function fn(Sim)
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
 
     inst:AddComponent("perishable")
-    inst.components.perishable:SetPerishTime(TUNING.PERISH_PRESERVED * 100)
+    inst.components.perishable:SetPerishTime(TUNING.PERISH_PRESERVED)
     inst.components.perishable:StartPerishing()
-    inst.components.perishable.onperishreplacement = "spoiled_food"
+    inst.components.perishable.onperishreplacement = "fhl_x"
 
     inst:AddComponent("bait")
 
