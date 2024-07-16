@@ -43,6 +43,26 @@ local function fn()
     inst.components.tradable.rocktribute = 8
 
     inst:AddComponent("inspectable")
+    inst:AddComponent("burnable")
+    inst.components.burnable:SetFXLevel(2)
+    inst.components.burnable:SetBurnTime(10)
+    inst.components.burnable:AddBurnFX("fire", Vector3(0, 0, 0))
+    inst.components.burnable:SetOnIgniteFn(DefaultBurnFn)
+    inst.components.burnable:SetOnExtinguishFn(DefaultExtinguishFn)
+    inst.components.burnable:SetOnBurntFn(function(inst)
+        local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
+        local crystal = SpawnPrefab("opalpreciousgem")
+        crystal.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+        if inst.components.stackable then
+            crystal.components.stackable:SetStackSize(math.min(crystal.components.stackable.maxsize,
+                inst.components.stackable.stacksize))
+        end
+
+        inst:Remove()
+    end)
+
+    MakeSmallPropagator(inst)
 
     -- 建造远古祭坛
     local function OnDeploy(inst, pt)

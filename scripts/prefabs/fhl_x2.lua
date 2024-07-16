@@ -40,9 +40,9 @@ local function fn(Sim)
     inst.AnimState:SetBuild("dy_x")
     inst.AnimState:PlayAnimation("idle")
 
+    inst:AddTag("catfood")
     inst:AddTag("preparedfood")
     inst:AddTag("saltbox_valid")
-    inst:AddTag("honeyed")
 
     --if not TheNet:GetIsServer() then
     --    return inst
@@ -76,6 +76,8 @@ local function fn(Sim)
     inst:AddComponent("bait")
 
     inst:AddComponent("tradable")
+
+    MakeHauntableChangePrefab(inst, "fhl_x")
 
     return inst
 end

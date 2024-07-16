@@ -7,6 +7,7 @@ local Assets =
 local prefabs =
 {
     "spoiled_food",
+    "fhl_x2",
 }
 
 local function OnFullMoon(inst)
@@ -47,9 +48,9 @@ local function fn(Sim)
     inst.AnimState:SetBuild("dy_x")
     inst.AnimState:PlayAnimation("idle")
 
+    inst:AddTag("catfood")
     inst:AddTag("preparedfood")
     inst:AddTag("saltbox_valid")
-    inst:AddTag("honeyed")
 
     --if not TheNet:GetIsServer() then
     --    return inst
@@ -70,6 +71,9 @@ local function fn(Sim)
     inst.components.edible:SetOnEatenFn(OnEat)
 
     inst:AddComponent("inspectable")
+
+    inst:AddComponent("halloweenmoonmutable")
+    inst.components.halloweenmoonmutable:SetPrefabMutated("fhl_x2")
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_x.xml"

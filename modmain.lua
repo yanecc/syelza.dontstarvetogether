@@ -1217,9 +1217,9 @@ AddCharacterRecipe("fhl_x_2",
 AddCharacterRecipe("fhl_cy", { Ingredient("cactus_meat_cooked", 1), Ingredient("ice", 1) }, TECH.NONE,
     { product = "fhl_cy", builder_tag = "fhl" })
 
-AddCharacterRecipe("ancient_gem",
+AddCharacterRecipe("ancient_workstation",
     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("purplegem", 2) },
-    TECH.NONE, { product = "ancient_gem", builder_tag = "fhl" })
+    TECH.NONE, { product = "ancient_gem", builder_tag = "fhl", no_deconstruction = true })
 
 AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 4), Ingredient("ancient_soul", 1) }, TECH.NONE,
     { product = "fhl_tree", builder_tag = "fhl" })
@@ -1227,6 +1227,18 @@ AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 4), Ingredient("ancient_sou
 AddCharacterRecipe("bj_11",
     { Ingredient("twigs", 6), Ingredient("ancient_soul", 6), Ingredient("goldnugget", 6) },
     TECH.NONE, { product = "bj_11", builder_tag = "fhl" })
+
+AddIngredientValues({ "fhl_cake" }, { dairy = 1, sweetener = 1 })
+
+AddDeconstructRecipe("fhl_cake", { Ingredient("bird_egg", 2), Ingredient("pumpkin", 1) })
+
+AddDeconstructRecipe("fhl_x", { Ingredient("berries", 2), Ingredient("lunarfrog", 2), Ingredient("petals_evil", 1) })
+
+AddDeconstructRecipe("fhl_x2",
+    { Ingredient("moonbutterfly", 2), Ingredient("halloweenpotion_moon", 1), Ingredient("petals_evil", 2) })
+
+-- AddDeconstructRecipe("ancient_gem",
+--     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })
 
 -- ----BOOK----
 -- 降低了科技等级，相当于老奶奶
@@ -1243,5 +1255,3 @@ AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespo
 -----------创建地图图标和角色基础属性
 AddMinimapAtlas("images/map_icons/fhl.xml")
 AddModCharacter("fhl", "FEMALE")
-
-GLOBAL.glassesdrop = 0 --GetModConfigData("DROPGLASSES")

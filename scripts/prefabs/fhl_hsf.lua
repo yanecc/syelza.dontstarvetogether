@@ -81,6 +81,7 @@ local function fn(Sim)
     inst:AddTag("sharp")
     --inst:AddTag("hat")
     inst:AddTag("trader")
+    inst:AddTag("nosteal")
 
     inst.isWeared = false
     inst.isDropped = false
@@ -100,12 +101,6 @@ local function fn(Sim)
         return inst
     end
 
-    -- 意义不明 待测试
-    if glassesdrop == 1 then
-        inst:AddTag("irreplaceable")
-    end
-    --
-
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_hsf.xml"
 
@@ -114,7 +109,7 @@ local function fn(Sim)
 
     if inst and TUNING.BUFFGO then
         inst:AddComponent("armor")
-        inst.components.armor:InitCondition(TUNING.ARMORMARBLE * 3, 0.5)
+        inst.components.armor:InitCondition(TUNING.ARMORRUINS * 3, 0.5)
         inst:AddComponent("trader")
         inst.components.trader:SetAcceptTest(AcceptTest)
         inst.components.trader.onaccept = OnGetItemFromPlayer

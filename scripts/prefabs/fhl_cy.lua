@@ -23,8 +23,8 @@ local function fn(Sim)
     inst.AnimState:SetBuild("fhl_cy")
     inst.AnimState:PlayAnimation("idle")
 
+    inst:AddTag("catfood")
     inst:AddTag("preparedfood")
-    inst:AddTag("honeyed")
 
     --if not TheNet:GetIsServer() then
     --    return inst

@@ -199,6 +199,7 @@ local function fn()
     MakeInventoryPhysics(inst)
 
     inst:AddTag("personal_licking_eyebone")
+    inst:AddTag("nosteal")
     inst:AddTag("irreplaceable")
     inst:AddTag("nonpotatable")
 

@@ -34,6 +34,7 @@ local function fn()
     anim:PlayAnimation("idle")
 
     inst:AddTag("sharp")
+    inst:AddTag("nosteal")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

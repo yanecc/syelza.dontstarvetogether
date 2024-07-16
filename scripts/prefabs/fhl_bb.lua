@@ -20,10 +20,10 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.armor:GetPercent() < 1 then
-        local backpack_repaired = TUNING.ARMORMARBLE * 1.2
+        local backpack_repaired = TUNING.ARMORRUINS
         inst.components.armor.condition = inst.components.armor.condition + backpack_repaired
         if inst.components.armor:GetPercent() > 1 then
-            inst.components.armor:SetCondition(TUNING.ARMORMARBLE * 3)
+            inst.components.armor:SetCondition(TUNING.ARMORRUINS * 4)
         end
     end
 end
@@ -34,6 +34,21 @@ local function onbreak(owner, data)
         armor.components.container:DropEverything()
         armor.components.container:Close()
         armor:RemoveComponent("container")
+    end
+end
+
+local function OnTakeDamage(inst, damage_amount)
+    local owner = inst.components.inventoryitem.owner
+    local durability = inst.components.armor:GetPercent()
+    if durability < 0.05 and not inst.thirdLowDurabilityWarning then
+        inst.thirdLowDurabilityWarning = true
+        owner.components.talker:Say("Warning: " .. inst:GetDisplayName() .. " is about to break!")
+    elseif durability < 0.1 and not inst.secondLowDurabilityWarning then
+        inst.secondLowDurabilityWarning = true
+        owner.components.talker:Say("Warning: " .. inst:GetDisplayName() .. " durability is below 10%!")
+    elseif durability < 0.2 and not inst.firstLowDurabilityWarning then
+        inst.firstLowDurabilityWarning = true
+        owner.components.talker:Say("Warning: " .. inst:GetDisplayName() .. " durability is below 20%!")
     end
 end
 
@@ -103,7 +118,8 @@ local function fn()
 
     if TUNING.FHL_HJOPEN then
         inst:AddComponent("armor")
-        inst.components.armor:InitCondition(TUNING.ARMORMARBLE * 3, 0.8)
+        inst.components.armor:InitCondition(TUNING.ARMORRUINS * 4, 0.8)
+        inst.components.armor.ontakedamage = OnTakeDamage
         inst:AddComponent("trader")
         inst.components.trader:SetAcceptTest(AcceptTest)
         inst.components.trader.onaccept = OnGetItemFromPlayer
