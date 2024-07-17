@@ -18,7 +18,7 @@ local function fn()
     RemovePhysicsColliders(inst)
 
     inst:AddTag("plant")
-    inst:AddTag("catfood")
+    inst:AddTag("cattoy")
     inst.AnimState:SetBank("fhl_tree")
     inst.AnimState:SetBuild("fhl_tree")
     inst.AnimState:PlayAnimation("idle")

@@ -4,6 +4,22 @@ local assets =
     Asset("ATLAS", "images/inventoryimages/fhl_hsf.xml")
 }
 
+local function OnEquip(inst, owner)
+    owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
+    owner.components.health.externalabsorbmodifiers:SetModifier(inst, 0.5)
+end
+
+local function OnUnequip(inst, owner)
+    owner.AnimState:ClearOverrideSymbol("swap_hat")
+    owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
+end
+
+local function OnTakeDamage(inst, data)
+    if inst.components.fueled then
+        inst.components.fueled:DoDelta(-inst.components.fueled.maxfuel * 0.02)
+    end
+end
+
 local function AcceptTest(inst, item)
     if item.prefab == "ancient_soul" and inst.components.armor:GetPercent() < 1 then
         return true
@@ -18,123 +34,79 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.armor:GetPercent() < 1 then
-        local hsf_repaired = TUNING.ARMORMARBLE * 1.2
+        local hsf_repaired = TUNING.ARMORBRAMBLE
         inst.components.armor.condition = inst.components.armor.condition + hsf_repaired
         if inst.components.armor:GetPercent() > 1 then
-            inst.components.armor:SetCondition(TUNING.ARMORMARBLE * 3)
+            inst.components.armor:SetCondition(TUNING.ARMORBRAMBLE * 2)
         end
     end
 end
 
-local function saniup(inst)
-    if inst.isWeared and not inst.isDropped then
-        --inst:AddComponent("dapperness")
-        inst.components.equippable.dapperness = 1
-    end
-end
-
-local function onequip(inst, owner)
-    --owner.AnimState:OverrideSymbol("swap_hat", "faroz_gls", "swap_hat")
-
-    --owner.AnimState:Show("HAT")
-    --owner.AnimState:Show("HAT_HAIR")
-    --owner.AnimState:Hide("HAIR_NOHAT")
-    --owner.AnimState:Hide("HAIR")
-
-    --if owner:HasTag("player") then
-    --    owner.AnimState:Hide("HEAD")
-    --    owner.AnimState:Show("HEAD_HAT")
-    --end
-    inst.isWeared = true
-    inst.isDropped = false
-    saniup(inst)
-end
-
-local function onunequip(inst, owner)
-    --owner.AnimState:Hide("HAT")
-    --owner.AnimState:Hide("HAT_HAIR")
-    --owner.AnimState:Show("HAIR_NOHAT")
-    --owner.AnimState:Show("HAIR")
-
-    --if owner:HasTag("player") then
-    --    owner.AnimState:Show("HEAD")
-    --    owner.AnimState:Hide("HEAD_HAT")
-    --end
-    inst.isWeared = false
-    inst.isDropped = false
-    saniup(inst)
-end
-
-local function ondrop(inst)
-    inst.isDropped = true
-    inst.isWeared = false
-    saniup(inst)
-end
-
 local function fn(Sim)
     local inst = CreateEntity()
-    local trans = inst.entity:AddTransform()
-    local anim = inst.entity:AddAnimState()
-    MakeInventoryPhysics(inst)
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
+    MakeInventoryPhysics(inst)
+
+    inst.AnimState:SetBank("fhl_hsf")
+    inst.AnimState:SetBuild("fhl_hsf")
+    inst.AnimState:PlayAnimation("idel")
+
     inst:AddTag("sharp")
-    --inst:AddTag("hat")
     inst:AddTag("trader")
-    inst:AddTag("nosteal")
-
-    inst.isWeared = false
-    inst.isDropped = false
-
-    --anim:SetBank("beehat")
-    --anim:SetBuild("fhl_hsf")
-    --anim:PlayAnimation("anim")
-
-    anim:SetBank("fhl_hsf")
-    anim:SetBuild("fhl_hsf")
-    anim:PlayAnimation("idel")
-
-    inst:AddComponent("inspectable") --�����
+    inst:AddComponent("inspectable")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
 
+    inst:AddTag("cattoy")
+    inst:AddTag("nosteal")
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_hsf.xml"
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
+    inst.components.equippable.dapperness = 1
+    inst.components.equippable.is_magic_dapperness = true
+
 
     if inst and TUNING.BUFFGO then
-        inst:AddComponent("armor")
-        inst.components.armor:InitCondition(TUNING.ARMORRUINS * 3, 0.5)
-        inst:AddComponent("trader")
-        inst.components.trader:SetAcceptTest(AcceptTest)
-        inst.components.trader.onaccept = OnGetItemFromPlayer
+        inst:AddTag("bramble_resistant")
+        -- inst:AddComponent("armor")
+        -- inst.components.armor:InitCondition(TUNING.ARMORBRAMBLE * 2, 0.5) -- 1050
+        -- inst:AddComponent("trader")
+        -- inst.components.trader:SetAcceptTest(AcceptTest)
+        -- inst.components.trader.onaccept = OnGetItemFromPlayer
+        -- -- inst:AddComponent("resistance")
+        -- -- inst.components.resistance:AddResistance("quakedebris")
+        -- -- inst.components.resistance:AddResistance("lunarhaildebris")
+        -- -- inst.components.resistance:SetOnResistDamageFn(fns.woodcarved_onhitbyquakedebris)
+        inst:AddComponent("fueled")
+        inst.components.fueled.fueltype = FUELTYPE.MAGIC
+        inst.components.fueled:InitializeFuelLevel(TUNING.TOTAL_DAY_TIME * 10)
+        inst.components.fueled:SetDepletedFn(inst.Remove)
+        inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION)
     end
-    inst.components.equippable:SetOnEquip(onequip)
-    inst.components.equippable:SetOnUnequip(onunequip)
-    inst.components.inventoryitem:SetOnDroppedFn(ondrop)
 
-    -- 作祟复活
-    --inst:AddTag("resurrector")
     inst:AddComponent("hauntable")
-    -- inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
-
-    -- 我真不会写作祟之后消失啊
-    AddHauntableCustomReaction(inst,
-        function(inst, haunter)
-            if haunter:HasTag("playerghost") then
-                haunter:PushEvent("respawnfromghost")
-                inst:Remove()
+    if inst and TUNING.HSF_RESPAWN == 1 then
+        AddHauntableCustomReaction(inst,
+            function(inst, haunter)
+                if haunter:HasTag("playerghost") then
+                    haunter:PushEvent("respawnfromghost")
+                    inst:Remove()
+                end
             end
-        end
-        , true, false, true)
-    --
+            , true, false, true)
+    elseif inst and TUNING.HSF_RESPAWN == -1 then
+        inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
+    end
 
-    inst:ListenForEvent("phasechanged", function() saniup(inst) end, TheWorld)
     return inst
 end
 

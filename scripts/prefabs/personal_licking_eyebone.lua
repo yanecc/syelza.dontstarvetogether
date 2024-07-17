@@ -1,7 +1,6 @@
 local assets =
 {
     Asset("ANIM", "anim/licking_eyebone.zip"),
-
     Asset("ATLAS", "images/inventoryimages/licking_eyebone.xml"),
 }
 

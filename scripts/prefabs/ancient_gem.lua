@@ -18,11 +18,10 @@ local function fn()
     MakeInventoryPhysics(inst)
     RemovePhysicsColliders(inst)
 
-    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-
     inst.AnimState:SetBank("ancient_gem")
     inst.AnimState:SetBuild("ancient_gem")
     inst.AnimState:PlayAnimation("idle")
+    inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
     inst.Light:Enable(true)
     inst.Light:SetRadius(.5)

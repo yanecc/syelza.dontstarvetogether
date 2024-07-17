@@ -11,7 +11,7 @@ local prefabs = {
 }
 
 local function AcceptTest(inst, item)
-    if item.prefab == "ancient_soul" and inst.components.finiteuses:GetPercent() < 1 then
+    if (item.prefab == "ancient_soul" or item.prefab == "goldnugget") and inst.components.finiteuses:GetPercent() < 1 then
         return true
     elseif inst.components.finiteuses:GetPercent() == 1 then
         local owner = item.components.inventoryitem:GetGrandOwner()
@@ -24,7 +24,12 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + 100
+        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.3
+        if inst.components.finiteuses:GetPercent() > 1 then
+            inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
+        end
+    elseif item.prefab == "goldnugget" and inst.components.finiteuses:GetPercent() < 1 then
+        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.15
         if inst.components.finiteuses:GetPercent() > 1 then
             inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
         end

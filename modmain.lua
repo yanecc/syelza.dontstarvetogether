@@ -1150,7 +1150,9 @@ TUNING.ZZJ_PRE = GetModConfigData("zzj_pre")
 TUNING.OPENLIGHT = GetModConfigData("openlight")
 TUNING.OPENLI = GetModConfigData("openli")
 TUNING.BUFFGO = GetModConfigData("buffgo")
-TUNING.FHL_HJOPEN = GetModConfigData("fhl_hjopen")
+TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn")
+TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
+TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
 TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen")
 
 -- 注册图片
@@ -1190,12 +1192,11 @@ AddCharacterRecipe("fhl_zzj5",
     { Ingredient("fhl_zzj4", 1), Ingredient("ancient_soul", 10), Ingredient("goldnugget", 20) },
     TECH.NONE, { product = "fhl_zzj5", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_bb", { Ingredient("cutgrass", 5), Ingredient("twigs", 5), Ingredient("ancient_soul", 8) },
+AddCharacterRecipe("fhl_bb", { Ingredient("waxpaper", 3), Ingredient("rope", 2), Ingredient("ancient_soul", 8) },
     TECH.NONE, { product = "fhl_bb", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_hsf",
-    { Ingredient("feather_robin", 1), Ingredient("feather_crow", 1), Ingredient("ancient_soul", 3) }, TECH.NONE,
-    { product = "fhl_hsf", builder_tag = "fhl" })
+AddCharacterRecipe("fhl_hsf", { Ingredient("feather_robin", 2), Ingredient("feather_crow", 2),
+    Ingredient("ancient_soul", 2) }, TECH.NONE, { product = "fhl_hsf", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_bz", { Ingredient("honey", 4), Ingredient("bird_egg", 4), Ingredient("cave_banana", 2) },
     TECH.NONE, { product = "fhl_bz", builder_tag = "fhl" })
@@ -1235,7 +1236,7 @@ AddDeconstructRecipe("fhl_cake", { Ingredient("bird_egg", 2), Ingredient("pumpki
 AddDeconstructRecipe("fhl_x", { Ingredient("berries", 2), Ingredient("lunarfrog", 2), Ingredient("petals_evil", 1) })
 
 AddDeconstructRecipe("fhl_x2",
-    { Ingredient("moonbutterfly", 2), Ingredient("halloweenpotion_moon", 1), Ingredient("petals_evil", 2) })
+    { Ingredient("halloweenpotion_moon", 1), Ingredient("moonbutterfly", 2), Ingredient("petals_evil", 1) })
 
 -- AddDeconstructRecipe("ancient_gem",
 --     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })

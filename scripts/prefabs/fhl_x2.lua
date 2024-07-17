@@ -69,9 +69,9 @@ local function fn(Sim)
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
 
     inst:AddComponent("perishable")
-    inst.components.perishable:SetPerishTime(TUNING.PERISH_PRESERVED)
+    inst.components.perishable:SetPerishTime(TUNING.PERISH_PRESERVED * 5)
     inst.components.perishable:StartPerishing()
-    inst.components.perishable.onperishreplacement = "fhl_x"
+    inst.components.perishable.onperishreplacement = "spoiled_food"
 
     inst:AddComponent("bait")
 

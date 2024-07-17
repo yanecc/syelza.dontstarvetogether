@@ -2,7 +2,7 @@ name = "Syelza风幻龙 (new)"
 description =
 "\n居于塞尔菲亚镇掌握符文之力的圣龙,击杀怪物掉落符文结晶\n吃火龙果和浆果(可选)升级!(满级10级,等级越高,失败概率越高)\n专属武器金芜菁之杖(附带冰柱/着火(夜间)特效,触发概率自选)\n移动速度随等级提高加快!是图书管理员的朋友!\n\n重制内容:\n1. 风幻专属食品黑夜祝福X将会在月圆夜得到祝福\n2. 加快成长速度,食用芝士蛋糕会降1级(刷技能点)\n3. 专属制作物配方及属性平衡性调整\n4. 修正风幻的苹果(狗箱)发光效果及始终生效\n5. 希雅蕾丝树枝和耀古之晶放置适配几何布局mod\n6. 萌妹子的宝具添加支持锄草、犁地(一键九格)、强力开采(绝望石等)\n7. 南瓜布丁可以下锅,提供1乳制品度、2甜味剂度\n8. 大幅增强风幻与新版饥荒联机版世界的互动性\n  (更多信息请前往mod主页查看)"
 author = "Sunrise"
-version = "2.1.0"
+version = "2.1.1"
 
 --------更新网址
 forumthread = ""
@@ -35,8 +35,8 @@ configuration_options = {
         label = "吃浆果升级功能",
         hover = "Eating berry upgrade function",
         options = {
-            { description = "open",           data = true },
             { description = "close(default)", data = false },
+            { description = "open",           data = true },
         },
 
         default = false,
@@ -88,15 +88,31 @@ configuration_options = {
     },
 
     {
-        name = "fhl_hjopen",
-        label = "背包护甲功能(耐久耗尽会消失)",
+        name = "bb_hjopen",
+        label = "背包护甲功能",
         hover = "The Backpack's armor function",
         options = {
-            { description = "open",           data = true },
             { description = "close(default)", data = false },
+            { description = "open",           data = true },
         },
 
         default = false,
+    },
+
+    {
+        name = "bb_durability",
+        label = "背包护甲耐久(耐久耗尽会消失)",
+        hover = "The Backpack's armor function",
+        options = {
+            { description = "1200",          data = 1200 },
+            { description = "1800",          data = 1800 },
+            { description = "2400(default)", data = 2400 },
+            { description = "3000",          data = 3000 },
+            { description = "3600",          data = 3600 },
+            { description = "4800",          data = 4800 },
+        },
+
+        default = 2400,
     },
 
     {
@@ -121,8 +137,8 @@ configuration_options = {
         label = "配剑火焰特效:",
         hover = "With sword and flame special effects",
         options = {
-            { description = "open",           data = true },
             { description = "close(default)", data = false },
+            { description = "open",           data = true },
         },
         default = false,
     },
@@ -146,8 +162,8 @@ configuration_options = {
         label = "幻儿会自己持久发光吗:",
         hover = "Can Syelza herself shine all the time?",
         options = {
-            { description = "yes",         data = true },
             { description = "no(default)", data = false },
+            { description = "yes",         data = true },
         },
         default = false,
     },
@@ -157,8 +173,8 @@ configuration_options = {
         label = "配剑可以当做斧子:",
         hover = "Can The Golden wujing cut down trees?",
         options = {
-            { description = "yes",         data = true },
             { description = "no(default)", data = false },
+            { description = "yes",         data = true },
         },
         default = false,
     },
@@ -168,8 +184,8 @@ configuration_options = {
         label = "配剑可以当做镐头:",
         hover = "Can The Golden wujing mining?",
         options = {
-            { description = "yes",         data = true },
             { description = "no(default)", data = false },
+            { description = "yes",         data = true },
         },
         default = false,
     },
@@ -179,8 +195,8 @@ configuration_options = {
         label = "配剑可当做铲子:",
         hover = "Can The Golden wujing use as shovel?",
         options = {
-            { description = "yes",         data = true },
             { description = "no(default)", data = false },
+            { description = "yes",         data = true },
         },
         default = false,
     },
@@ -190,8 +206,8 @@ configuration_options = {
         label = "配剑可以当做锤子:",
         hover = "Can The Golden wujing use as hammer?",
         options = {
-            { description = "yes",         data = true },
             { description = "no(default)", data = false },
+            { description = "yes",         data = true },
         },
         default = false,
     },
@@ -215,6 +231,18 @@ configuration_options = {
         label = "狗箱发光",
         hover = "Can the apple(chester) shine?",
         options = {
+            { description = "no(default)", data = false },
+            { description = "yes",         data = true },
+        },
+
+        default = false,
+    },
+
+    {
+        name = "buffgo",
+        label = "护身符吸收一半伤害",
+        hover = "Can the amulet absorbs half damage?",
+        options = {
             { description = "yes(default)", data = true },
             { description = "no",           data = false },
         },
@@ -223,14 +251,15 @@ configuration_options = {
     },
 
     {
-        name = "buffgo",
-        label = "护身符吸收一半伤害",
-        hover = "Can the Amulet absorbs half damage?",
+        name = "hsf_respawn",
+        label = "作祟护身符重生效果",
+        hover = "Can the amulet respawn haunting ghost?",
         options = {
-            { description = "yes(default)", data = true },
-            { description = "no",           data = false },
+            { description = "no(default)", data = 0 },
+            { description = "one-off",     data = 1 },
+            { description = "always",      data = -1 },
         },
 
-        default = true,
-    },
+        default = 0,
+    }
 }

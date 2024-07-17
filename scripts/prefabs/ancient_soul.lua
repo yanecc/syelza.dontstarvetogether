@@ -21,7 +21,6 @@ local function fn()
 	inst.AnimState:SetBank("ancient_soul")
 	inst.AnimState:SetBuild("ancient_soul")
 	inst.AnimState:PlayAnimation("idle")
-
 	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
 	inst.Light:Enable(true)

@@ -20,10 +20,9 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.armor:GetPercent() < 1 then
-        local backpack_repaired = TUNING.ARMORRUINS
-        inst.components.armor.condition = inst.components.armor.condition + backpack_repaired
+        inst.components.armor.condition = inst.components.armor.condition + TUNING.BB_DURABILITY * 0.2
         if inst.components.armor:GetPercent() > 1 then
-            inst.components.armor:SetCondition(TUNING.ARMORRUINS * 4)
+            inst.components.armor:SetCondition(TUNING.BB_DURABILITY)
         end
     end
 end
@@ -88,7 +87,6 @@ local function fn()
 
     inst:AddTag("backpack")
     inst:AddTag("fridge")
-    inst:AddTag("icebox_valid")
     inst:AddTag("trader")
 
     --waterproofer (from waterproofer component) added to pristine state for optimization
@@ -116,9 +114,9 @@ local function fn()
     inst:AddComponent("waterproofer")
     inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_HUGE)
 
-    if TUNING.FHL_HJOPEN then
+    if TUNING.BB_HJOPEN then
         inst:AddComponent("armor")
-        inst.components.armor:InitCondition(TUNING.ARMORRUINS * 4, 0.8)
+        inst.components.armor:InitCondition(TUNING.BB_DURABILITY, 0.8)
         inst.components.armor.ontakedamage = OnTakeDamage
         inst:AddComponent("trader")
         inst.components.trader:SetAcceptTest(AcceptTest)

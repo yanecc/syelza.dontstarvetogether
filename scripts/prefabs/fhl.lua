@@ -74,7 +74,6 @@ local prefabs = {}
 
 -- 自定义启动项
 local start_inv = {
-    --"fhl_zzj",
     "fhl_bz",
     "fhl_cake",
     "fhl_cy",
@@ -82,7 +81,7 @@ local start_inv = {
 }
 
 
-local function onkilledother(inst, data)
+local function onkillother(inst, data)
     local chance = TUNING.FHL_COS
     local victim = data.victim
     if victim.components.freezable or victim:HasTag("monster") then
@@ -310,7 +309,7 @@ local master_postinit = function(inst)
     inst.components.temperature.inherentinsulation = (TUNING.INSULATION_PER_BEARD_BIT * 0.00)
     --inst.components.health:StartRegen(1,4)
     -- 增加击杀掉落
-    inst:ListenForEvent("killed", onkilledother)
+    inst:ListenForEvent("killed", onkillother)
 
     inst.OnSave = onsave
     inst.OnPreLoad = onpreload
