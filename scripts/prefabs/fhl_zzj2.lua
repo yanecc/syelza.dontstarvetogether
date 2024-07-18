@@ -25,14 +25,11 @@ end
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.finiteuses:GetPercent() < 1 then
         inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.5
-        if inst.components.finiteuses:GetPercent() > 1 then
-            inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
-        end
     elseif item.prefab == "goldnugget" and inst.components.finiteuses:GetPercent() < 1 then
         inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.25
-        if inst.components.finiteuses:GetPercent() > 1 then
-            inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
-        end
+    end
+    if inst.components.finiteuses:GetPercent() > 1 then
+        inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
     end
 end
 
@@ -219,7 +216,6 @@ local function fn()
     inst:AddComponent("equippable")
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(OnUnequip)
-    --inst.components.inventoryitem.keepondeath = true
     inst.components.equippable.walkspeedmult = 1.15
 
     inst:AddComponent("trader")
