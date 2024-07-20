@@ -1,11 +1,9 @@
 local assets =
 {
     Asset("ANIM", "anim/fhl_tree.zip"),
-
     Asset("ATLAS", "images/inventoryimages/fhl_tree.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_tree.tex"),
 }
-
 
 local function fn()
     local inst = CreateEntity()
@@ -19,6 +17,7 @@ local function fn()
 
     inst:AddTag("plant")
     inst:AddTag("cattoy")
+    inst:AddTag("deployedplant")
     inst.AnimState:SetBank("fhl_tree")
     inst.AnimState:SetBuild("fhl_tree")
     inst.AnimState:PlayAnimation("idle")
@@ -43,15 +42,16 @@ local function fn()
     inst.components.tradable.rocktribute = 2
 
     inst:AddComponent("deployable")
-    local function OnDeploy(inst, pt)
+    local function onDeploy(inst, pt)
         local tree = SpawnPrefab("cave_banana_tree")
         if tree then
             tree.Transform:SetPosition(pt.x, pt.y, pt.z)
             inst.components.stackable:Get():Remove()
+            tree.components.pickable:MakeEmpty()
             tree.SoundEmitter:PlaySound("dontstarve/wilson/plant_tree")
         end
     end
-    inst.components.deployable.ondeploy = OnDeploy
+    inst.components.deployable.ondeploy = onDeploy
     inst.components.deployable.mode = DEPLOYMODE.PLANT
     inst.components.deployable.min_spacing = 6
 

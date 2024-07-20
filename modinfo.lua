@@ -58,7 +58,7 @@ configuration_options = {
 
     {
         name = "fhl_levelup_failure_factor",
-        label = "升级失败的计算因子（与失败概率正相关）",
+        label = "升级失败的计算因子(与失败概率正相关)",
         hover = "Probability of levelup failure",
         options = {
             { description = "0",            data = 0 },
@@ -261,5 +261,17 @@ configuration_options = {
         },
 
         default = 0,
+    },
+
+    {
+        name = "skill_tree",
+        label = "技能树开发中功能体验(不建议开启)",
+        hover = "Enable the preview functions about the skill tree?",
+        options = {
+            { description = "no(default)", data = false },
+            { description = "yes",         data = true },
+        },
+
+        default = false,
     }
 }

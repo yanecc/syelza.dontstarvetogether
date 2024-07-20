@@ -51,15 +51,15 @@ if GetModConfigData("fhl_language") == 0 then
     GLOBAL.STRINGS.RECIPE_DESC.BJ_11 = "这是生产工具。"
 
     GLOBAL.STRINGS.NAMES.ANCIENT_GEM = "耀古之晶"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_GEM = "我感受到了上古的气息."
+    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_GEM = "我感受到了上古的气息。"
     GLOBAL.STRINGS.RECIPE_DESC.ANCIENT_GEM = "充斥着澎湃的\n古老的气息"
 
     GLOBAL.STRINGS.NAMES.FHL_TREE = "希雅蕾丝树枝"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_TREE = "我感受到了生命的气息."
+    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_TREE = "我感受到了生命的气息。"
     GLOBAL.STRINGS.RECIPE_DESC.FHL_TREE = "生命之树的枝条\n恩,有股香蕉的味道."
 
     GLOBAL.STRINGS.NAMES.ANCIENT_SOUL = "符文结晶"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "这是符文的结晶."
+    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "这是符文的结晶。"
     GLOBAL.STRINGS.RECIPE_DESC.ANCIENT_SOUL = "这是符文的结晶"
 
     STRINGS.NAMES.FHL_ZZJ = "金芜菁之杖-初阶"
@@ -1154,6 +1154,7 @@ TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn")
 TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
 TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
 TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen")
+TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
 -- 注册图片
 RegisterInventoryItemAtlas("images/inventoryimages/ancient_soul.xml", "ancient_soul.tex")
@@ -1241,6 +1242,51 @@ AddDeconstructRecipe("fhl_x2",
 -- AddDeconstructRecipe("ancient_gem",
 --     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })
 
+-- ----SHOPPING----
+AddRecipe2("gold_exchange", { Ingredient("ancient_soul", 1) }, TECH.NONE,
+    { product = "goldnugget", numtogive = 2, builder_tag = "shopping" })
+AddRecipe2("entree_shroombait", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "shroombait", builder_tag = "shopping" })
+AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "frogfishbowl", builder_tag = "shopping" })
+AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "voltgoatjelly", builder_tag = "shopping" })
+AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "nightmarepie", builder_tag = "shopping" })
+AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "glowberrymousse", builder_tag = "shopping" })
+AddRecipe2("favorite_baconeggs", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "baconeggs", builder_tag = "shopping" })
+AddRecipe2("favorite_banana_cooked", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "cave_banana_cooked", builder_tag = "shopping" })
+AddRecipe2("favorite_hotchili", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "hotchili", builder_tag = "shopping" })
+AddRecipe2("favorite_potato_cooked", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "potato_cooked", builder_tag = "shopping" })
+AddRecipe2("favorite_bananapop", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "bananapop", builder_tag = "shopping" })
+AddRecipe2("favorite_butterflymuffin", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "butterflymuffin", builder_tag = "shopping" })
+AddRecipe2("favorite_surfnturf", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "surfnturf", builder_tag = "shopping" })
+AddRecipe2("favorite_honeynuggets", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "honeynuggets", builder_tag = "shopping" })
+AddRecipe2("favorite_freshfruitcrepes", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "freshfruitcrepes", builder_tag = "shopping" })
+AddRecipe2("favorite_lobsterdinner", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "lobsterdinner", builder_tag = "shopping" })
+AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "turkeydinner", builder_tag = "shopping" })
+AddRecipe2("favorite_icecream", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "icecream", builder_tag = "shopping" })
+AddRecipe2("favorite_vegstinger", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "vegstinger", builder_tag = "shopping" })
+AddRecipe2("favorite_trailmix", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "trailmix", builder_tag = "shopping" })
+AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.NONE,
+    { product = "turkeydinner", builder_tag = "shopping" })
+
+
 -- ----BOOK----
 -- 降低了科技等级，相当于老奶奶
 
@@ -1252,6 +1298,31 @@ AddRecipe2("book_brimstone", { Ingredient("papyrus", 2), Ingredient("redgem", 1)
 
 AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespots", 1) }, TECH.NONE,
     { product = "book_tentacles", builder_tag = "bookbuilder" })
+
+
+local function ReduceFoodHealthPenalty(inst, eater, health)
+    for k, v in pairs(eater.components.inventory.equipslots) do
+        if v and v:HasTag("foodharm_resistant") then
+            return 0
+        end
+    end
+    return health
+end
+if TUNING.SKILL_TREE then
+    AddComponentPostInit("edible", function(self)
+        local oldGetHealth = self.GetHealth
+        self.GetHealth = function(self, eater, ...)
+            local health = oldGetHealth(self, eater, ...)
+            if self.healthvalue < 0 then
+                health = ReduceFoodHealthPenalty(self.inst, eater, health)
+            end
+            return health
+        end
+    end)
+
+    AddCharacterRecipe("fhl_reeds", { Ingredient("cutreeds", 8), Ingredient("ancient_soul", 1) }, TECH.NONE,
+        { product = "dug_monkeytail", numtogive = 2, builder_tag = "fhl", no_deconstruction = true })
+end
 
 -----------创建地图图标和角色基础属性
 AddMinimapAtlas("images/map_icons/fhl.xml")

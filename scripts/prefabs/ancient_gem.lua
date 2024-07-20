@@ -63,13 +63,12 @@ local function fn()
 
     MakeSmallPropagator(inst)
 
-    -- 建造远古祭坛
-    local function OnDeploy(inst, pt)
+    local function onDeploy(inst, pt)
         SpawnPrefab("ancient_altar").Transform:SetPosition(pt.x, pt.y, pt.z)
         inst.components.stackable:Get():Remove()
     end
     inst:AddComponent("deployable")
-    inst.components.deployable.ondeploy = OnDeploy
+    inst.components.deployable.ondeploy = onDeploy
     inst.components.deployable.min_spacing = 8
     inst.components.deployable:SetDeployMode(DEPLOYMODE.DEFAULT)
 

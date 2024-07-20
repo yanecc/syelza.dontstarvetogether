@@ -5,41 +5,45 @@ local assets =
 }
 
 local function OnEquip(inst, owner)
+    inst.components.fueled:StartConsuming()
+    owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
+
     if TUNING.BUFFGO and inst.components.fueled then
-        owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
-        owner.components.health.externalabsorbmodifiers:SetModifier(inst, 0.5)
-        inst.consumefn = function(attacked, data)
-            inst.components.fueled:DoDelta(-0.02 * inst.components.fueled.maxfuel)
+        inst.consumefn = function(owner, data)
+            if data.amount > -1 then return end
+            for k, v in pairs(owner.components.inventory.equipslots) do
+                if v and v:HasTag("hsf_protection") then
+                    local fuelrate = TUNING.SKILL_TREE and 0.01 or 0.02
+                    inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
+                    break
+                end
+            end
         end
+        inst:AddTag("hsf_protection")
         inst:AddTag("bramble_resistant")
-        inst:ListenForEvent("attacked", inst.consumefn, owner)
-        inst.components.fueled:StartConsuming()
-    else
-        owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
-        inst.components.fueled:StartConsuming()
+        inst:AddTag("foodharm_resistant")
+        owner:ListenForEvent("healthdelta", inst.consumefn)
+        owner.components.health.externalabsorbmodifiers:SetModifier(inst, 0.5)
     end
 end
 
 local function OnUnequip(inst, owner)
     if TUNING.BUFFGO and inst.components.fueled then
-        owner.AnimState:ClearOverrideSymbol("swap_hat")
+        owner:RemoveEventCallback("healthdelta", inst.consumefn)
         owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
-        inst.components.fueled:StopConsuming()
-        inst:RemoveEventCallback("attacked", inst.consumefn, owner)
-    else
-        owner.AnimState:ClearOverrideSymbol("swap_hat")
-        inst.components.fueled:StopConsuming()
     end
+
+    inst.components.fueled:StopConsuming()
+    owner.AnimState:ClearOverrideSymbol("swap_hat")
 end
 
 local function OnEquipToModel(inst, owner)
     if TUNING.BUFFGO and inst.components.fueled then
+        owner:RemoveEventCallback("healthdelta", inst.consumefn)
         owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
-        inst.components.fueled:StopConsuming()
-        inst:RemoveEventCallback("attacked", inst.consumefn, owner)
-    else
-        inst.components.fueled:StopConsuming()
     end
+
+    inst.components.fueled:StopConsuming()
 end
 
 local function AcceptTest(inst, item)
@@ -88,9 +92,10 @@ local function fn(Sim)
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_hsf.xml"
 
     inst:AddComponent("fueled")
+    local fuelLevel = TUNING.SKILL_TREE and 10 or 2
     inst.components.fueled.fueltype = FUELTYPE.MAGIC
-    inst.components.fueled:InitializeFuelLevel(TUNING.TOTAL_DAY_TIME * 2)
     inst.components.fueled:SetDepletedFn(inst.Remove)
+    inst.components.fueled:InitializeFuelLevel(fuelLevel * TUNING.TOTAL_DAY_TIME)
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
