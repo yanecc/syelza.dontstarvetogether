@@ -119,7 +119,7 @@ local function fn(Sim)
 
 
     inst:AddComponent("hauntable")
-    if inst and TUNING.HSF_RESPAWN == 1 then
+    if TUNING.HSF_RESPAWN == 1 then
         inst.components.hauntable:SetOnHauntFn(function(inst, haunter)
             if haunter:HasTag("playerghost") then
                 haunter:PushEvent("respawnfromghost", { source = inst })
@@ -136,7 +136,7 @@ local function fn(Sim)
         --         end
         --     end
         --     , true, false, true)
-    elseif inst and TUNING.HSF_RESPAWN == -1 then
+    elseif TUNING.HSF_RESPAWN == -1 then
         inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
     end
 

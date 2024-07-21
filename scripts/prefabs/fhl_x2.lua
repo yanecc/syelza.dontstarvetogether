@@ -11,17 +11,17 @@ local prefabs =
 
 local function OnEat(inst, eater)
     if eater.components.health and eater.components.sanity then
-        local function RestoreBuff()
-            local restore_percent = math.random(5, 15) / 100
+        local function restoreBuff()
+            local restorePercent = math.random(5, 15) / 100
             if eater.components.sanity:GetPercent() < eater.components.health:GetPercent() then
-                eater.components.sanity:DoDelta(math.ceil(eater.components.sanity.max * restore_percent))
+                eater.components.sanity:DoDelta(math.ceil(eater.components.sanity.max * restorePercent))
             else
-                eater.components.health:DoDelta(math.ceil(eater.components.health:GetMaxWithPenalty() * restore_percent))
+                eater.components.health:DoDelta(math.ceil(eater.components.health:GetMaxWithPenalty() * restorePercent))
             end
         end
 
         for i = 1, 10 do
-            inst:DoTaskInTime(2 * i - 1, RestoreBuff)
+            inst:DoTaskInTime(2 * i - 1, restoreBuff)
         end
     end
 end

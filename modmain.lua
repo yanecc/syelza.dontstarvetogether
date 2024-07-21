@@ -1174,8 +1174,8 @@ RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex"
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
 
-AddCharacterRecipe("fhl_zzj", { Ingredient("ancient_soul", 1), Ingredient("goldnugget", 2) }, TECH.NONE,
-    { product = "fhl_zzj", builder_tag = "fhl" })
+AddCharacterRecipe("fhl_zzj", { Ingredient("twigs", 6), Ingredient("ancient_soul", 1), Ingredient("goldnugget", 2) },
+    TECH.NONE, { product = "fhl_zzj", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_zzj1", { Ingredient("fhl_zzj", 1), Ingredient("ancient_soul", 2), Ingredient("goldnugget", 4) },
     TECH.NONE, { product = "fhl_zzj1", builder_tag = "fhl" })
@@ -1218,6 +1218,9 @@ AddCharacterRecipe("fhl_x_2",
 
 AddCharacterRecipe("fhl_cy", { Ingredient("cactus_meat_cooked", 1), Ingredient("ice", 1) }, TECH.NONE,
     { product = "fhl_cy", builder_tag = "fhl" })
+
+AddCharacterRecipe("book_gardening", { Ingredient("papyrus", 2), Ingredient("seeds", 1), Ingredient("poop", 1) },
+    TECH.NONE, { product = "book_gardening", builder_tag = "fhl" })
 
 AddCharacterRecipe("ancient_workstation",
     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("purplegem", 2) },
@@ -1303,7 +1306,7 @@ AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespo
 local function ReduceFoodHealthPenalty(inst, eater, health)
     for k, v in pairs(eater.components.inventory.equipslots) do
         if v and v:HasTag("foodharm_resistant") then
-            return 0
+            return -1
         end
     end
     return health
@@ -1313,7 +1316,7 @@ if TUNING.SKILL_TREE then
         local oldGetHealth = self.GetHealth
         self.GetHealth = function(self, eater, ...)
             local health = oldGetHealth(self, eater, ...)
-            if self.healthvalue < 0 then
+            if self.healthvalue < -1 then
                 health = ReduceFoodHealthPenalty(self.inst, eater, health)
             end
             return health
