@@ -70,16 +70,35 @@ local assets = {
     Asset("ANIM", "anim/fhl.zip"),
     Asset("ANIM", "anim/ghost_fhl_build.zip"),
 }
-local prefabs = {}
+
+local prefabs = {
+    "fhl_bz",
+    "fhl_cake",
+    "fhl_cy",
+    "bj_11",
+
+    "dragonpie",
+    "dragonfruit",
+    "dragonfruit_cooked",
+    "dragonchilisalad",
+
+    "berries",
+    "berries_cooked",
+    "berries_juicy",
+    "berries_juicy_cooked",
+
+    "powcake"
+}
 
 -- 自定义启动项
 local start_inv = {
     "fhl_bz",
     "fhl_cake",
     "fhl_cy",
-    "bj_11",
+    "bj_11"
 }
 
+prefabs =
 
 local function onkillother(inst, data)
     local chance = TUNING.FHL_COS
@@ -284,6 +303,7 @@ local master_postinit = function(inst)
     inst.level = 0
     inst.jnd = 0
     inst.je = 0
+    inst.starting_inventory = start_inv
     inst.components.eater:SetOnEatFn(oneat)
     applyupgrades(inst)
 
@@ -317,4 +337,4 @@ local master_postinit = function(inst)
     inst.OnNewSpawn = onload
 end
 
-return MakePlayerCharacter("fhl", prefabs, assets, common_postinit, master_postinit, start_inv)
+return MakePlayerCharacter("fhl", prefabs, assets, common_postinit, master_postinit)
