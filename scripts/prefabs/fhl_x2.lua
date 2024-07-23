@@ -7,24 +7,27 @@ local Assets =
 local prefabs =
 {
     "fhl_x",
+    "buff_x2",
+    "spoiled_food",
 }
 
-local function OnEat(inst, eater)
-    if eater.components.health and eater.components.sanity then
-        local function restoreBuff()
-            local restorePercent = math.random(5, 15) / 100
-            if eater.components.sanity:GetPercent() < eater.components.health:GetPercent() then
-                eater.components.sanity:DoDelta(math.ceil(eater.components.sanity.max * restorePercent))
-            else
-                eater.components.health:DoDelta(math.ceil(eater.components.health:GetMaxWithPenalty() * restorePercent))
-            end
-        end
+-- It's good, but will stop for a logout
+-- local function OnEat(inst, eater)
+--     if eater.components.health and eater.components.sanity then
+--         local function restoreBuff()
+--             local restorePercent = math.random(5, 15) / 100
+--             if eater.components.sanity:GetPercent() < eater.components.health:GetPercent() then
+--                 eater.components.sanity:DoDelta(math.ceil(eater.components.sanity.max * restorePercent))
+--             else
+--                 eater.components.health:DoDelta(math.ceil(eater.components.health:GetMaxWithPenalty() * restorePercent))
+--             end
+--         end
 
-        for i = 1, 10 do
-            inst:DoTaskInTime(2 * i - 1, restoreBuff)
-        end
-    end
-end
+--         for i = 1, 10 do
+--             inst:DoTaskInTime(2 * i - 1, restoreBuff)
+--         end
+--     end
+-- end
 
 local function fn(Sim)
     local inst = CreateEntity()
@@ -58,7 +61,13 @@ local function fn(Sim)
     inst.components.edible.healthvalue = 0
     inst.components.edible.hungervalue = 40
     inst.components.edible.sanityvalue = 0
-    inst.components.edible:SetOnEatenFn(OnEat)
+    inst.components.edible.oneaten = function(inst, eater)
+        if eater.components.debuffable and eater.components.debuffable:IsEnabled() and
+            not (eater.components.health and eater.components.health:IsDead()) and
+            not eater:HasTag("playerghost") then
+            eater:AddDebuff("buff_x2", "buff_x2")
+        end
+    end
 
     inst:AddComponent("inspectable")
 

@@ -39,6 +39,7 @@ PrefabFiles = {
     "fhl_tree",
     --"krampus_sack",
     "fhl_bb",
+    "buff_x2",
 }
 
 

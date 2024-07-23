@@ -98,8 +98,6 @@ local start_inv = {
     "bj_11"
 }
 
-prefabs =
-
 local function onkillother(inst, data)
     local chance = TUNING.FHL_COS
     local victim = data.victim

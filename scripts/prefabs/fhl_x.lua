@@ -6,8 +6,8 @@ local Assets =
 
 local prefabs =
 {
-    "spoiled_food",
     "fhl_x2",
+    "spoiled_food"
 }
 
 local function OnFullMoon(inst)
