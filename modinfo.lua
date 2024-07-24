@@ -31,6 +31,54 @@ configuration_options = {
     },
 
     {
+        name = "status_key",
+        label = "查看当前状态的按键",
+        hover = "The key to check current status",
+        options = {
+            { description = "B", data = "KEY_B" },
+            { description = "G", data = "KEY_G" },
+            { description = "H", data = "KEY_H" },
+            { description = "J", data = "KEY_J" },
+            { description = "K", data = "KEY_K" },
+            { description = "L", data = "KEY_L" },
+            { description = "N", data = "KEY_N" },
+            { description = "O", data = "KEY_O" },
+            { description = "P", data = "KEY_P" },
+            { description = "R", data = "KEY_R" },
+            { description = "T", data = "KEY_T" },
+            { description = "V", data = "KEY_V" },
+            { description = "X", data = "KEY_X" },
+            { description = "Z", data = "KEY_Z" },
+        },
+
+        default = "KEY_T",
+    },
+
+    {
+        name = "skill_point_key",
+        label = "查看当前技能点的按键",
+        hover = "The key to show available skill points",
+        options = {
+            { description = "B", data = "KEY_B" },
+            { description = "G", data = "KEY_G" },
+            { description = "H", data = "KEY_H" },
+            { description = "J", data = "KEY_J" },
+            { description = "K", data = "KEY_K" },
+            { description = "L", data = "KEY_L" },
+            { description = "N", data = "KEY_N" },
+            { description = "O", data = "KEY_O" },
+            { description = "P", data = "KEY_P" },
+            { description = "R", data = "KEY_R" },
+            { description = "T", data = "KEY_T" },
+            { description = "V", data = "KEY_V" },
+            { description = "X", data = "KEY_X" },
+            { description = "Z", data = "KEY_Z" },
+        },
+
+        default = "KEY_R",
+    },
+
+    {
         name = "fhl_jgeat",
         label = "吃浆果升级功能",
         hover = "Eating berry upgrade function",

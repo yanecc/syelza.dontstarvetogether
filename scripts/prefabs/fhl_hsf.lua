@@ -64,6 +64,17 @@ local function OnGetItem(inst, giver, item)
     end
 end
 
+local function UpdateLightState(inst)
+    if not inst.components.container:IsEmpty() then
+        local item = inst.components.container:GetItemInSlot(1)
+        if item.prefab == "horrorfuel" then
+            inst.components.equippable.dapperness = -1
+        end
+    else
+        inst.components.equippable.dapperness = 1
+    end
+end
+
 local function fn(Sim)
     local inst = CreateEntity()
 
@@ -83,6 +94,9 @@ local function fn(Sim)
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
+        inst.OnEntityReplicated = function(inst)
+            inst.replica.container:WidgetSetup("hsf_addon")
+        end
         return inst
     end
 
@@ -96,6 +110,10 @@ local function fn(Sim)
     inst.components.fueled.fueltype = FUELTYPE.MAGIC
     inst.components.fueled:SetDepletedFn(inst.Remove)
     inst.components.fueled:InitializeFuelLevel(fuelLevel * TUNING.TOTAL_DAY_TIME)
+
+    inst:AddComponent("container")
+    inst.components.container:WidgetSetup("hsf_addon")
+    inst.components.container.acceptsstacks = false
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
@@ -139,6 +157,9 @@ local function fn(Sim)
     elseif TUNING.HSF_RESPAWN == -1 then
         inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
     end
+
+    inst:ListenForEvent("itemget", UpdateLightState)
+    inst:ListenForEvent("itemlose", UpdateLightState)
 
     return inst
 end

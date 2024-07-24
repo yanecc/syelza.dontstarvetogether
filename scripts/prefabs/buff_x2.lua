@@ -32,7 +32,7 @@ end
 
 local function OnExtended(inst, target)
     inst.components.timer:StopTimer("x2buffover")
-    inst.components.timer:StartTimer("x2buffover", 21)
+    inst.components.timer:StartTimer("x2buffover", 20)
     inst.task:Cancel()
     inst.task = inst:DoPeriodicTask(2, OnTick, nil, target)
 end
@@ -63,7 +63,7 @@ local function fn()
     inst.components.debuff.keepondespawn = true
 
     inst:AddComponent("timer")
-    inst.components.timer:StartTimer("x2buffover", 21)
+    inst.components.timer:StartTimer("x2buffover", 20) -- 9-10 times
     inst:ListenForEvent("timerdone", OnTimerDone)
 
     return inst

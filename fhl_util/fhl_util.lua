@@ -2,7 +2,36 @@ local ThePlayer = GLOBAL.ThePlayer
 local TheInput = GLOBAL.TheInput
 local TheNet = GLOBAL.TheNet
 
-local KEY_T = GLOBAL.KEY_T
+local MajorKey = {
+    KEY_A = 97,
+    KEY_B = 98,
+    KEY_C = 99,
+    KEY_D = 100,
+    KEY_E = 101,
+    KEY_F = 102,
+    KEY_G = 103,
+    KEY_H = 104,
+    KEY_I = 105,
+    KEY_J = 106,
+    KEY_K = 107,
+    KEY_L = 108,
+    KEY_M = 109,
+    KEY_N = 110,
+    KEY_O = 111,
+    KEY_P = 112,
+    KEY_Q = 113,
+    KEY_R = 114,
+    KEY_S = 115,
+    KEY_T = 116,
+    KEY_U = 117,
+    KEY_V = 118,
+    KEY_W = 119,
+    KEY_X = 120,
+    KEY_Y = 121,
+    KEY_Z = 122,
+}
+
+-- local KEY_T = GLOBAL.KEY_T
 AddModRPCHandler(modname, "T", function(player)
     if not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.level > 10 then player.level = 10 end
@@ -95,7 +124,7 @@ AddModRPCHandler(modname, "RIGHT", function(player)
     end
 end)
 
-local KEY_R = GLOBAL.KEY_R
+-- local KEY_R = GLOBAL.KEY_R
 AddModRPCHandler(modname, "R", function(player)
     if not player:HasTag("playerghost") and player.prefab == "fhl" then
         player.components.talker:Say("你还有" .. (player.jnd) .. "点技能点!" ..
@@ -115,7 +144,7 @@ AddPlayerPostInit(function(inst)
             -- If we are horo
             if inst.prefab == "fhl" then
                 -- We create and store the key handlers
-                fhl_handlers[0] = TheInput:AddKeyDownHandler(KEY_T, function()
+                fhl_handlers[0] = TheInput:AddKeyDownHandler(MajorKey[TUNING.STATUS_KEY], function()
                     SendModRPCToServer(MOD_RPC[modname]["T"])
                 end)
                 fhl_handlers[1] = TheInput:AddKeyDownHandler(KEY_UP, function()
@@ -130,7 +159,7 @@ AddPlayerPostInit(function(inst)
                 fhl_handlers[4] = TheInput:AddKeyDownHandler(KEY_RIGHT, function()
                     SendModRPCToServer(MOD_RPC[modname]["RIGHT"])
                 end)
-                fhl_handlers[5] = TheInput:AddKeyDownHandler(KEY_R, function()
+                fhl_handlers[5] = TheInput:AddKeyDownHandler(MajorKey[TUNING.SKILL_POINT_KEY], function()
                     SendModRPCToServer(MOD_RPC[modname]["R"])
                 end)
             else

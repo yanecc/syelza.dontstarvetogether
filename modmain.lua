@@ -12,6 +12,7 @@ local ThePlayer = GLOBAL.ThePlayer
 local IsServer = GLOBAL.TheNet:GetIsServer()
 local containers = require("containers")
 local TheInput = GLOBAL.TheInput
+local Vector3 = GLOBAL.Vector3
 
 
 modimport("fhl_util/fhl_util.lua")
@@ -320,8 +321,53 @@ Assets = {
 --inst:AddComponent("tradable")
 --end end
 
-------------------box
 
+local params = {}
+local containers_widgetsetup_base = containers.widgetsetup
+function containers.widgetsetup(container, prefab, data, ...)
+    local t = params[prefab or container.inst.prefab]
+    if t ~= nil then
+        for k, v in pairs(t) do
+            container[k] = v
+        end
+        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
+    else
+        containers_widgetsetup_base(container, prefab, data, ...)
+    end
+end
+
+local function hsfAddOn()
+    local container =
+    {
+        widget =
+        {
+            slotpos = {
+                Vector3(-2, 18, 0),
+            },
+            animbank = "ui_alterguardianhat_1x1",
+            animbuild = "ui_alterguardianhat_1x1",
+            pos = Vector3(0, 160, 0),
+        },
+        acceptsstacks = false,
+        type = "chest",
+        itemtestfn = function(container, item, slot)
+            return item.prefab == "horrorfuel" or item.prefab == "purebrilliance" or item.prefab == "ancient_soul"
+        end
+    }
+    return container
+end
+
+params.hsf_addon = hsfAddOn()
+
+-- function params.hsf_addon.itemtestfn(container, item, slot)
+--     return item.prefab == "horrorfuel" or item.prefab == "purebrilliance" or item.prefab == "ancient_soul"
+-- end
+
+for k, v in pairs(params) do
+    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
+end
+
+------------------box
 
 local oldwidgetsetup = containers.widgetsetup
 containers.widgetsetup = function(container, prefab)
@@ -1131,6 +1177,9 @@ end)
 
 
 TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
+
+TUNING.STATUS_KEY = GetModConfigData("status_key")
+TUNING.SKILL_POINT_KEY = GetModConfigData("skill_point_key")
 
 TUNING.GJBL = GetModConfigData("zzj_gjbl")
 TUNING.JGEAT = GetModConfigData("fhl_jgeat")
