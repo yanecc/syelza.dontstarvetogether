@@ -348,8 +348,9 @@ local function hsfAddOn()
             animbuild = "ui_alterguardianhat_1x1",
             pos = Vector3(0, 160, 0),
         },
-        acceptsstacks = false,
         type = "chest",
+        acceptsstacks = false,
+        excludefromcrafting = true,
         itemtestfn = function(container, item, slot)
             return item.prefab == "horrorfuel" or item.prefab == "purebrilliance" or item.prefab == "ancient_soul"
         end
@@ -358,10 +359,6 @@ local function hsfAddOn()
 end
 
 params.hsf_addon = hsfAddOn()
-
--- function params.hsf_addon.itemtestfn(container, item, slot)
---     return item.prefab == "horrorfuel" or item.prefab == "purebrilliance" or item.prefab == "ancient_soul"
--- end
 
 for k, v in pairs(params) do
     containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
@@ -405,7 +402,7 @@ local function frostsmall()
             slotpos = {},
             animbank = "ui_backpack_2x4",
             animbuild = "ui_chest_frosthammer",
-            pos = GLOBAL.Vector3(-5, 100, 0),
+            pos = Vector3(-5, 100, 0),
             side_align_tip = 160,
         },
         issidewidget = true,
@@ -413,7 +410,7 @@ local function frostsmall()
     }
 
     for y = 0, 1 do
-        table.insert(container.widget.slotpos, GLOBAL.Vector3(-126, -y * 75 + 114, -126 + 75, -y * 75 + 114))
+        table.insert(container.widget.slotpos, Vector3(-126, -y * 75 + 114, -126 + 75, -y * 75 + 114))
     end
     return container
 end
@@ -471,15 +468,15 @@ local function frostbox()
             slotpos = {},
             animbank = "ui_backpack_2x4",
             animbuild = "ui_chest_frosthammer2",
-            pos = GLOBAL.Vector3(-5, -70, 0),
+            pos = Vector3(-5, -70, 0),
             side_align_tip = 160,
         },
         issidewidget = true,
         type = "pack",
     }
     for y = 0, 4 do
-        table.insert(container.widget.slotpos, GLOBAL.Vector3(-162, -y * 58 + 124, 0))
-        table.insert(container.widget.slotpos, GLOBAL.Vector3(-162 + 75, -y * 58 + 124, 0))
+        table.insert(container.widget.slotpos, Vector3(-162, -y * 58 + 124, 0))
+        table.insert(container.widget.slotpos, Vector3(-162 + 75, -y * 58 + 124, 0))
     end
     return container
 end
@@ -538,13 +535,13 @@ local function chest_yamche0()
             slotpos = {},
             animbank = "ui_chest_3x2",
             animbuild = "ui_chest_yamche0",
-            pos = GLOBAL.Vector3(0, 200, 0),
+            pos = Vector3(0, 200, 0),
             side_align_tip = 160,
         },
         type = "chest",
     }
     for y = 1, 0, -1 do
-        table.insert(container.widget.slotpos, GLOBAL.Vector3(74 * y - 74 * 2 + 70, 0))
+        table.insert(container.widget.slotpos, Vector3(74 * y - 74 * 2 + 70, 0))
     end
     return container
 end
@@ -597,14 +594,14 @@ local function chest_yamche1()
             slotpos = {},
             animbank = "ui_chest_3x3",
             animbuild = "ui_chest_yamche1",
-            pos = GLOBAL.Vector3(0, 200, 0),
+            pos = Vector3(0, 200, 0),
             side_align_tip = 160,
         },
         type = "chest",
     }
     for y = 1, 0, -1 do
         for x = 0, 1 do
-            table.insert(container.widget.slotpos, GLOBAL.Vector3(80 * x - 80 * 2 + 78, 80 * y - 80 * 2 + 80, 0))
+            table.insert(container.widget.slotpos, Vector3(80 * x - 80 * 2 + 78, 80 * y - 80 * 2 + 80, 0))
         end
     end
     return container
@@ -658,7 +655,7 @@ local function chest_yamche2()
             slotpos = {},
             animbank = "ui_chest_3x3",
             animbuild = "ui_chest_yamche2",
-            pos = GLOBAL.Vector3(0, 200, 0),
+            pos = Vector3(0, 200, 0),
             side_align_tip = 160,
         },
         type = "chest",
@@ -666,7 +663,7 @@ local function chest_yamche2()
 
     for y = 2, 0, -1 do
         for x = 0, 1 do
-            table.insert(container.widget.slotpos, GLOBAL.Vector3(80 * x - 80 * 2 + 78, 80 * y - 80 * 2 + 80, 0))
+            table.insert(container.widget.slotpos, Vector3(80 * x - 80 * 2 + 78, 80 * y - 80 * 2 + 80, 0))
         end
     end
     return container
@@ -720,14 +717,14 @@ local function chest_yamche4()
             slotpos = {},
             animbank = "ui_chest_3x3",
             animbuild = "ui_chest_3x3",
-            pos = GLOBAL.Vector3(0, 200, 0),
+            pos = Vector3(0, 200, 0),
             side_align_tip = 160,
         },
         type = "chest",
     }
     for y = 3, 0, -1 do
         for x = 0, 2 do
-            table.insert(container.widget.slotpos, GLOBAL.Vector3(75 * x - 75 * 2 + 75, 60 * y - 60 * 2 + 32, 0))
+            table.insert(container.widget.slotpos, Vector3(75 * x - 75 * 2 + 75, 60 * y - 60 * 2 + 32, 0))
         end
     end
     return container
@@ -781,14 +778,14 @@ local function chest_yamche5()
             slotpos = {},
             animbank = "ui_chest_3x3",
             animbuild = "ui_chest_3x3",
-            pos = GLOBAL.Vector3(0, 200, 0),
+            pos = Vector3(0, 200, 0),
             side_align_tip = 160,
         },
         type = "chest",
     }
     for y = 3, 0, -1 do
         for x = 0, 3 do
-            table.insert(container.widget.slotpos, GLOBAL.Vector3(60 * x - 60 * 2 + 30, 60 * y - 60 * 2 + 30, 0))
+            table.insert(container.widget.slotpos, Vector3(60 * x - 60 * 2 + 30, 60 * y - 60 * 2 + 30, 0))
         end
     end
     return container
@@ -844,14 +841,14 @@ local function chest_yamche6()
             slotpos = {},
             animbank = "ui_chest_3x3",
             animbuild = "", --"ui_chest_moon",
-            pos = GLOBAL.Vector3(0, 200, 0),
+            pos = Vector3(0, 200, 0),
             side_align_tip = 160,
         },
         type = "chest",
     }
     for y = 5, 0, -1 do
         for x = 0, 14 do
-            table.insert(container.widget.slotpos, GLOBAL.Vector3(60 * x - 60 * 2 + -150, 60 * y - 60 * 2 + 10, 0))
+            table.insert(container.widget.slotpos, Vector3(60 * x - 60 * 2 + -150, 60 * y - 60 * 2 + 10, 0))
         end
     end
     return container
@@ -1296,8 +1293,8 @@ AddDeconstructRecipe("fhl_x2",
 --     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })
 
 -- ----SHOPPING----
-AddRecipe2("gold_exchange", { Ingredient("ancient_soul", 1) }, TECH.NONE,
-    { product = "goldnugget", numtogive = 2, builder_tag = "shopping" })
+AddRecipe2("gold_exchange", { Ingredient("goldnugget", 3) }, TECH.NONE,
+    { product = "ancient_soul", numtogive = 1, builder_tag = "shopping" })
 AddRecipe2("entree_shroombait", { Ingredient("goldnugget", 1) }, TECH.NONE,
     { product = "shroombait", builder_tag = "shopping" })
 AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 1) }, TECH.NONE,
@@ -1352,6 +1349,24 @@ AddRecipe2("book_brimstone", { Ingredient("papyrus", 2), Ingredient("redgem", 1)
 AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespots", 1) }, TECH.NONE,
     { product = "book_tentacles", builder_tag = "bookbuilder" })
 
+local function ReedsBonus(inst)
+    if not inst.components.pickable then return end
+    inst.components.pickable.onpickedfn = function(inst, picker)
+        inst.SoundEmitter:PlaySound("dontstarve/wilson/pickup_reeds")
+        inst.AnimState:PlayAnimation("picking")
+
+        if inst.components.pickable:IsBarren() then
+            inst.AnimState:PushAnimation("empty_to_dead")
+            inst.AnimState:PushAnimation("idle_dead", false)
+        else
+            inst.AnimState:PushAnimation("picked", false)
+        end
+
+        if picker.components.inventory and picker:HasTag("fhl") and math.random() < 0.5 then
+            picker.components.inventory:GiveItem(GLOBAL.SpawnPrefab("cutreeds"))
+        end
+    end
+end
 
 local function ReduceFoodHealthPenalty(inst, eater, health)
     for k, v in pairs(eater.components.inventory.equipslots) do
@@ -1362,6 +1377,8 @@ local function ReduceFoodHealthPenalty(inst, eater, health)
     return health
 end
 if TUNING.SKILL_TREE then
+    -- AddPrefabPostInit("reeds", ReedsBonus)
+    -- AddPrefabPostInit("monkeytail", ReedsBonus)
     AddComponentPostInit("edible", function(self)
         local oldGetHealth = self.GetHealth
         self.GetHealth = function(self, eater, ...)

@@ -16,6 +16,7 @@ local function AcceptTest(inst, item)
         local owner = item.components.inventoryitem:GetGrandOwner()
         owner.components.talker:Say("qwq这个无法用来修复背包哦!\nThis can't be used to repairing the backpack!")
     end
+    return false
 end
 
 local function OnGetItemFromPlayer(inst, giver, item)
@@ -85,9 +86,9 @@ local function fn()
 
     --inst.foleysound = "dontstarve/movement/foley/krampuspack"
 
-    inst:AddTag("backpack")
-    inst:AddTag("fridge")
     inst:AddTag("trader")
+    inst:AddTag("fridge")
+    inst:AddTag("backpack")
 
     --waterproofer (from waterproofer component) added to pristine state for optimization
     inst:AddTag("waterproofer")

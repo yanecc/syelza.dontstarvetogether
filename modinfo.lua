@@ -124,15 +124,16 @@ configuration_options = {
         label = "符文结晶爆率",
         hover = "Drop probability of The Ancient soul",
         options = {
-            { description = "0",           data = 0 },
-            { description = "1%",          data = 0.01 },
-            { description = "5%(default)", data = 0.05 },
-            { description = "10%",         data = 0.1 },
-            { description = "20%",         data = 0.2 },
-            { description = "30%",         data = 0.3 },
+            { description = "0",            data = 0 },
+            { description = "5%",           data = 0.05 },
+            { description = "10%(default)", data = 0.1 },
+            { description = "20%",          data = 0.2 },
+            { description = "30%",          data = 0.3 },
+            { description = "40%",          data = 0.4 },
+            { description = "50%",          data = 0.5 },
         },
 
-        default = 0.05,
+        default = 0.1,
     },
 
     {

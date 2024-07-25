@@ -83,8 +83,9 @@ local function SpawnIceFx(inst, target)
                     if v and v.components.health and not v.components.health:IsDead() and v.components.combat and
                         v ~= inst and
                         not (v.components.follower and v.components.follower.leader == inst) and
-                        (TheNet:GetPVPEnabled() or not v:HasTag("player"))
-                    then
+                        (TheNet:GetPVPEnabled() or not v:HasTag("player")) and
+                        --检查实体是否在玩家的背包或物品栏中，如果是，则跳过攻击
+                        not (v.components.inventoryitem and v.components.inventoryitem:GetGrandOwner() == inst) then
                         v.components.combat:GetAttacked(inst, dmg)
 
                         if v.components.freezable then

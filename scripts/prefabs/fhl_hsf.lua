@@ -46,34 +46,58 @@ local function OnEquipToModel(inst, owner)
     inst.components.fueled:StopConsuming()
 end
 
-local function AcceptTest(inst, item)
-    if item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 1 then
-        return true
-    elseif inst.components.fueled:GetPercent() == 1 then
-        local owner = item.components.inventoryitem:GetGrandOwner()
-        owner.components.talker:Say("Durability is full!")
-    else
-        local owner = item.components.inventoryitem:GetGrandOwner()
-        owner.components.talker:Say("qwq!\nThis can't be used to repairing the amulet!")
-    end
-end
+-- local function OnDepleted(inst)
+--     if inst.components.container:IsEmpty() then
+--         inst:Remove()
+--     else
+--         local item = inst.components.container:GetItemInSlot(1)
+--         if item.prefab == "ancient_soul" then
+--             inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
+--             item:Remove()
+--         else
+--             inst.components.container:DropEverything()
+--             inst:Remove()
+--         end
+--     end
+-- end
 
-local function OnGetItem(inst, giver, item)
-    if item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 1 then
-        inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
-    end
-end
+-- local function UpdateHSFAddon(inst)
+--     if inst.components.container:IsEmpty() then
+--         inst.components.equippable.dapperness = 1
+--         inst.components.planardefense:SetBaseDefense(0)
+--     else
+--         local item = inst.components.container:GetItemInSlot(1)
+--         if item.prefab == "horrorfuel" then
+--             inst.components.equippable.dapperness = -2
+--         elseif item.prefab == "purebrilliance" then
+--             inst.components.planardefense:SetBaseDefense(20)
+--         elseif item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 0.99 then
+--             inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
+--             item:Remove()
+--         else
+--             local owner = item.components.inventoryitem:GetGrandOwner()
+--             owner.components.talker:Say("Durability is full!")
+--         end
+--     end
+-- end
 
-local function UpdateLightState(inst)
-    if not inst.components.container:IsEmpty() then
-        local item = inst.components.container:GetItemInSlot(1)
-        if item.prefab == "horrorfuel" then
-            inst.components.equippable.dapperness = -1
-        end
-    else
-        inst.components.equippable.dapperness = 1
-    end
-end
+-- local function AcceptTest(inst, item)
+--     if item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 1 then
+--         return true
+--     elseif inst.components.fueled:GetPercent() == 1 then
+--         local owner = item.components.inventoryitem:GetGrandOwner()
+--         owner.components.talker:Say("Durability is full!")
+--     else
+--         local owner = item.components.inventoryitem:GetGrandOwner()
+--         owner.components.talker:Say("qwq!\nThis can't be used to repairing the amulet!")
+--     end
+-- end
+
+-- local function OnGetItem(inst, giver, item)
+--     if item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 1 then
+--         inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
+--     end
+-- end
 
 local function fn(Sim)
     local inst = CreateEntity()
@@ -89,7 +113,7 @@ local function fn(Sim)
     inst.AnimState:PlayAnimation("idel")
 
     inst:AddTag("sharp")
-    inst:AddTag("trader")
+    -- inst:AddTag("trader")
     inst:AddComponent("inspectable")
 
     inst.entity:SetPristine()
@@ -111,10 +135,6 @@ local function fn(Sim)
     inst.components.fueled:SetDepletedFn(inst.Remove)
     inst.components.fueled:InitializeFuelLevel(fuelLevel * TUNING.TOTAL_DAY_TIME)
 
-    inst:AddComponent("container")
-    inst.components.container:WidgetSetup("hsf_addon")
-    inst.components.container.acceptsstacks = false
-
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
     inst.components.equippable.dapperness = 1
@@ -123,9 +143,11 @@ local function fn(Sim)
     inst.components.equippable:SetOnUnequip(OnUnequip)
     inst.components.equippable:SetOnEquipToModel(OnEquipToModel)
 
-    inst:AddComponent("trader")
-    inst.components.trader:SetAcceptTest(AcceptTest)
-    inst.components.trader.onaccept = OnGetItem
+    inst:AddComponent("planardefense")
+
+    -- inst:AddComponent("trader")
+    -- inst.components.trader:SetAcceptTest(AcceptTest)
+    -- inst.components.trader.onaccept = OnGetItem
 
     -- inst:AddComponent("armor")
     -- inst.components.armor:InitCondition(TUNING.ARMORBRAMBLE * 2, 0.5) -- 1050
@@ -158,8 +180,12 @@ local function fn(Sim)
         inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
     end
 
-    inst:ListenForEvent("itemget", UpdateLightState)
-    inst:ListenForEvent("itemlose", UpdateLightState)
+    inst:AddComponent("container")
+    inst.components.container:WidgetSetup("hsf_addon")
+    inst.components.container.acceptsstacks = false
+
+    inst:ListenForEvent("itemget", UpdateHSFAddon)
+    inst:ListenForEvent("itemlose", UpdateHSFAddon)
 
     return inst
 end

@@ -99,15 +99,14 @@ local start_inv = {
 }
 
 local function onkillother(inst, data)
-    local chance = TUNING.FHL_COS
     local victim = data.victim
-    if victim.components.freezable or victim:HasTag("monster") then
-        if math.random() < chance then
-            if victim.components.lootdropper then
-                victim.components.lootdropper:SpawnLootPrefab("ancient_soul")
-            end
-        end
-    end
+    if not victim.components.lootdropper then return end
+    -- if victim.components.freezable or victim:HasTag("monster") then
+    -- if victim:HasTag("monster") or victim:HasTag("hostile") or victim:HasTag("scarytoprey") then
+    --     if victim:HasTag("epic") or math.random() < TUNING.FHL_COS then
+    --         victim.components.lootdropper:SpawnLootPrefab("ancient_soul")
+    --     end
+    -- end
 end
 
 
@@ -325,6 +324,7 @@ local master_postinit = function(inst)
     inst.components.combat.damagemultiplier = 1.00
     inst.components.hunger.hungerrate = (TUNING.WILSON_HUNGER_RATE * 1.00)
     inst.components.temperature.inherentinsulation = (TUNING.INSULATION_PER_BEARD_BIT * 0.00)
+
     --inst.components.health:StartRegen(1,4)
     -- 增加击杀掉落
     inst:ListenForEvent("killed", onkillother)

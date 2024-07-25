@@ -34,14 +34,9 @@ local function fn()
 		return inst
 	end
 
-	--inst:AddComponent("edible")
-	--inst.components.edible.foodtype = "ELEMENTAL"
-	--inst.components.edible.hungervalue = 2
 	inst:AddComponent("tradable")
-
-	inst:AddComponent("inspectable")
-
 	inst:AddComponent("stackable")
+	inst:AddComponent("inspectable")
 	inst:AddComponent("inventoryitem")
 	inst.components.inventoryitem.atlasname = "images/inventoryimages/ancient_soul.xml"
 
