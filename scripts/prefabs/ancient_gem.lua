@@ -38,8 +38,8 @@ local function fn()
     inst.components.edible.foodtype = "ELEMENTAL"
     inst.components.edible.hungervalue = 2
     inst:AddComponent("tradable")
-    inst.components.tradable.goldvalue = 8
-    inst.components.tradable.rocktribute = 8
+    inst.components.tradable.goldvalue = 9   -- 9金块
+    inst.components.tradable.rocktribute = 9 -- 3天
 
     inst:AddComponent("inspectable")
     inst:AddComponent("burnable")

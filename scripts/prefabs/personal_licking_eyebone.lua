@@ -149,12 +149,17 @@ local function Fixlicking(inst)
     end
 end
 
-local function OnPutInInventory(inst)
+local function OnPickUp(inst)
     if inst.fixtask == nil then
         inst.fixtask = inst:DoTaskInTime(1, Fixlicking)
     end
+    -- 仅在物品栏中有效，放入背包或箱子不行
+    if inst.components.inventoryitem:IsHeldBy(inst.owner) then
+        inst.owner:AddTag("bellholder")
+    else
+        inst.owner:RemoveTag("bellholder")
+    end
 end
-
 
 local function OnSave(inst, data)
     if inst.respawntime ~= nil then
@@ -219,7 +224,9 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/licking_eyebone.xml"
     inst.components.inventoryitem:ChangeImageName("licking_eyebone")
-    inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)
+    inst.components.inventoryitem:SetOnPickupFn(OnPickUp)
+    inst.components.inventoryitem:SetOnPutInInventoryFn(OnPickUp)
+    inst.components.inventoryitem:SetOnDroppedFn(function(inst) inst.owner:RemoveTag("bellholder") end)
 
     inst.EyeboneState = "NORMAL"
     inst.openEye = "licking_eyebone"

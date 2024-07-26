@@ -38,8 +38,8 @@ local function fn()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("tradable")
-    inst.components.tradable.goldvalue = 3
-    inst.components.tradable.rocktribute = 2
+    inst.components.tradable.goldvalue = 3   -- 3金块
+    inst.components.tradable.rocktribute = 3 -- 1天
 
     inst:AddComponent("deployable")
     local function onDeploy(inst, pt)

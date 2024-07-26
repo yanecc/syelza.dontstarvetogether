@@ -20,8 +20,6 @@ local assets =
 local prefabs =
 {
     "personal_licking_eyebone",
-    --"chesterlight",
-    --"chester_transform_fx",
 }
 
 local sounds =
@@ -231,9 +229,10 @@ local function create_licking()
 
     inst:AddTag("companion")
     inst:AddTag("character")
+    inst:AddTag("prototyper")
     inst:AddTag("scarytoprey")
-    inst:AddTag("personal_licking")
     inst:AddTag("notraptrigger")
+    inst:AddTag("personal_licking")
 
     inst:AddTag("_named")
 
@@ -297,6 +296,9 @@ local function create_licking()
 
     --print("   knownlocations")
     inst:AddComponent("knownlocations")
+
+    inst:AddComponent("prototyper")
+    inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
 
     --print("   burnable")
     MakeSmallBurnableCharacter(inst, "licking_body")

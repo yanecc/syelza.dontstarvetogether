@@ -128,9 +128,7 @@ configuration_options = {
             { description = "5%",           data = 0.05 },
             { description = "10%(default)", data = 0.1 },
             { description = "20%",          data = 0.2 },
-            { description = "30%",          data = 0.3 },
             { description = "40%",          data = 0.4 },
-            { description = "50%",          data = 0.5 },
         },
 
         default = 0.1,

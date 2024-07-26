@@ -5,6 +5,7 @@ local Ingredient = GLOBAL.Ingredient
 local RECIPETABS = GLOBAL.RECIPETABS
 local Recipe = GLOBAL.Recipe
 local TECH = GLOBAL.TECH
+local TechTree = require("techtree")
 local ACTIONS = GLOBAL.ACTIONS
 local TheNet = GLOBAL.TheNet
 local next = GLOBAL.next
@@ -316,12 +317,8 @@ Assets = {
     Asset("IMAGE", "images/inventoryimages/fhltab.tex"),
 }
 
---function Addtradableprefab(inst)
---if not inst.components.tradable then
---inst:AddComponent("tradable")
---end end
 
-
+------------------box
 local params = {}
 local containers_widgetsetup_base = containers.widgetsetup
 function containers.widgetsetup(container, prefab, data, ...)
@@ -346,9 +343,9 @@ local function hsfAddOn()
             },
             animbank = "ui_alterguardianhat_1x1",
             animbuild = "ui_alterguardianhat_1x1",
-            pos = Vector3(0, 160, 0),
+            pos = Vector3(108, 50, 0),
         },
-        type = "chest",
+        type = "hand_inv",
         acceptsstacks = false,
         excludefromcrafting = true,
         itemtestfn = function(container, item, slot)
@@ -364,8 +361,6 @@ for k, v in pairs(params) do
     containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
 end
 
-------------------box
-
 local oldwidgetsetup = containers.widgetsetup
 containers.widgetsetup = function(container, prefab)
     if not prefab and container.inst.prefab == "fhl_bb" then
@@ -374,510 +369,47 @@ containers.widgetsetup = function(container, prefab)
     oldwidgetsetup(container, prefab)
 end
 
----------------
---small icebox1
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "frostsmall"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
+----------------------------------------------------------------------------------------------------
+-- params.bundle_container =
+-- {
+--     widget =
+--     {
+--         slotpos =
+--         {
+--             Vector3(-37.5, 32 + 4, 0),
+--             Vector3(37.5, 32 + 4, 0),
+--             Vector3(-37.5, -(32 + 4), 0),
+--             Vector3(37.5, -(32 + 4), 0),
+--         },
+--         animbank = "ui_bundle_2x2",
+--         animbuild = "ui_bundle_2x2",
+--         pos = Vector3(200, 0, 0),
+--         side_align_tip = 120,
+--         buttoninfo =
+--         {
+--             text = STRINGS.ACTIONS.WRAPBUNDLE,
+--             position = Vector3(0, -100, 0),
+--         }
+--     },
+--     type = "cooker",
+-- }
 
-local function frostsmall()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_backpack_2x4",
-            animbuild = "ui_chest_frosthammer",
-            pos = Vector3(-5, 100, 0),
-            side_align_tip = 160,
-        },
-        issidewidget = true,
-        type = "chest",
-    }
+-- function params.bundle_container.itemtestfn(container, item, slot)
+--     return not (item:HasTag("irreplaceable") or item:HasTag("_container") or item:HasTag("bundle") or item:HasTag("nobundling"))
+-- end
 
-    for y = 0, 1 do
-        table.insert(container.widget.slotpos, Vector3(-126, -y * 75 + 114, -126 + 75, -y * 75 + 114))
-    end
-    return container
-end
-params.frostsmall = frostsmall()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "frostsmall" then
-                container.type = "chest"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
+-- function params.bundle_container.widget.buttoninfo.fn(inst, doer)
+--     if inst.components.container ~= nil then
+--         BufferedAction(doer, inst, ACTIONS.WRAPBUNDLE):Do()
+--     elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+--         SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.WRAPBUNDLE.code, inst, ACTIONS.WRAPBUNDLE.mod_name)
+--     end
+-- end
 
-function params.frostsmall.itemtestfn(container, item, slot)
-    return not item:HasTag("heatrock")
-end
+-- function params.bundle_container.widget.buttoninfo.validfn(inst)
+--     return inst.replica.container ~= nil and not inst.replica.container:IsEmpty()
+-- end
 
---------------------------------------------------
---icebox1
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "frostbox"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
-
-local function frostbox()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_backpack_2x4",
-            animbuild = "ui_chest_frosthammer2",
-            pos = Vector3(-5, -70, 0),
-            side_align_tip = 160,
-        },
-        issidewidget = true,
-        type = "pack",
-    }
-    for y = 0, 4 do
-        table.insert(container.widget.slotpos, Vector3(-162, -y * 58 + 124, 0))
-        table.insert(container.widget.slotpos, Vector3(-162 + 75, -y * 58 + 124, 0))
-    end
-    return container
-end
-params.frostbox = frostbox()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "frostbox" then
-                container.type = "pack"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
-
-function params.frostbox.itemtestfn(container, item, slot)
-    return not item:HasTag("heatrock")
-end
-
---------------------------------------------------
-
---box1
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "chest_yamche0"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
-
-local function chest_yamche0()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_chest_3x2",
-            animbuild = "ui_chest_yamche0",
-            pos = Vector3(0, 200, 0),
-            side_align_tip = 160,
-        },
-        type = "chest",
-    }
-    for y = 1, 0, -1 do
-        table.insert(container.widget.slotpos, Vector3(74 * y - 74 * 2 + 70, 0))
-    end
-    return container
-end
-params.chest_yamche0 = chest_yamche0()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "chest_yamche0" then
-                container.type = "chest"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
----------------------------------------------------------------
---box2
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "chest_yamche1"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
-
-local function chest_yamche1()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_chest_3x3",
-            animbuild = "ui_chest_yamche1",
-            pos = Vector3(0, 200, 0),
-            side_align_tip = 160,
-        },
-        type = "chest",
-    }
-    for y = 1, 0, -1 do
-        for x = 0, 1 do
-            table.insert(container.widget.slotpos, Vector3(80 * x - 80 * 2 + 78, 80 * y - 80 * 2 + 80, 0))
-        end
-    end
-    return container
-end
-params.chest_yamche1 = chest_yamche1()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "chest_yamche1" then
-                container.type = "chest"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
----------------------------------------------------------------
---box3
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "chest_yamche2"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
-
-local function chest_yamche2()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_chest_3x3",
-            animbuild = "ui_chest_yamche2",
-            pos = Vector3(0, 200, 0),
-            side_align_tip = 160,
-        },
-        type = "chest",
-    }
-
-    for y = 2, 0, -1 do
-        for x = 0, 1 do
-            table.insert(container.widget.slotpos, Vector3(80 * x - 80 * 2 + 78, 80 * y - 80 * 2 + 80, 0))
-        end
-    end
-    return container
-end
-params.chest_yamche2 = chest_yamche2()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "chest_yamche2" then
-                container.type = "chest"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
----------------------------------------------------------------
---box5
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "chest_yamche4"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
-
-local function chest_yamche4()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_chest_3x3",
-            animbuild = "ui_chest_3x3",
-            pos = Vector3(0, 200, 0),
-            side_align_tip = 160,
-        },
-        type = "chest",
-    }
-    for y = 3, 0, -1 do
-        for x = 0, 2 do
-            table.insert(container.widget.slotpos, Vector3(75 * x - 75 * 2 + 75, 60 * y - 60 * 2 + 32, 0))
-        end
-    end
-    return container
-end
-params.chest_yamche4 = chest_yamche4()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "chest_yamche4" then
-                container.type = "chest"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
----------------------------------------------------------------
---box6
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "chest_yamche5"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
-
-local function chest_yamche5()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_chest_3x3",
-            animbuild = "ui_chest_3x3",
-            pos = Vector3(0, 200, 0),
-            side_align_tip = 160,
-        },
-        type = "chest",
-    }
-    for y = 3, 0, -1 do
-        for x = 0, 3 do
-            table.insert(container.widget.slotpos, Vector3(60 * x - 60 * 2 + 30, 60 * y - 60 * 2 + 30, 0))
-        end
-    end
-    return container
-end
-params.chest_yamche5 = chest_yamche5()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "chest_yamche5" then
-                container.type = "chest"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
-
----------------------------------------------------------------
----------------------------------------------------------------
---box7
-local params = {}
-local OVERRIDE_WIDGETSETUP = false
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-        if OVERRIDE_WIDGETSETUP then
-            container.type = "chest_yamche6"
-        end
-    else
-        containers_widgetsetup_base(container, prefab)
-    end
-end
-
-local function chest_yamche6()
-    local container =
-    {
-        widget =
-        {
-            slotpos = {},
-            animbank = "ui_chest_3x3",
-            animbuild = "", --"ui_chest_moon",
-            pos = Vector3(0, 200, 0),
-            side_align_tip = 160,
-        },
-        type = "chest",
-    }
-    for y = 5, 0, -1 do
-        for x = 0, 14 do
-            table.insert(container.widget.slotpos, Vector3(60 * x - 60 * 2 + -150, 60 * y - 60 * 2 + 10, 0))
-        end
-    end
-    return container
-end
-params.chest_yamche6 = chest_yamche6()
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
-local containers_widgetsetup_custom = containers.widgetsetup
-local MAXITEMSLOTS = containers.MAXITEMSLOTS
-AddPrefabPostInit("world_network", function(inst)
-    if containers.widgetsetup ~= containers_widgetsetup_custom then
-        OVERRIDE_WIDGETSETUP = true
-        local containers_widgetsetup_base2 = containers.widgetsetup
-        function containers.widgetsetup(container, prefab)
-            containers_widgetsetup_base2(container, prefab)
-            if container.type == "chest_yamche6" then
-                container.type = "chest"
-            end
-        end
-    end
-    if containers.MAXITEMSLOTS < MAXITEMSLOTS then
-        containers.MAXITEMSLOTS = MAXITEMSLOTS
-    end
-end)
-
-
---AddPrefabPostInit("ancient_soul", Addtradableprefab)
---AddPrefabPostInit("maxwellintro", InoriMaxwellIntro)
 ----------------------------------------------------------------------------------------------------
 
 local function Givelickingbone(inst)
@@ -1138,6 +670,7 @@ end
 AddMinimapAtlas("images/inventoryimages/personal_licking.xml")
 
 
+----------------------------------------------------------------------------------------
 local function UseFullMoonRecipe()
     AddRecipePostInit("fhl_x_1", function(recipe)
         recipe.product = "fhl_x2"
@@ -1161,8 +694,62 @@ local function CheckFullMoon()
     end
 end
 
+----------------------------------------------------------------------------------------
+local function AddFirstOrderTagToPlayer(inst, player)
+    local day = GLOBAL.TheWorld.state.cycles
+    local key = player.userid .. "_" .. tostring(day)
+
+    if not inst.TradingRecord[key] then
+        inst.TradingRecord[key] = true
+        player:AddTag("firstorder")
+    end
+end
+
+local function AddFirstOrderTagToAllPlayers(inst)
+    for _, player in ipairs(GLOBAL.AllPlayers) do
+        AddFirstOrderTagToPlayer(inst, player)
+    end
+end
+
+local function OnDayComplete(inst)
+    inst:DoTaskInTime(0, AddFirstOrderTagToAllPlayers(inst))
+end
+
+local function OnPlayerJoined(inst, player)
+    AddFirstOrderTagToPlayer(inst, player)
+    if GLOBAL.TheWorld.state.isfullmoon then
+        UseFullMoonRecipe()
+    end
+end
+
 AddPrefabPostInit("world", function(inst)
-    inst:ListenForEvent("ms_playerjoined", CheckFullMoon)
+    local _OnSave = inst.OnSave
+    local function onSave(inst, data, ...)
+        data.TradingRecord = inst.TradingRecord or {}
+        if _OnSave ~= nil then _OnSave(inst, data, ...) end
+    end
+    inst.OnSave = onSave
+
+    local _OnLoad = inst.OnLoad
+    local function onLoad(inst, data, ...)
+        if data ~= nil then
+            inst.TradingRecord = data.TradingRecord or {}
+        end
+        if _OnLoad ~= nil then
+            return _OnLoad(inst, data, ...)
+        end
+    end
+    inst.OnLoad = onLoad
+
+    inst:WatchWorldState("cycles", OnDayComplete)
+    inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
+    AddFirstOrderTagToAllPlayers(inst)
+    -- inst:WatchWorldState("cycles", function()
+    --     for _, player in ipairs(GLOBAL.AllPlayers) do
+    --         player:AddTag("firstorder")
+    --     end
+    -- end)
+    -- inst:ListenForEvent("ms_playerjoined", CheckFullMoon)
     inst:WatchWorldState("isfullmoon", function(inst, isfullmoon)
         if isfullmoon then
             UseFullMoonRecipe()
@@ -1221,6 +808,54 @@ RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex"
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
 
+
+----------------------------------------------------------------------------------------
+GLOBAL.PROTOTYPER_DEFS.personal_licking = {
+    icon_atlas = "images/inventoryimages/licking_eyebone.xml",
+    icon_image = "licking_eyebone.tex",
+    is_crafting_station = true,
+    action_str = "交易",
+    filter_text = "苹果杂货铺",
+}
+
+GLOBAL.RECIPETABS.PROPERTY = {
+    str = "PROPERTY",
+    sort = 666,
+    icon = "licking_eyebone.tex",
+    icon_atlas = "images/inventoryimages/licking_eyebone.xml",
+    crafting_station = true,
+    shop = true
+}
+----------------------------------------------------------------------------------------
+TechTree.Make = function(t)
+    t = t or {}
+    for i, v in ipairs(TechTree.AVAILABLE_TECH) do
+        t[v] = t[v] or 0
+    end
+    return t
+end
+table.insert(TechTree.AVAILABLE_TECH, "PROPERTY")
+table.insert(TechTree.BONUS_TECH, "PROPERTY")
+for k, v in pairs(TUNING.PROTOTYPER_TREES) do
+    v.PROPERTY = 0
+end
+
+TECH.NONE.PROPERTY = 0
+TECH.APPLESTORE = { PROPERTY = 1 }
+TUNING.PROTOTYPER_TREES.APPLESTORE = TechTree.Make({
+    PROPERTY = 1,
+})
+-- TECH.ONCESUPPLY = { PROPERTY = 2 }
+-- TUNING.PROTOTYPER_TREES.ONCESUPPLY = TechTree.Make({
+--     PROPERTY = 2,
+-- })
+for i, v in pairs(GLOBAL.AllRecipes) do
+    if v.level.PROPERTY == nil then
+        v.level.PROPERTY = 0
+    end
+end
+
+----------------------------------------------------------------------------------------
 AddCharacterRecipe("fhl_zzj", { Ingredient("twigs", 6), Ingredient("ancient_soul", 1), Ingredient("goldnugget", 2) },
     TECH.NONE, { product = "fhl_zzj", builder_tag = "fhl" })
 
@@ -1293,48 +928,61 @@ AddDeconstructRecipe("fhl_x2",
 --     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })
 
 -- ----SHOPPING----
-AddRecipe2("gold_exchange", { Ingredient("goldnugget", 3) }, TECH.NONE,
-    { product = "ancient_soul", numtogive = 1, builder_tag = "shopping" })
-AddRecipe2("entree_shroombait", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "shroombait", builder_tag = "shopping" })
-AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "frogfishbowl", builder_tag = "shopping" })
-AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "voltgoatjelly", builder_tag = "shopping" })
-AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "nightmarepie", builder_tag = "shopping" })
-AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "glowberrymousse", builder_tag = "shopping" })
-AddRecipe2("favorite_baconeggs", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "baconeggs", builder_tag = "shopping" })
-AddRecipe2("favorite_banana_cooked", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "cave_banana_cooked", builder_tag = "shopping" })
-AddRecipe2("favorite_hotchili", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "hotchili", builder_tag = "shopping" })
-AddRecipe2("favorite_potato_cooked", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "potato_cooked", builder_tag = "shopping" })
-AddRecipe2("favorite_bananapop", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "bananapop", builder_tag = "shopping" })
-AddRecipe2("favorite_butterflymuffin", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "butterflymuffin", builder_tag = "shopping" })
-AddRecipe2("favorite_surfnturf", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "surfnturf", builder_tag = "shopping" })
-AddRecipe2("favorite_honeynuggets", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "honeynuggets", builder_tag = "shopping" })
-AddRecipe2("favorite_freshfruitcrepes", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "freshfruitcrepes", builder_tag = "shopping" })
-AddRecipe2("favorite_lobsterdinner", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "lobsterdinner", builder_tag = "shopping" })
-AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "turkeydinner", builder_tag = "shopping" })
-AddRecipe2("favorite_icecream", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "icecream", builder_tag = "shopping" })
-AddRecipe2("favorite_vegstinger", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "vegstinger", builder_tag = "shopping" })
-AddRecipe2("favorite_trailmix", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "trailmix", builder_tag = "shopping" })
-AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.NONE,
-    { product = "turkeydinner", builder_tag = "shopping" })
+AddRecipe2("free_drink", {}, TECH.APPLESTORE,
+    { product = "goatmilk", nounlock = true, builder_tag = "firstorder", no_deconstruction = true })
+AddRecipe2("gold_exchange", { Ingredient("goldnugget", 3) }, TECH.APPLESTORE,
+    { product = "ancient_soul", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("entree_shroombait", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "shroombait", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "voltgoatjelly", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "glowberrymousse", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_baconeggs", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "baconeggs", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_banana_cooked", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "cave_banana_cooked", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_hotchili", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "hotchili", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_potato_cooked", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "potato_cooked", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_bananapop", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "bananapop", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_butterflymuffin", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "butterflymuffin", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_surfnturf", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "surfnturf", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_honeynuggets", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "honeynuggets", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_freshfruitcrepes", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "freshfruitcrepes", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_lobsterdinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "lobsterdinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "turkeydinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_icecream", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "icecream", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_vegstinger", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "vegstinger", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_trailmix", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "trailmix", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+    { product = "turkeydinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+
+
+-- 每天给予所有玩家一个标签，可以交易限饮
+AddPlayerPostInit(function(inst)
+    inst:ListenForEvent("makerecipe", function(inst, data)
+        if data.recipe.name == "free_drink" then
+            inst:RemoveTag("firstorder")
+        end
+    end)
+end)
+
 
 
 -- ----BOOK----

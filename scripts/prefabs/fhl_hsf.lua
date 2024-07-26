@@ -33,6 +33,7 @@ local function OnUnequip(inst, owner)
         owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
     end
 
+    inst.components.container:Close()
     inst.components.fueled:StopConsuming()
     owner.AnimState:ClearOverrideSymbol("swap_hat")
 end
@@ -46,40 +47,40 @@ local function OnEquipToModel(inst, owner)
     inst.components.fueled:StopConsuming()
 end
 
--- local function OnDepleted(inst)
---     if inst.components.container:IsEmpty() then
---         inst:Remove()
---     else
---         local item = inst.components.container:GetItemInSlot(1)
---         if item.prefab == "ancient_soul" then
---             inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
---             item:Remove()
---         else
---             inst.components.container:DropEverything()
---             inst:Remove()
---         end
---     end
--- end
+local function OnDepleted(inst)
+    if inst.components.container:IsEmpty() then
+        inst:Remove()
+    else
+        local item = inst.components.container:GetItemInSlot(1)
+        if item.prefab == "ancient_soul" then
+            inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
+            item:Remove()
+        else
+            inst.components.container:DropEverything()
+            inst:Remove()
+        end
+    end
+end
 
--- local function UpdateHSFAddon(inst)
---     if inst.components.container:IsEmpty() then
---         inst.components.equippable.dapperness = 1
---         inst.components.planardefense:SetBaseDefense(0)
---     else
---         local item = inst.components.container:GetItemInSlot(1)
---         if item.prefab == "horrorfuel" then
---             inst.components.equippable.dapperness = -2
---         elseif item.prefab == "purebrilliance" then
---             inst.components.planardefense:SetBaseDefense(20)
---         elseif item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 0.99 then
---             inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
---             item:Remove()
---         else
---             local owner = item.components.inventoryitem:GetGrandOwner()
---             owner.components.talker:Say("Durability is full!")
---         end
---     end
--- end
+local function UpdateHSFAddon(inst)
+    if inst.components.container:IsEmpty() then
+        inst.components.equippable.dapperness = 1
+        inst.components.planardefense:SetBaseDefense(0)
+    else
+        local item = inst.components.container:GetItemInSlot(1)
+        if item.prefab == "horrorfuel" then
+            inst.components.equippable.dapperness = -2
+        elseif item.prefab == "purebrilliance" then
+            inst.components.planardefense:SetBaseDefense(20)
+        elseif item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 0.99 then
+            inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
+            item:Remove()
+        else
+            local owner = item.components.inventoryitem:GetGrandOwner()
+            owner.components.talker:Say("Durability is full!")
+        end
+    end
+end
 
 -- local function AcceptTest(inst, item)
 --     if item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 1 then
