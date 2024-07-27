@@ -325,6 +325,16 @@ local master_postinit = function(inst)
     inst.components.hunger.hungerrate = (TUNING.WILSON_HUNGER_RATE * 1.00)
     inst.components.temperature.inherentinsulation = (TUNING.INSULATION_PER_BEARD_BIT * 0.00)
 
+    -- food affinity multipliers to add 15 calories
+    -- AFFINITY_15_CALORIES_TINY = 2.6
+    -- AFFINITY_15_CALORIES_SMALL = 2.2
+    -- AFFINITY_15_CALORIES_MED = 1.6
+    -- AFFINITY_15_CALORIES_LARGE = 1.4
+    -- AFFINITY_15_CALORIES_HUGE = 1.2
+    -- AFFINITY_15_CALORIES_SUPERHUGE = 1.1
+    -- 香蕉奶昔（至少有两个香蕉/烤香蕉，不能有肉度，鱼度，怪物度） 8,25+15,33
+    inst.components.foodaffinity:AddPrefabAffinity("bananajuice", TUNING.AFFINITY_15_CALORIES_MED)
+
     --inst.components.health:StartRegen(1,4)
     -- 增加击杀掉落
     inst:ListenForEvent("killed", onkillother)

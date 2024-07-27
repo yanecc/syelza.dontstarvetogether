@@ -695,61 +695,61 @@ local function CheckFullMoon()
 end
 
 ----------------------------------------------------------------------------------------
-local function AddFirstOrderTagToPlayer(inst, player)
-    local day = GLOBAL.TheWorld.state.cycles
-    local key = player.userid .. "_" .. tostring(day)
+-- local function AddFirstOrderTagToPlayer(inst, player)
+--     local day = GLOBAL.TheWorld.state.cycles
+--     local key = player.userid .. "_" .. tostring(day)
 
-    if not inst.TradingRecord[key] then
-        inst.TradingRecord[key] = true
-        player:AddTag("firstorder")
-    end
-end
+--     if not inst.TradingRecord[key] then
+--         inst.TradingRecord[key] = true
+--         player:AddTag("firstorder")
+--     end
+-- end
 
-local function AddFirstOrderTagToAllPlayers(inst)
-    for _, player in ipairs(GLOBAL.AllPlayers) do
-        AddFirstOrderTagToPlayer(inst, player)
-    end
-end
+-- local function AddFirstOrderTagToAllPlayers(inst)
+--     for _, player in ipairs(GLOBAL.AllPlayers) do
+--         AddFirstOrderTagToPlayer(inst, player)
+--     end
+-- end
 
-local function OnDayComplete(inst)
-    inst:DoTaskInTime(0, AddFirstOrderTagToAllPlayers(inst))
-end
+-- local function OnDayComplete(inst)
+--     inst:DoTaskInTime(0, AddFirstOrderTagToAllPlayers(inst))
+-- end
 
-local function OnPlayerJoined(inst, player)
-    AddFirstOrderTagToPlayer(inst, player)
-    if GLOBAL.TheWorld.state.isfullmoon then
-        UseFullMoonRecipe()
-    end
-end
+-- local function OnPlayerJoined(inst, player)
+--     AddFirstOrderTagToPlayer(inst, player)
+--     if GLOBAL.TheWorld.state.isfullmoon then
+--         UseFullMoonRecipe()
+--     end
+-- end
 
 AddPrefabPostInit("world", function(inst)
-    local _OnSave = inst.OnSave
-    local function onSave(inst, data, ...)
-        data.TradingRecord = inst.TradingRecord or {}
-        if _OnSave ~= nil then _OnSave(inst, data, ...) end
-    end
-    inst.OnSave = onSave
+    -- local _OnSave = inst.OnSave
+    -- local function onSave(inst, data, ...)
+    --     data.TradingRecord = inst.TradingRecord
+    --     if _OnSave ~= nil then _OnSave(inst, data, ...) end
+    -- end
+    -- inst.OnSave = onSave
 
-    local _OnLoad = inst.OnLoad
-    local function onLoad(inst, data, ...)
-        if data ~= nil then
-            inst.TradingRecord = data.TradingRecord or {}
-        end
-        if _OnLoad ~= nil then
-            return _OnLoad(inst, data, ...)
-        end
-    end
-    inst.OnLoad = onLoad
-
-    inst:WatchWorldState("cycles", OnDayComplete)
-    inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
-    AddFirstOrderTagToAllPlayers(inst)
-    -- inst:WatchWorldState("cycles", function()
-    --     for _, player in ipairs(GLOBAL.AllPlayers) do
-    --         player:AddTag("firstorder")
+    -- local _OnLoad = inst.OnLoad
+    -- local function onLoad(inst, data, ...)
+    --     if data ~= nil then
+    --         inst.TradingRecord = data.TradingRecord or {}
     --     end
-    -- end)
-    -- inst:ListenForEvent("ms_playerjoined", CheckFullMoon)
+    --     if _OnLoad ~= nil then
+    --         return _OnLoad(inst, data, ...)
+    --     end
+    -- end
+    -- inst.OnLoad = onLoad
+
+    -- inst:WatchWorldState("cycles", OnDayComplete)
+    -- inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
+    -- AddFirstOrderTagToAllPlayers(inst)
+    inst:WatchWorldState("cycles", function()
+        for _, player in ipairs(GLOBAL.AllPlayers) do
+            player:AddTag("firstorder")
+        end
+    end)
+    inst:ListenForEvent("ms_playerjoined", CheckFullMoon)
     inst:WatchWorldState("isfullmoon", function(inst, isfullmoon)
         if isfullmoon then
             UseFullMoonRecipe()
@@ -974,7 +974,6 @@ AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.APPLES
     { product = "turkeydinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
 
 
--- 每天给予所有玩家一个标签，可以交易限饮
 AddPlayerPostInit(function(inst)
     inst:ListenForEvent("makerecipe", function(inst, data)
         if data.recipe.name == "free_drink" then
