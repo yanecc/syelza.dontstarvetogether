@@ -318,6 +318,38 @@ Assets = {
 }
 
 
+TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
+
+TUNING.STATUS_KEY = GetModConfigData("status_key")
+TUNING.SKILL_POINT_KEY = GetModConfigData("skill_point_key")
+
+TUNING.GJBL = GetModConfigData("zzj_gjbl")
+TUNING.JGEAT = GetModConfigData("fhl_jgeat")
+TUNING.JGEATSL = GetModConfigData("fhl_jgeatsl")
+
+--TUNING.LIKEORNOT = GetModConfigData("likeornot")
+--TUNING.ZZJ_DAMAGE = GetModConfigData("zzj_damage")
+TUNING.ZZJ_TIMES = .4 --GetModConfigData("zzj_times")
+
+TUNING.FHL_COS = GetModConfigData("fhl_cos")
+TUNING.ZZJ_CAN_USE_AS_HAMMER = GetModConfigData("zzj_canuseashammer")
+TUNING.ZZJ_CAN_USE_AS_SHOVEL = GetModConfigData("zzj_canuseasshovel")
+TUNING.ZZJ_FINITE_USES = GetModConfigData("zzj_finiteuses")
+TUNING.ZZJ_CANKANSHU = GetModConfigData("zzj_cankanshu")
+TUNING.ZZJ_CANWAKUANG = GetModConfigData("zzj_canwakuang")
+TUNING.ZZJ_PRE = GetModConfigData("zzj_pre")
+--TUNING.ZZJ_RANGE = GetModConfigData("zzj_range")
+TUNING.OPENLIGHT = GetModConfigData("openlight")
+TUNING.OPENLI = GetModConfigData("openli")
+TUNING.APPLESTORE = GetModConfigData("applestore")
+TUNING.BUFFGO = GetModConfigData("buffgo")
+TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn")
+TUNING.HSF_POSITION = GetModConfigData("hsf_position")
+TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
+TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
+TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen")
+TUNING.SKILL_TREE = GetModConfigData("skill_tree")
+
 ------------------box
 local params = {}
 local containers_widgetsetup_base = containers.widgetsetup
@@ -333,6 +365,13 @@ function containers.widgetsetup(container, prefab, data, ...)
     end
 end
 
+local Position = {
+    DEFAULT = Vector3(108, 50, 0),
+    THREEGRID = Vector3(108, 50, 0),
+    FOURGRID = Vector3(160, 50, 0),
+    FIVEGRID = Vector3(214, 50, 0)
+}
+
 local function hsfAddOn()
     local container =
     {
@@ -343,7 +382,7 @@ local function hsfAddOn()
             },
             animbank = "ui_alterguardianhat_1x1",
             animbuild = "ui_alterguardianhat_1x1",
-            pos = Vector3(108, 50, 0),
+            pos = Position[string.upper(TUNING.HSF_POSITION)] or Position.DEFAULT,
         },
         type = "hand_inv",
         acceptsstacks = false,
@@ -744,11 +783,13 @@ AddPrefabPostInit("world", function(inst)
     -- inst:WatchWorldState("cycles", OnDayComplete)
     -- inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
     -- AddFirstOrderTagToAllPlayers(inst)
-    inst:WatchWorldState("cycles", function()
-        for _, player in ipairs(GLOBAL.AllPlayers) do
-            player:AddTag("firstorder")
-        end
-    end)
+    if TUNING.APPLESTORE then
+        inst:WatchWorldState("cycles", function()
+            for _, player in ipairs(GLOBAL.AllPlayers) do
+                player:AddTag("firstorder")
+            end
+        end)
+    end
     inst:ListenForEvent("ms_playerjoined", CheckFullMoon)
     inst:WatchWorldState("isfullmoon", function(inst, isfullmoon)
         if isfullmoon then
@@ -759,36 +800,6 @@ AddPrefabPostInit("world", function(inst)
     end)
 end)
 
-
-TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
-
-TUNING.STATUS_KEY = GetModConfigData("status_key")
-TUNING.SKILL_POINT_KEY = GetModConfigData("skill_point_key")
-
-TUNING.GJBL = GetModConfigData("zzj_gjbl")
-TUNING.JGEAT = GetModConfigData("fhl_jgeat")
-TUNING.JGEATSL = GetModConfigData("fhl_jgeatsl")
-
---TUNING.LIKEORNOT = GetModConfigData("likeornot")
---TUNING.ZZJ_DAMAGE = GetModConfigData("zzj_damage")
-TUNING.ZZJ_TIMES = .4 --GetModConfigData("zzj_times")
-
-TUNING.FHL_COS = GetModConfigData("fhl_cos")
-TUNING.ZZJ_CAN_USE_AS_HAMMER = GetModConfigData("zzj_canuseashammer")
-TUNING.ZZJ_CAN_USE_AS_SHOVEL = GetModConfigData("zzj_canuseasshovel")
-TUNING.ZZJ_FINITE_USES = GetModConfigData("zzj_finiteuses")
-TUNING.ZZJ_CANKANSHU = GetModConfigData("zzj_cankanshu")
-TUNING.ZZJ_CANWAKUANG = GetModConfigData("zzj_canwakuang")
-TUNING.ZZJ_PRE = GetModConfigData("zzj_pre")
---TUNING.ZZJ_RANGE = GetModConfigData("zzj_range")
-TUNING.OPENLIGHT = GetModConfigData("openlight")
-TUNING.OPENLI = GetModConfigData("openli")
-TUNING.BUFFGO = GetModConfigData("buffgo")
-TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn")
-TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
-TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
-TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen")
-TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
 -- 注册图片
 RegisterInventoryItemAtlas("images/inventoryimages/ancient_soul.xml", "ancient_soul.tex")
@@ -856,6 +867,9 @@ for i, v in pairs(GLOBAL.AllRecipes) do
 end
 
 ----------------------------------------------------------------------------------------
+AddCharacterRecipe("book_gardening", { Ingredient("papyrus", 2), Ingredient("seeds", 1), Ingredient("poop", 1) },
+    TECH.NONE, { product = "book_gardening", builder_tag = "fhl" })
+
 AddCharacterRecipe("fhl_zzj", { Ingredient("twigs", 6), Ingredient("ancient_soul", 1), Ingredient("goldnugget", 2) },
     TECH.NONE, { product = "fhl_zzj", builder_tag = "fhl" })
 
@@ -901,12 +915,12 @@ AddCharacterRecipe("fhl_x_2",
 AddCharacterRecipe("fhl_cy", { Ingredient("cactus_meat_cooked", 1), Ingredient("ice", 1) }, TECH.NONE,
     { product = "fhl_cy", builder_tag = "fhl" })
 
-AddCharacterRecipe("book_gardening", { Ingredient("papyrus", 2), Ingredient("seeds", 1), Ingredient("poop", 1) },
-    TECH.NONE, { product = "book_gardening", builder_tag = "fhl" })
-
 AddCharacterRecipe("ancient_workstation",
     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("purplegem", 2) },
     TECH.NONE, { product = "ancient_gem", builder_tag = "fhl", no_deconstruction = true })
+
+AddCharacterRecipe("fhl_reeds", { Ingredient("cutreeds", 8), Ingredient("ancient_soul", 1) }, TECH.NONE,
+    { product = "dug_monkeytail", numtogive = 2, builder_tag = "fhl", no_deconstruction = true })
 
 AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 4), Ingredient("ancient_soul", 1) }, TECH.NONE,
     { product = "fhl_tree", builder_tag = "fhl" })
@@ -930,58 +944,58 @@ AddDeconstructRecipe("fhl_x2",
 -- ----SHOPPING----
 AddRecipe2("free_drink", {}, TECH.APPLESTORE,
     { product = "goatmilk", nounlock = true, builder_tag = "firstorder", no_deconstruction = true })
-AddRecipe2("gold_exchange", { Ingredient("goldnugget", 3) }, TECH.APPLESTORE,
+AddRecipe2("gold_exchange", { Ingredient("goldnugget", 4) }, TECH.APPLESTORE,
     { product = "ancient_soul", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("entree_shroombait", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "shroombait", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "voltgoatjelly", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "glowberrymousse", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_baconeggs", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "baconeggs", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_banana_cooked", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "cave_banana_cooked", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_hotchili", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "hotchili", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_potato_cooked", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "potato_cooked", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_bananapop", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "bananapop", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_butterflymuffin", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "butterflymuffin", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_surfnturf", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "surfnturf", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_honeynuggets", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "honeynuggets", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_freshfruitcrepes", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "freshfruitcrepes", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_lobsterdinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "lobsterdinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "turkeydinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_icecream", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "icecream", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_vegstinger", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "vegstinger", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_trailmix", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "trailmix", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
-AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
-    { product = "turkeydinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("entree_shroombait", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "shroombait", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "voltgoatjelly", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "glowberrymousse", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_baconeggs", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "baconeggs", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_banana_cooked", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "cave_banana_cooked", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_hotchili", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "hotchili", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_potato_cooked", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "potato_cooked", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_bananapop", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "bananapop", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_butterflymuffin", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "butterflymuffin", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_surfnturf", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "surfnturf", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_honeynuggets", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "honeynuggets", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_freshfruitcrepes", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "freshfruitcrepes", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_lobsterdinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "lobsterdinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "turkeydinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_icecream", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "icecream", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_vegstinger", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "vegstinger", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_trailmix", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "trailmix", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
+-- AddRecipe2("favorite_turkeydinner", { Ingredient("goldnugget", 1) }, TECH.APPLESTORE,
+--     { product = "turkeydinner", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })
 
-
-AddPlayerPostInit(function(inst)
-    inst:ListenForEvent("makerecipe", function(inst, data)
-        if data.recipe.name == "free_drink" then
-            inst:RemoveTag("firstorder")
-        end
+if TUNING.APPLESTORE then
+    AddPlayerPostInit(function(inst)
+        inst:ListenForEvent("makerecipe", function(inst, data)
+            if data.recipe.name == "free_drink" then
+                inst:RemoveTag("firstorder")
+            end
+        end)
     end)
-end)
-
+end
 
 
 -- ----BOOK----
@@ -1036,9 +1050,6 @@ if TUNING.SKILL_TREE then
             return health
         end
     end)
-
-    AddCharacterRecipe("fhl_reeds", { Ingredient("cutreeds", 8), Ingredient("ancient_soul", 1) }, TECH.NONE,
-        { product = "dug_monkeytail", numtogive = 2, builder_tag = "fhl", no_deconstruction = true })
 end
 
 -----------创建地图图标和角色基础属性

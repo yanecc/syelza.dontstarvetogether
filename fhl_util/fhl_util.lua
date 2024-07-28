@@ -35,28 +35,18 @@ local MajorKey = {
 AddModRPCHandler(modname, "T", function(player)
     if not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.level > 10 then player.level = 10 end
-        if player.jnd == 0 and player.je then
-            if player.level < 10 then
-                player.components.talker:Say("Current State : Lv " .. (player.level) ..
-                    "\n当前状态:\n寒冷抗性(The cold resistance):" ..
-                    (player.components.temperature.inherentinsulation) .. "/240" ..
-                    "\n伤害减免(Damage reduction):" ..
-                    (player.components.health.absorb * 100) .. "%" ..
-                    "\n伤害提升(Damage ascension):" ..
-                    ((player.components.combat.damagemultiplier - 1) * 100) .. "%" ..
-                    "\n饥饿抗性(Hunger resistance):" .. (player.je * 5) .. "%")
-            else
-                player.components.talker:Say("Current State : Lv 10" ..
-                    "\n当前状态:\n寒冷抗性(The cold resistance):" ..
-                    (player.components.temperature.inherentinsulation) .. "/240" ..
-                    "\n伤害减免(Damage reduction):" ..
-                    (player.components.health.absorb * 100) .. "%" ..
-                    "\n伤害提升(Damage ascension):" ..
-                    ((player.components.combat.damagemultiplier - 1) * 100) .. "%" ..
-                    "\n饥饿抗性(Hunger resistance):" .. (player.je * 5) .. "%")
+        if player.jnd and player.je then
+            player.components.talker:Say("Current State : Lv " .. (player.level) ..
+                "\n当前状态:\n寒冷抗性(The cold resistance):" ..
+                (player.components.temperature.inherentinsulation) .. "/240" ..
+                "\n伤害减免(Damage reduction):" ..
+                (player.components.health.absorb * 100) .. "%" ..
+                "\n伤害提升(Damage ascension):" ..
+                ((player.components.combat.damagemultiplier - 1) * 100) .. "%" ..
+                "\n饥饿抗性(Hunger resistance):" .. (player.je * 5) .. "%")
+            if player.jnd > 0 then
+                player.components.talker:Say("当前还有未使用的的技能点!\nI have available skill points!")
             end
-        else
-            player.components.talker:Say("请点完技能点再来查看!\nPlease point out skill points to see again!")
         end
     end
 end)
@@ -84,7 +74,7 @@ AddModRPCHandler(modname, "DOWN", function(player)
             player.components.health.absorb = player.components.health.absorb + 0.05
             player.components.talker:Say("伤害减免已提升5%!\nDamage reduction is increased by 5%!")
         elseif player.jnd == 0 then
-            player.components.talker:Say("技能点不足!\nhave no skill points!")
+            player.components.talker:Say("技能点不足!\nNo skill points left!")
         else
             player.components.talker:Say("伤害减免已至上限!\nDamage reduction has reached the limit!")
         end
@@ -99,7 +89,7 @@ AddModRPCHandler(modname, "LEFT", function(player)
             player.components.combat.damagemultiplier = player.components.combat.damagemultiplier + 0.1
             player.components.talker:Say("输出伤害已提升10%!\nDamage ascension has up 10%!")
         elseif player.jnd == 0 then
-            player.components.talker:Say("技能点不足!\nhave no skill points!")
+            player.components.talker:Say("技能点不足!\nNo skill points left!")
         else
             player.components.talker:Say("输出伤害已至上限!\nDamage ascension has reached the limit!")
         end
@@ -111,6 +101,7 @@ AddModRPCHandler(modname, "RIGHT", function(player)
     if not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.je then
             if player.components.hunger.hungerrate > 0.1 then
+                -- 最多8次，达到0.09375
                 player.jnd = player.jnd - 1
                 player.je = player.je + 1
                 player.components.hunger.hungerrate = (1 - 0.05 * player.je) * TUNING.WILSON_HUNGER_RATE
@@ -119,7 +110,7 @@ AddModRPCHandler(modname, "RIGHT", function(player)
                 player.components.talker:Say("饥饿抗性已至上限!\nHunger resistance has to limit!")
             end
         else
-            player.components.talker:Say("技能点不足!\nhave no skill points!")
+            player.components.talker:Say("技能点不足!\nNo skill points left!")
         end
     end
 end)

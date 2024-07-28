@@ -98,7 +98,7 @@ local start_inv = {
     "bj_11"
 }
 
-local function onkillother(inst, data)
+local function OnKillOther(inst, data)
     local victim = data.victim
     if not victim.components.lootdropper then return end
     -- if victim.components.freezable or victim:HasTag("monster") then
@@ -122,34 +122,40 @@ end
 
 --升级机制
 local function applyupgrades(inst)
-    local max_upgrades = 10
-    local upgrades = math.min(inst.level, max_upgrades)
+    local maxLevel = 10
+    local curLevel = math.min(inst.level, maxLevel)
+    local pointsKey = TUNING.SKILL_POINT_KEY:sub(-1)
+    local statusKey = TUNING.STATUS_KEY:sub(-1)
 
-    local hunger_percent = inst.components.hunger:GetPercent()
-    local health_percent = inst.components.health:GetPercent()
-    local sanity_percent = inst.components.sanity:GetPercent()
+    local hungerPercent = inst.components.hunger:GetPercent()
+    local healthPercent = inst.components.health:GetPercent()
+    local sanityPercent = inst.components.sanity:GetPercent()
 
-    inst.components.hunger.max = 150 + upgrades * 15                  --300
-    inst.components.health.maxhealth = 150 + upgrades * 15            --300
-    inst.components.sanity.max = 150 + upgrades * 15                  --300
+    inst.components.hunger.max = 150 + curLevel * 15                  --300
+    inst.components.health.maxhealth = 150 + curLevel * 15            --300
+    inst.components.sanity.max = 150 + curLevel * 15                  --300
 
-    inst.components.locomotor.walkspeed = math.ceil(7 + upgrades / 4) --10
-    inst.components.locomotor.runspeed = math.ceil(9 + upgrades / 4)  --12
+    inst.components.locomotor.walkspeed = math.ceil(7 + curLevel / 4) --10
+    inst.components.locomotor.runspeed = math.ceil(9 + curLevel / 4)  --12
 
 
     inst.components.talker:Say("QWQ Level now: " .. (inst.level) ..
-        "\n你还有" .. (inst.jnd) .. "点技能点!\n加点帮助请按R,当前状态请按T!" ..
-        "\nyou have " .. (inst.jnd) .. " skill points!\nClick R for help, Click T for State!")
+        "\n你还有" .. (inst.jnd) .. "点技能点!" ..
+        "\n加点帮助请按" .. pointsKey .. ",当前状态请按" .. statusKey .. "!" ..
+        "\nyou have " .. (inst.jnd) .. " skill points!" ..
+        "\nClick " .. pointsKey .. " for help, Click " .. statusKey .. " for State!")
 
     if inst.level >= 10 then
-        inst.components.talker:Say("W.W Level Max!\n你还有" .. (inst.level) ..
-            "\n你还有" .. (inst.jnd) .. "点技能点!\n加点帮助请按R,当前状态请按T!" ..
-            "\nyou have " .. (inst.jnd) .. " skill points!\nClick R for help, Click T for State!")
+        inst.components.talker:Say("W.W Level Max!\n" ..
+            "\n你还有" .. (inst.jnd) .. "点技能点!" ..
+            "\n加点帮助请按" .. pointsKey .. ",当前状态请按" .. statusKey .. "!" ..
+            "\nyou have " .. (inst.jnd) .. " skill points!" ..
+            "\nClick " .. pointsKey .. " for help, Click " .. statusKey .. " for State!")
     end
 
-    inst.components.hunger:SetPercent(hunger_percent)
-    inst.components.health:SetPercent(health_percent)
-    inst.components.sanity:SetPercent(sanity_percent)
+    inst.components.hunger:SetPercent(hungerPercent)
+    inst.components.health:SetPercent(healthPercent)
+    inst.components.sanity:SetPercent(sanityPercent)
 end
 
 -- 当这个角色从人类复活
@@ -171,114 +177,101 @@ end
 
 
 local function oneat(inst, food)
-    local jgeat = TUNING.JGEAT                          -- 吃浆果升级
-    local jgeatsl = TUNING.JGEATSL                      -- 吃浆果升级的临界值
+    local berryUp = TUNING.JGEAT                        -- 吃浆果升级
+    local berryLimit = TUNING.JGEATSL                   -- 吃浆果升级的临界值
     local levelmax = inst.level == 10                   -- 是否已满级
     local failureFactor = TUNING.LEVELUP_FAILURE_FACTOR -- 升级失败的概率
 
-    if (food and food.components.edible) then
-        -- 包括 浆果 烤浆果 多汁浆果 烤多汁浆果
-        if (jgeat == true and food.prefab == "berries" or food.prefab == "berries_cooked" or food.prefab == "berries_juicy" or food.prefab == "berries_juicy_cooked") then
-            -- inst.eatsl 已经吃了的数量
-            -- inst.eatsj 满足升级条件
-            inst.eatsl = inst.eatsl + 1
-            if inst.eatsl % 5 == 0 then
-                inst.components.talker:Say("已经吃了: " .. inst.eatsl .. " / " .. jgeatsl .. " 个浆果" ..
-                    "\nHave eaten " .. inst.eatsl .. " / " .. jgeatsl .. " berries")
-            end
-            if not levelmax and inst.eatsl >= jgeatsl then
-                inst.eatsj = true
-                inst.eatsl = inst.eatsl - jgeatsl
-            end
+    -- 浆果 烤浆果 多汁浆果 烤多汁浆果
+    -- 吃浆果可以升级，满级以后获取技能点只能吃火龙果
+    if berryUp and (food.prefab == "berries" or food.prefab == "berries_cooked" or food.prefab == "berries_juicy" or food.prefab == "berries_juicy_cooked") then
+        inst.berryCount = inst.berryCount + 1
+        if inst.berryCount % 5 == 0 then
+            inst.components.talker:Say("已经吃了: " .. inst.berryCount .. " / " .. berryLimit .. " 个浆果" ..
+                "\nHave eaten " .. inst.berryCount .. " / " .. berryLimit .. " berries")
         end
+        if not levelmax and inst.berryCount >= berryLimit then
+            inst.berryEnough = true
+            inst.berryCount = inst.berryCount - berryLimit
+        end
+    end
 
-        -- 火龙果和浆果的升级处理  浆果的升级处理依赖于 inst.eatsj 的值
-        -- 辣龙椒沙拉、火龙果派、火龙果、烤火龙果
-        if (food.prefab == "dragonchilisalad" or food.prefab == "dragonpie" or food.prefab == "dragonfruit" or food.prefab == "dragonfruit_cooked" or inst.eatsj == true) then
-            if (levelmax) then
-                inst.components.talker:Say("QWQ 满级了!\nQWQ level Max!")
-            elseif math.random() > failureFactor * math.tan(inst.level * 0.1) then
+    -- 火龙果、烤火龙果、火龙果派、辣龙椒沙拉
+    if food.prefab == "dragonfruit" or food.prefab == "dragonfruit_cooked" or food.prefab == "dragonpie" or food.prefab == "dragonchilisalad" or inst.berryEnough then
+        local hasGoodLuck = math.random() > failureFactor * math.tan(inst.level * 0.1)
+        -- 满级以后再吃浆果inst.berryEnough不会为true
+        if (levelmax) then
+            if inst.totalPoints < 42 and hasGoodLuck then
                 -- inst.jnd 技能点
-                inst.level = inst.level + 1
+                local points = math.max(inst.totalPoints + 1, inst.level, inst.jnd)
+                inst.totalPoints = points
                 inst.jnd = inst.jnd + 1
-                inst.eatsj = false
                 applyupgrades(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
             else
-                inst.eatsj = false
-                inst.components.talker:Say("QWQ 升级失败了!\nlevel up failed!")
+                inst.components.talker:Say("QWQ 满级了! 没获得技能点!\nQWQ level Max! Got no skill points!")
             end
-        end
-
-        -- 吃芝士蛋糕会降一级
-        if (food.prefab == "powcake") and inst.level > 0 then
-            inst.level = inst.level - 1
+        elseif hasGoodLuck then
+            -- inst.jnd 技能点
+            -- inst.totalPoints 总技能点42可以将全部方向点满 抗寒8 减伤16 增伤10 抗饿8
+            if inst.totalPoints < 42 then
+                local points = math.max(inst.totalPoints + 1, inst.level, inst.jnd)
+                inst.totalPoints = points
+                inst.jnd = inst.jnd + 1
+            end
+            inst.level = inst.level + 1
+            inst.berryEnough = false
             applyupgrades(inst)
             inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+        else
+            inst.berryEnough = false
+            inst.components.talker:Say("QWQ 升级失败了!\nlevel up failed!")
         end
+    end
+
+    -- 吃芝士蛋糕会重置等级和技能点，必须等级大于0才能洗点
+    if food.prefab == "powcake" and inst.level > 0 then
+        inst.level = 0
+        inst.jnd = inst.totalPoints
+
+        inst.je = 0
+        inst.components.health.absorb = 0
+        inst.components.combat.damagemultiplier = 1
+        inst.components.temperature.inherentinsulation = 0
+        inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
+        applyupgrades(inst)
+        inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
     end
 end
 
 local function onpreload(inst, data)
-    if data then
-        if data.jnd then
-            inst.jnd = data.jnd
-        else
-            inst.jnd = data.level
-        end
+    inst.je = data.je or 0
+    inst.level = data.level or 0
+    inst.jnd = data.jnd or data.level
+    inst.berryCount = data.berryCount or 0
+    inst.totalPoints = data.totalPoints or data.level
 
-        if data.je then
-            inst.je = data.je
-        else
-            inst.je = 0
-        end
+    applyupgrades(inst)
 
-        -- 加载已经吃的浆果数量
-        if data.eatsl then
-            inst.eatsl = data.eatsl
-        else
-            inst.eatsl = 0
-        end
-
-        if data.level then
-            inst.level = data.level
-            applyupgrades(inst)
-            if data.health and data.health.health then inst.components.health.currenthealth = data.health.health end
-            if data.hunger and data.hunger.hunger then inst.components.hunger.current = data.hunger.hunger end
-            if data.sanity and data.sanity.current then inst.components.sanity.current = data.sanity.current end
-            inst.components.health:DoDelta(0)
-            inst.components.hunger:DoDelta(0)
-            inst.components.sanity:DoDelta(0)
-        end
-        applyupgrades(inst)
-    end
-
-    if data.absorb then
-        inst.components.health.absorb = data.absorb
-    end
-    if data.hungerrate then
-        inst.components.hunger.hungerrate = data.hungerrate
-    end
-    if data.damagemultiplier then
-        inst.components.combat.damagemultiplier = data.damagemultiplier
-    end
-    if data.inherentinsulation then
-        inst.components.temperature.inherentinsulation = data.inherentinsulation
-    end
+    inst.components.health.absorb = data.absorb or 0.00
+    inst.components.hunger.hungerrate = data.hungerrate or TUNING.WILSON_HUNGER_RATE
+    inst.components.combat.damagemultiplier = data.damagemultiplier or 1.00
+    inst.components.temperature.inherentinsulation = data.inherentinsulation or 0.00
 end
 
 local function onsave(inst, data)
-    data.level = inst.level
-    data.jnd = inst.jnd
     data.je = inst.je
+    data.jnd = inst.jnd
+    data.level = inst.level
+    data.totalPoints = inst.totalPoints
 
     -- 保存已经吃的浆果数量
-    data.eatsl = inst.eatsl
+    data.berryCount = inst.berryCount
 
-    data.hungerrate = inst.components.hunger.hungerrate or nil
-    data.absorb = inst.components.health.absorb or nil
-    data.damagemultiplier = inst.components.combat.damagemultiplier or nil
-    data.inherentinsulation = inst.components.temperature.inherentinsulation or nil
+    data.hungerrate = inst.components.hunger.hungerrate
+    data.absorb = inst.components.health.absorb
+    data.damagemultiplier = inst.components.combat.damagemultiplier
+    data.inherentinsulation = inst.components.temperature.inherentinsulation
 end
 
 -- 这对服务器和客户端初始化。可以添加标注。
@@ -295,11 +288,12 @@ end
 -- 这对于服务器初始化。组件被添加。
 local master_postinit = function(inst)
     -- 选择这个角色的声音
-    inst.eatsl = 0
-    inst.eatsj = false
     inst.level = 0
     inst.jnd = 0
     inst.je = 0
+    inst.totalPoints = 0
+    inst.berryCount = 0
+    inst.berryEnough = false
     inst.starting_inventory = start_inv
     inst.components.eater:SetOnEatFn(oneat)
     applyupgrades(inst)
@@ -332,12 +326,12 @@ local master_postinit = function(inst)
     -- AFFINITY_15_CALORIES_LARGE = 1.4
     -- AFFINITY_15_CALORIES_HUGE = 1.2
     -- AFFINITY_15_CALORIES_SUPERHUGE = 1.1
-    -- 香蕉奶昔（至少有两个香蕉/烤香蕉，不能有肉度，鱼度，怪物度） 8,25+15,33
+    -- 香蕉奶昔 至少两个(烤)香蕉，不能有鱼度、肉度、怪物度、冰 8,25+15,33
     inst.components.foodaffinity:AddPrefabAffinity("bananajuice", TUNING.AFFINITY_15_CALORIES_MED)
 
     --inst.components.health:StartRegen(1,4)
     -- 增加击杀掉落
-    inst:ListenForEvent("killed", onkillother)
+    inst:ListenForEvent("killed", OnKillOther)
 
     inst.OnSave = onsave
     inst.OnPreLoad = onpreload

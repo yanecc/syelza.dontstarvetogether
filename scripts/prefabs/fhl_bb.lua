@@ -19,7 +19,7 @@ local function AcceptTest(inst, item)
     return false
 end
 
-local function OnGetItemFromPlayer(inst, giver, item)
+local function OnGetItem(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.armor:GetPercent() < 1 then
         inst.components.armor.condition = inst.components.armor.condition + TUNING.BB_DURABILITY * 0.2
         if inst.components.armor:GetPercent() > 1 then
@@ -28,7 +28,7 @@ local function OnGetItemFromPlayer(inst, giver, item)
     end
 end
 
-local function onbreak(owner, data)
+local function OnBreak(owner, data)
     local armor = data ~= nil and data.armor or nil
     if armor and armor.components.container then
         armor.components.container:DropEverything()
@@ -52,20 +52,20 @@ local function OnTakeDamage(inst, damage_amount)
     end
 end
 
-local function onequip(inst, owner)
+local function OnEquip(inst, owner)
     owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_15220700")
     owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_b6d8e12e")
     inst.components.container:Open(owner)
-    inst:ListenForEvent("armorbroke", onbreak, owner)
+    inst:ListenForEvent("armorbroke", OnBreak, owner)
 end
 
-local function onunequip(inst, owner)
+local function OnUnequip(inst, owner)
     owner.AnimState:ClearOverrideSymbol("swap_body")
     owner.AnimState:ClearOverrideSymbol("backpack")
     if inst.components.container ~= nil then
         inst.components.container:Close(owner)
     end
-    inst:RemoveEventCallback("armorbroke", onbreak, owner)
+    inst:RemoveEventCallback("armorbroke", OnBreak, owner)
 end
 
 local function fn()
@@ -121,14 +121,14 @@ local function fn()
         inst.components.armor.ontakedamage = OnTakeDamage
         inst:AddComponent("trader")
         inst.components.trader:SetAcceptTest(AcceptTest)
-        inst.components.trader.onaccept = OnGetItemFromPlayer
+        inst.components.trader.onaccept = OnGetItem
     end
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.BACK or EQUIPSLOTS.BODY
 
-    inst.components.equippable:SetOnEquip(onequip)
-    inst.components.equippable:SetOnUnequip(onunequip)
+    inst.components.equippable:SetOnEquip(OnEquip)
+    inst.components.equippable:SetOnUnequip(OnUnequip)
 
     inst:AddComponent("container")
     inst.components.container:WidgetSetup("krampus_sack")
