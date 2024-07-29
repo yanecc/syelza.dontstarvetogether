@@ -229,10 +229,12 @@ local function create_licking()
 
     inst:AddTag("companion")
     inst:AddTag("character")
-    inst:AddTag("prototyper")
     inst:AddTag("scarytoprey")
     inst:AddTag("notraptrigger")
     inst:AddTag("personal_licking")
+    if TUNING.APPLESTORE then
+        inst:AddTag("prototyper")
+    end
 
     inst:AddTag("_named")
 
@@ -297,8 +299,10 @@ local function create_licking()
     --print("   knownlocations")
     inst:AddComponent("knownlocations")
 
-    inst:AddComponent("prototyper")
-    inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
+    if TUNING.APPLESTORE then
+        inst:AddComponent("prototyper")
+        inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
+    end
 
     --print("   burnable")
     MakeSmallBurnableCharacter(inst, "licking_body")
