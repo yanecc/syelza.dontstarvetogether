@@ -68,6 +68,16 @@ local function OnUnequip(inst, owner)
     inst:RemoveEventCallback("armorbroke", OnBreak, owner)
 end
 
+local function KeepLives(inst, data)
+    if data.item and data.item.components.perishable and data.item:HasTag("smallcreature") then
+        data.item.components.perishable:StopPerishing()
+        data.item:AddTag("fhlpet")
+    elseif data.prev_item and data.prev_item:HasTag("fhlpet") then
+        data.prev_item.components.perishable:StartPerishing()
+        data.prev_item:RemoveTag("fhlpet")
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -132,6 +142,9 @@ local function fn()
 
     inst:AddComponent("container")
     inst.components.container:WidgetSetup("krampus_sack")
+
+    inst:ListenForEvent("itemget", KeepLives)
+    inst:ListenForEvent("itemlose", KeepLives)
 
     MakeHauntableLaunchAndDropFirstItem(inst)
 

@@ -134,6 +134,7 @@ local function fn(Sim)
     local fuelLevel = TUNING.SKILL_TREE and 10 or 2
     inst.components.fueled.fueltype = FUELTYPE.MAGIC
     inst.components.fueled:SetDepletedFn(inst.Remove)
+    -- inst.components.fueled:SetDepletedFn(OnDepleted)
     inst.components.fueled:InitializeFuelLevel(fuelLevel * TUNING.TOTAL_DAY_TIME)
 
     inst:AddComponent("equippable")
@@ -185,8 +186,8 @@ local function fn(Sim)
     inst.components.container:WidgetSetup("hsf_addon")
     inst.components.container.acceptsstacks = false
 
-    inst:ListenForEvent("itemget", UpdateHSFAddon)
-    inst:ListenForEvent("itemlose", UpdateHSFAddon)
+    -- inst:ListenForEvent("itemget", UpdateHSFAddon)
+    -- inst:ListenForEvent("itemlose", UpdateHSFAddon)
 
     return inst
 end

@@ -45,25 +45,23 @@ PrefabFiles = {
 }
 
 
-
+GLOBAL.TUNING.FHL = {}
 if GetModConfigData("fhl_language") == 0 then
-    GLOBAL.TUNING.FHL = {}
+    STRINGS.NAMES.BJ_11 = "萌妹子的宝具"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.BJ_11 = "我可以用它来做所有事情。"
+    STRINGS.RECIPE_DESC.BJ_11 = "这是生产工具。"
 
-    GLOBAL.STRINGS.NAMES.BJ_11 = "萌妹子的宝具"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.BJ_11 = "我可以用它来做所有事情。"
-    GLOBAL.STRINGS.RECIPE_DESC.BJ_11 = "这是生产工具。"
+    STRINGS.NAMES.ANCIENT_GEM = "耀古之晶"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_GEM = "我感受到了上古的气息。"
+    STRINGS.RECIPE_DESC.ANCIENT_GEM = "充斥着澎湃的\n古老的气息"
 
-    GLOBAL.STRINGS.NAMES.ANCIENT_GEM = "耀古之晶"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_GEM = "我感受到了上古的气息。"
-    GLOBAL.STRINGS.RECIPE_DESC.ANCIENT_GEM = "充斥着澎湃的\n古老的气息"
+    STRINGS.NAMES.FHL_TREE = "希雅蕾丝树枝"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_TREE = "我感受到了生命的气息。"
+    STRINGS.RECIPE_DESC.FHL_TREE = "生命之树的枝条\n恩,有股香蕉的味道."
 
-    GLOBAL.STRINGS.NAMES.FHL_TREE = "希雅蕾丝树枝"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_TREE = "我感受到了生命的气息。"
-    GLOBAL.STRINGS.RECIPE_DESC.FHL_TREE = "生命之树的枝条\n恩,有股香蕉的味道."
-
-    GLOBAL.STRINGS.NAMES.ANCIENT_SOUL = "符文结晶"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "这是符文的结晶。"
-    GLOBAL.STRINGS.RECIPE_DESC.ANCIENT_SOUL = "这是符文的结晶"
+    STRINGS.NAMES.ANCIENT_SOUL = "符文结晶"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "这是符文的结晶。"
+    STRINGS.RECIPE_DESC.ANCIENT_SOUL = "这是符文的结晶"
 
     STRINGS.NAMES.FHL_ZZJ = "金芜菁之杖-初阶"
     STRINGS.RECIPE_DESC.FHL_ZZJ = "金芜菁之杖 Lv1\n伤害: 20 冰冻概率:4%"
@@ -123,30 +121,28 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.NAMES.PERSONAL_LICKING_EYEBONE = "风幻的铃铛"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING_EYEBONE = "铃铛的声音很好听."
 
-    --GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.KRAMPUS_SACK = "it looks great."
-    --GLOBAL.STRINGS.RECIPE_DESC.KRAMPUS_SACK = "集冰箱护甲暖石一身的\n高级背包"
+    --STRINGS.CHARACTERS.GENERIC.DESCRIBE.KRAMPUS_SACK = "it looks great."
+    --STRINGS.RECIPE_DESC.KRAMPUS_SACK = "集冰箱护甲暖石一身的\n高级背包"
 
     STRINGS.NAMES.FHL_BB = "瑟尔泽的背包"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "它看起来很棒。"
-    STRINGS.RECIPE_DESC.FHL_BB = "集冰箱护甲于一身的高级背包"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "噢，真漂亮，宠物们该会很高兴住进去"
+    STRINGS.RECIPE_DESC.FHL_BB = "冰箱背包，收纳的小生命会得到最好的照料"
 else
-    GLOBAL.TUNING.FHL = {}
+    STRINGS.NAMES.BJ_11 = "Cute girl's treasure"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.BJ_11 = "I can use this to do everything."
+    STRINGS.RECIPE_DESC.BJ_11 = "this is the Production tools."
 
-    GLOBAL.STRINGS.NAMES.BJ_11 = "Cute girl's treasure"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.BJ_11 = "I can use this to do everything."
-    GLOBAL.STRINGS.RECIPE_DESC.BJ_11 = "this is the Production tools."
+    STRINGS.NAMES.ANCIENT_GEM = "Yaogu Crystal"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_GEM = "I felt the ancient's smell."
+    STRINGS.RECIPE_DESC.ANCIENT_GEM = "The seeds of the ancient tower."
 
-    GLOBAL.STRINGS.NAMES.ANCIENT_GEM = "Yaogu Crystal"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_GEM = "I felt the ancient's smell."
-    GLOBAL.STRINGS.RECIPE_DESC.ANCIENT_GEM = "The seeds of the ancient tower."
+    STRINGS.NAMES.FHL_TREE = "ShiaLace Branch"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_TREE = "I felt the banana's smell."
+    STRINGS.RECIPE_DESC.FHL_TREE = "The seeds of the banana trees."
 
-    GLOBAL.STRINGS.NAMES.FHL_TREE = "ShiaLace Branch"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_TREE = "I felt the banana's smell."
-    GLOBAL.STRINGS.RECIPE_DESC.FHL_TREE = "The seeds of the banana trees."
-
-    GLOBAL.STRINGS.NAMES.ANCIENT_SOUL = "Rune Crystal"
-    GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "this is the ancient soul."
-    GLOBAL.STRINGS.RECIPE_DESC.ANCIENT_SOUL = "this is the ancient soul."
+    STRINGS.NAMES.ANCIENT_SOUL = "Rune Crystal"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "this is the ancient soul."
+    STRINGS.RECIPE_DESC.ANCIENT_SOUL = "this is the ancient soul."
 
     STRINGS.NAMES.FHL_ZZJ = "Golden wujing Lv1"
     STRINGS.RECIPE_DESC.FHL_ZZJ = "Golden wujing Lv1\nATK: 20 Ice chance:4%"
@@ -207,15 +203,13 @@ else
     STRINGS.NAMES.PERSONAL_LICKING_EYEBONE = "Syelza's Bell"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING_EYEBONE = "The sound of the bell is nice."
 
-    --GLOBAL.STRINGS.CHARACTERS.GENERIC.DESCRIBE.KRAMPUS_SACK = "it looks great."
-    --GLOBAL.STRINGS.RECIPE_DESC.KRAMPUS_SACK = "集冰箱护甲暖石一身的\n高级背包"
+    --STRINGS.CHARACTERS.GENERIC.DESCRIBE.KRAMPUS_SACK = "it looks great."
+    --STRINGS.RECIPE_DESC.KRAMPUS_SACK = "集冰箱护甲暖石一身的\n高级背包"
 
     STRINGS.NAMES.FHL_BB = "Syelza's Backpack"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "it looks great."
-    STRINGS.RECIPE_DESC.FHL_BB = "fridge/raincoat/armor"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "Oh, Nice. Why are my pets still out there?"
+    STRINGS.RECIPE_DESC.FHL_BB = "fridge/armor/animal's heaven"
 end
-
-
 
 
 -- 人物语言反馈
@@ -350,7 +344,7 @@ TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
 TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen")
 TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
-------------------box
+------------------ Backpack
 local oldwidgetsetup = containers.widgetsetup
 containers.widgetsetup = function(container, prefab)
     if not prefab and container.inst.prefab == "fhl_bb" then
@@ -359,7 +353,7 @@ containers.widgetsetup = function(container, prefab)
     oldwidgetsetup(container, prefab)
 end
 
----------------
+------------------ The Amulet
 local params = {}
 local containers_widgetsetup_base = containers.widgetsetup
 function containers.widgetsetup(container, prefab, data, ...)
@@ -408,47 +402,6 @@ params.hsf_addon = hsfAddOn()
 for k, v in pairs(params) do
     containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
 end
-
-----------------------------------------------------------------------------------------------------
--- params.bundle_container =
--- {
---     widget =
---     {
---         slotpos =
---         {
---             Vector3(-37.5, 32 + 4, 0),
---             Vector3(37.5, 32 + 4, 0),
---             Vector3(-37.5, -(32 + 4), 0),
---             Vector3(37.5, -(32 + 4), 0),
---         },
---         animbank = "ui_bundle_2x2",
---         animbuild = "ui_bundle_2x2",
---         pos = Vector3(200, 0, 0),
---         side_align_tip = 120,
---         buttoninfo =
---         {
---             text = STRINGS.ACTIONS.WRAPBUNDLE,
---             position = Vector3(0, -100, 0),
---         }
---     },
---     type = "cooker",
--- }
-
--- function params.bundle_container.itemtestfn(container, item, slot)
---     return not (item:HasTag("irreplaceable") or item:HasTag("_container") or item:HasTag("bundle") or item:HasTag("nobundling"))
--- end
-
--- function params.bundle_container.widget.buttoninfo.fn(inst, doer)
---     if inst.components.container ~= nil then
---         BufferedAction(doer, inst, ACTIONS.WRAPBUNDLE):Do()
---     elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
---         SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.WRAPBUNDLE.code, inst, ACTIONS.WRAPBUNDLE.mod_name)
---     end
--- end
-
--- function params.bundle_container.widget.buttoninfo.validfn(inst)
---     return inst.replica.container ~= nil and not inst.replica.container:IsEmpty()
--- end
 
 ----------------------------------------------------------------------------------------------------
 
@@ -808,7 +761,6 @@ AddPrefabPostInit("world", function(inst)
     end)
 end)
 
-
 -- 注册图片
 RegisterInventoryItemAtlas("images/inventoryimages/ancient_soul.xml", "ancient_soul.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj.xml", "fhl_zzj.tex")
@@ -827,55 +779,168 @@ RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex"
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
 
-
 ----------------------------------------------------------------------------------------
-GLOBAL.PROTOTYPER_DEFS.personal_licking = {
-    icon_atlas = "images/inventoryimages/licking_eyebone.xml",
-    icon_image = "licking_eyebone.tex",
-    is_crafting_station = true,
-    action_str = "TRADE",
-    filter_text = "苹果杂货铺",
-}
+if TUNING.APPLESTORE then
+    GLOBAL.PROTOTYPER_DEFS.personal_licking = {
+        icon_atlas = "images/inventoryimages/licking_eyebone.xml",
+        icon_image = "licking_eyebone.tex",
+        is_crafting_station = true,
+        action_str = "TRADE",
+        filter_text = "苹果杂货铺",
+    }
 
-GLOBAL.RECIPETABS.PROPERTY = {
-    str = "PROPERTY",
-    sort = 666,
-    icon = "licking_eyebone.tex",
-    icon_atlas = "images/inventoryimages/licking_eyebone.xml",
-    crafting_station = true,
-    shop = true
-}
-----------------------------------------------------------------------------------------
-TechTree.Make = function(t)
-    t = t or {}
-    for i, v in ipairs(TechTree.AVAILABLE_TECH) do
-        t[v] = t[v] or 0
+    GLOBAL.RECIPETABS.PROPERTY = {
+        str = "PROPERTY",
+        sort = 666,
+        icon = "licking_eyebone.tex",
+        icon_atlas = "images/inventoryimages/licking_eyebone.xml",
+        crafting_station = true,
+        shop = true
+    }
+    ----------------------------------------------------------------------------------------
+    TechTree.Make = function(t)
+        t = t or {}
+        for i, v in ipairs(TechTree.AVAILABLE_TECH) do
+            t[v] = t[v] or 0
+        end
+        return t
     end
-    return t
-end
-table.insert(TechTree.AVAILABLE_TECH, "PROPERTY")
-table.insert(TechTree.BONUS_TECH, "PROPERTY")
-for k, v in pairs(TUNING.PROTOTYPER_TREES) do
-    v.PROPERTY = 0
-end
-
-TECH.NONE.PROPERTY = 0
-TECH.APPLESTORE = { PROPERTY = 1 }
-TUNING.PROTOTYPER_TREES.APPLESTORE = TechTree.Make({
-    PROPERTY = 1,
-})
--- TECH.ONCESUPPLY = { PROPERTY = 2 }
--- TUNING.PROTOTYPER_TREES.ONCESUPPLY = TechTree.Make({
---     PROPERTY = 2,
--- })
-for i, v in pairs(GLOBAL.AllRecipes) do
-    if v.level.PROPERTY == nil then
-        v.level.PROPERTY = 0
+    table.insert(TechTree.AVAILABLE_TECH, "PROPERTY")
+    table.insert(TechTree.BONUS_TECH, "PROPERTY")
+    for k, v in pairs(TUNING.PROTOTYPER_TREES) do
+        v.PROPERTY = 0
     end
+
+    TECH.NONE.PROPERTY = 0
+    TECH.APPLESTORE = { PROPERTY = 1 }
+    TUNING.PROTOTYPER_TREES.APPLESTORE = TechTree.Make({
+        PROPERTY = 1,
+    })
+    -- TECH.ONCESUPPLY = { PROPERTY = 2 }
+    -- TUNING.PROTOTYPER_TREES.ONCESUPPLY = TechTree.Make({
+    --     PROPERTY = 2,
+    -- })
+    for i, v in pairs(GLOBAL.AllRecipes) do
+        if v.level.PROPERTY == nil then
+            v.level.PROPERTY = 0
+        end
+    end
+
+    -- ----SHOPPING----
+    AddRecipe2("free_hot_drink", {}, TECH.APPLESTORE,
+        { product = "winter_food8", nounlock = true, builder_tag = "firstorder", no_deconstruction = true })               -- 热可可
+    AddRecipe2("free_cold_drink", {}, TECH.APPLESTORE,
+        { product = "winter_food9", nounlock = true, builder_tag = "summerorder", no_deconstruction = true })              -- 美味的蛋酒
+    AddRecipe2("gold_exchange", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "ancient_soul", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 符文结晶
+    AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "voltgoatjelly", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })              -- 伏特羊肉冻
+    AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "glowberrymousse", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 发光浆果慕斯
+    AddRecipe2("entree_dragonchilisalad", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "dragonchilisalad", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 辣龙椒沙拉
+    AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 蓝带鱼排
+    AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 恐怖国王饼
+    AddRecipe2("treasure_mudpie", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "yotp_food2", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 八宝泥馅饼
+    AddRecipe2("treasure_luckyfan", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "perdfan", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                    -- 幸运火鸡扇
+    AddRecipe2("treasure_luckywhistle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "houndwhistle", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 幸运猎犬哨子
+    AddRecipe2("treasure_giftwrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "giftwrap", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                   -- 礼物包装
+    AddRecipe2("treasure_seedpacket_rare", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "yotc_seedpacket_rare", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })       -- 高级种子包
+    AddRecipe2("treasure_surprisingseed", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "ancienttree_seed", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 惊喜种子
+    AddRecipe2("treasure_normaltree", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "livingtree_root", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 完全正常的树根
+    AddRecipe2("treasure_redlantern", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
+        { product = "redlantern", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 红灯笼
+    AddRecipe2("treasure_dragonboat_lamp", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
+        { product = "mastupgrade_lamp_item_yotd", nounlock = true, builder_tag = "bellholder", no_deconstruction = true }) -- 龙蝇灯套装
+    AddRecipe2("treasure_archaic_boat", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
+        { product = "boat_ancient_item", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 古董船套装
+    AddRecipe2("treasure_dragonboat_pack", { Ingredient("goldnugget", 30) }, TECH.APPLESTORE,
+        { product = "dragonboat_pack", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 豪华龙蝇船套装
+    AddRecipe2("raw_scrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "wagpunk_bits", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 废料
+    AddRecipe2("raw_emptybottle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "messagebottleempty", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })         -- 空瓶子
+    AddRecipe2("raw_voidcloth", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "voidcloth", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 暗影碎布
+    AddRecipe2("raw_dreadstone", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
+        { product = "dreadstone", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 绝望石
+    AddRecipe2("raw_horrorfuel", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
+        { product = "horrorfuel", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 纯粹恐惧
+    AddRecipe2("raw_lunarplant_husk", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "lunarplant_husk", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 亮茄外壳
+    AddRecipe2("raw_moonglass_charged", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "moonglass_charged", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 充能月亮碎片
+    AddRecipe2("raw_purebrilliance", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
+        { product = "purebrilliance", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 纯粹辉煌
+    AddRecipe2("raw_enlightened_shard", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
+        { product = "alterguardianhatshard", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })      -- 启迪碎片
+    AddRecipe2("raw_spark_ark", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
+        { product = "security_pulse_cage_full", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })   -- 充能火花柜
+
+    AddPlayerPostInit(function(inst)
+        inst:ListenForEvent("makerecipe", function(inst, data)
+            if data.recipe.name == "free_hot_drink" then
+                inst:RemoveTag("firstorder")
+            end
+            if data.recipe.name == "free_cold_drink" then
+                inst:RemoveTag("summerorder")
+            end
+        end)
+    end)
 end
 
 ----------------------------------------------------------------------------------------
+local function ReedsBonus(inst)
+    if not inst.components.pickable then return end
+    inst.components.pickable.onpickedfn = function(inst, picker)
+        inst.SoundEmitter:PlaySound("dontstarve/wilson/pickup_reeds")
+        inst.AnimState:PlayAnimation("picking")
+
+        if inst.components.pickable:IsBarren() then
+            inst.AnimState:PushAnimation("empty_to_dead")
+            inst.AnimState:PushAnimation("idle_dead", false)
+        else
+            inst.AnimState:PushAnimation("picked", false)
+        end
+
+        if picker.components.inventory and picker:HasTag("fhl") and math.random() < 0.5 then
+            picker.components.inventory:GiveItem(GLOBAL.SpawnPrefab("cutreeds"))
+        end
+    end
+end
+
+local function ReduceFoodHealthPenalty(inst, eater, health)
+    for k, v in pairs(eater.components.inventory.equipslots) do
+        if v and v:HasTag("foodharm_resistant") then
+            return -1
+        end
+    end
+    return health
+end
+
 if TUNING.SKILL_TREE then
+    -- AddPrefabPostInit("reeds", ReedsBonus)
+    -- AddPrefabPostInit("monkeytail", ReedsBonus)
+    AddComponentPostInit("edible", function(self)
+        local oldGetHealth = self.GetHealth
+        self.GetHealth = function(self, eater, ...)
+            local health = oldGetHealth(self, eater, ...)
+            if self.healthvalue < -1 then
+                health = ReduceFoodHealthPenalty(self.inst, eater, health)
+            end
+            return health
+        end
+    end)
+
     AddCharacterRecipe("book_gardening", { Ingredient("papyrus", 2), Ingredient("seeds", 1), Ingredient("poop", 1) },
         TECH.NONE, { product = "book_gardening", builder_tag = "fhl" })
 end
@@ -951,79 +1016,6 @@ AddDeconstructRecipe("fhl_x2",
 -- AddDeconstructRecipe("ancient_gem",
 --     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })
 
--- ----SHOPPING----
-AddRecipe2("free_hot_drink", {}, TECH.APPLESTORE,
-    { product = "winter_food8", nounlock = true, builder_tag = "firstorder", no_deconstruction = true })               -- 热可可
-AddRecipe2("free_cold_drink", {}, TECH.APPLESTORE,
-    { product = "winter_food9", nounlock = true, builder_tag = "summerorder", no_deconstruction = true })              -- 美味的蛋酒
-AddRecipe2("gold_exchange", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "ancient_soul", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 符文结晶
-AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "voltgoatjelly", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })              -- 伏特羊肉冻
-AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "glowberrymousse", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 发光浆果慕斯
-AddRecipe2("entree_dragonchilisalad", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "dragonchilisalad", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 辣龙椒沙拉
-AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 蓝带鱼排
-AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 恐怖国王饼
-AddRecipe2("treasure_mudpie", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "yotp_food2", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 八宝泥馅饼
-AddRecipe2("treasure_luckyfan", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "perdfan", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                    -- 幸运火鸡扇
-AddRecipe2("treasure_luckywhistle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "houndwhistle", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 幸运猎犬哨子
-AddRecipe2("treasure_giftwrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "giftwrap", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                   -- 礼物包装
-AddRecipe2("treasure_seedpacket_rare", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "yotc_seedpacket_rare", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })       -- 高级种子包
-AddRecipe2("treasure_surprisingseed", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "ancienttree_seed", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 惊喜种子
-AddRecipe2("treasure_normaltree", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "livingtree_root", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 完全正常的树根
-AddRecipe2("treasure_redlantern", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-    { product = "redlantern", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 红灯笼
-AddRecipe2("treasure_dragonboat_lamp", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-    { product = "mastupgrade_lamp_item_yotd", nounlock = true, builder_tag = "bellholder", no_deconstruction = true }) -- 龙蝇灯套装
-AddRecipe2("treasure_archaic_boat", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
-    { product = "boat_ancient_item", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 古董船套装
-AddRecipe2("treasure_dragonboat_pack", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
-    { product = "dragonboat_pack", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 豪华龙蝇船套装
-AddRecipe2("raw_scrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "wagpunk_bits", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 废料
-AddRecipe2("raw_emptybottle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "messagebottleempty", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })         -- 空瓶子
-AddRecipe2("raw_voidcloth", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "voidcloth", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 暗影碎布
-AddRecipe2("raw_dreadstone", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-    { product = "dreadstone", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 绝望石
-AddRecipe2("raw_horrorfuel", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-    { product = "horrorfuel", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 纯粹恐惧
-AddRecipe2("raw_lunarplant_husk", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "lunarplant_husk", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 亮茄外壳
-AddRecipe2("raw_moonglass_charged", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-    { product = "moonglass_charged", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 充能月亮碎片
-AddRecipe2("raw_purebrilliance", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-    { product = "purebrilliance", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 纯粹辉煌
-AddRecipe2("raw_enlightened_shard", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
-    { product = "alterguardianhatshard", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })      -- 启蒙碎片
-AddRecipe2("raw_spark_ark", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
-    { product = "security_pulse_cage_full", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })   -- 充能火花柜
-
-if TUNING.APPLESTORE then
-    AddPlayerPostInit(function(inst)
-        inst:ListenForEvent("makerecipe", function(inst, data)
-            if data.recipe.name == "free_hot_drink" then
-                inst:RemoveTag("firstorder")
-            end
-            if data.recipe.name == "free_cold_drink" then
-                inst:RemoveTag("summerorder")
-            end
-        end)
-    end)
-end
-
 -- ----BOOK----
 -- 降低了科技等级，相当于老奶奶
 
@@ -1035,48 +1027,6 @@ AddRecipe2("book_brimstone", { Ingredient("papyrus", 2), Ingredient("redgem", 1)
 
 AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespots", 1) }, TECH.NONE,
     { product = "book_tentacles", builder_tag = "bookbuilder" })
-
-local function ReedsBonus(inst)
-    if not inst.components.pickable then return end
-    inst.components.pickable.onpickedfn = function(inst, picker)
-        inst.SoundEmitter:PlaySound("dontstarve/wilson/pickup_reeds")
-        inst.AnimState:PlayAnimation("picking")
-
-        if inst.components.pickable:IsBarren() then
-            inst.AnimState:PushAnimation("empty_to_dead")
-            inst.AnimState:PushAnimation("idle_dead", false)
-        else
-            inst.AnimState:PushAnimation("picked", false)
-        end
-
-        if picker.components.inventory and picker:HasTag("fhl") and math.random() < 0.5 then
-            picker.components.inventory:GiveItem(GLOBAL.SpawnPrefab("cutreeds"))
-        end
-    end
-end
-
-local function ReduceFoodHealthPenalty(inst, eater, health)
-    for k, v in pairs(eater.components.inventory.equipslots) do
-        if v and v:HasTag("foodharm_resistant") then
-            return -1
-        end
-    end
-    return health
-end
-if TUNING.SKILL_TREE then
-    -- AddPrefabPostInit("reeds", ReedsBonus)
-    -- AddPrefabPostInit("monkeytail", ReedsBonus)
-    AddComponentPostInit("edible", function(self)
-        local oldGetHealth = self.GetHealth
-        self.GetHealth = function(self, eater, ...)
-            local health = oldGetHealth(self, eater, ...)
-            if self.healthvalue < -1 then
-                health = ReduceFoodHealthPenalty(self.inst, eater, health)
-            end
-            return health
-        end
-    end)
-end
 
 -----------创建地图图标和角色基础属性
 AddMinimapAtlas("images/map_icons/fhl.xml")
