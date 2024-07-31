@@ -733,6 +733,7 @@ AddPrefabPostInit("world", function(inst)
     --     end
     -- end
     -- inst.OnLoad = onLoad
+    -- inst.TradingRecord = {}
 
     -- inst:WatchWorldState("cycles", OnDayComplete)
     -- inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
@@ -863,7 +864,7 @@ if TUNING.APPLESTORE then
         { product = "mastupgrade_lamp_item_yotd", nounlock = true, builder_tag = "bellholder", no_deconstruction = true }) -- 龙蝇灯套装
     AddRecipe2("treasure_archaic_boat", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
         { product = "boat_ancient_item", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 古董船套装
-    AddRecipe2("treasure_dragonboat_pack", { Ingredient("goldnugget", 30) }, TECH.APPLESTORE,
+    AddRecipe2("treasure_dragonboat_pack", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
         { product = "dragonboat_pack", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 豪华龙蝇船套装
     AddRecipe2("raw_scrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
         { product = "wagpunk_bits", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 废料

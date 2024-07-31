@@ -6,35 +6,43 @@ local assets =
     Asset("ATLAS", "images/inventoryimages/fhl_bb.xml")
 }
 
+local function OnEquip(inst, owner)
+    owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_15220700")
+    owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_b6d8e12e")
+    if inst.components.container ~= nil then
+        inst.components.container:Open(owner)
+    end
+end
+
+local function OnUnequip(inst, owner)
+    owner.AnimState:ClearOverrideSymbol("swap_body")
+    owner.AnimState:ClearOverrideSymbol("backpack")
+    if inst.components.container ~= nil then
+        inst.components.container:Close(owner)
+    end
+end
+
+local function KeepLives(inst, data)
+    if data.item and data.item.components.perishable and data.item:HasTag("smallcreature") then
+        data.item.components.perishable:StopPerishing()
+        data.item:AddTag("fhlpet")
+    elseif data.prev_item and data.prev_item:HasTag("fhlpet") then
+        data.prev_item.components.perishable:StartPerishing()
+        data.prev_item:RemoveTag("fhlpet")
+    end
+end
+
 local function AcceptTest(inst, item)
-    if item.prefab == "ancient_soul" and inst.components.armor:GetPercent() < 1 then
+    if item.prefab == "ancient_soul" and inst.components.armor:IsDamaged() then
         return true
-    elseif inst.components.armor:GetPercent() == 1 then
-        local owner = item.components.inventoryitem:GetGrandOwner()
-        owner.components.talker:Say("耐久已满!\nDurability is full!")
-    else
+    elseif item.prefab ~= "ancient_soul" then
         local owner = item.components.inventoryitem:GetGrandOwner()
         owner.components.talker:Say("qwq这个无法用来修复背包哦!\nThis can't be used to repairing the backpack!")
+    else
+        local owner = item.components.inventoryitem:GetGrandOwner()
+        owner.components.talker:Say("耐久已满!\nDurability is full!")
     end
     return false
-end
-
-local function OnGetItem(inst, giver, item)
-    if item.prefab == "ancient_soul" and inst.components.armor:GetPercent() < 1 then
-        inst.components.armor.condition = inst.components.armor.condition + TUNING.BB_DURABILITY * 0.2
-        if inst.components.armor:GetPercent() > 1 then
-            inst.components.armor:SetCondition(TUNING.BB_DURABILITY)
-        end
-    end
-end
-
-local function OnBreak(owner, data)
-    local armor = data ~= nil and data.armor or nil
-    if armor and armor.components.container then
-        armor.components.container:DropEverything()
-        armor.components.container:Close()
-        armor:RemoveComponent("container")
-    end
 end
 
 local function OnTakeDamage(inst, damage_amount)
@@ -52,29 +60,13 @@ local function OnTakeDamage(inst, damage_amount)
     end
 end
 
-local function OnEquip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_15220700")
-    owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_b6d8e12e")
-    inst.components.container:Open(owner)
-    inst:ListenForEvent("armorbroke", OnBreak, owner)
-end
-
-local function OnUnequip(inst, owner)
-    owner.AnimState:ClearOverrideSymbol("swap_body")
-    owner.AnimState:ClearOverrideSymbol("backpack")
+local function OnBroken(inst)
     if inst.components.container ~= nil then
-        inst.components.container:Close(owner)
-    end
-    inst:RemoveEventCallback("armorbroke", OnBreak, owner)
-end
-
-local function KeepLives(inst, data)
-    if data.item and data.item.components.perishable and data.item:HasTag("smallcreature") then
-        data.item.components.perishable:StopPerishing()
-        data.item:AddTag("fhlpet")
-    elseif data.prev_item and data.prev_item:HasTag("fhlpet") then
-        data.prev_item.components.perishable:StartPerishing()
-        data.prev_item:RemoveTag("fhlpet")
+        inst.components.container:DropEverything()
+        inst.components.container:Close()
+        inst:RemoveComponent("container")
+        -- inst:RemoveAllEventCallbacks()
+        inst:Remove()
     end
 end
 
@@ -129,9 +121,13 @@ local function fn()
         inst:AddComponent("armor")
         inst.components.armor:InitCondition(TUNING.BB_DURABILITY, 0.8)
         inst.components.armor.ontakedamage = OnTakeDamage
+        inst.components.armor:SetOnFinished(OnBroken)
+
         inst:AddComponent("trader")
         inst.components.trader:SetAcceptTest(AcceptTest)
-        inst.components.trader.onaccept = OnGetItem
+        inst.components.trader.onaccept = function(inst, giver, item)
+            inst.components.armor:Repair(TUNING.BB_DURABILITY * 0.2)
+        end
     end
 
     inst:AddComponent("equippable")
