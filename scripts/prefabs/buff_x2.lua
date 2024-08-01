@@ -5,7 +5,7 @@ local function OnTick(inst, target)
         not target:HasTag("playerghost") then
         local restorePercent = math.random(5, 15) / 100
         if target.components.sanity:GetPercent() < target.components.health:GetPercent() then
-            target.components.sanity:DoDelta(math.ceil(target.components.sanity.max * restorePercent))
+            target.components.sanity:DoDelta(math.ceil(target.components.sanity:GetMaxWithPenalty() * restorePercent))
         else
             target.components.health:DoDelta(
                 math.ceil(target.components.health:GetMaxWithPenalty() * restorePercent), nil, "fhl_x2")

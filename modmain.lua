@@ -126,7 +126,7 @@ if GetModConfigData("fhl_language") == 0 then
 
     STRINGS.NAMES.FHL_BB = "瑟尔泽的背包"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "噢，真漂亮，宠物们该会很高兴住进去"
-    STRINGS.RECIPE_DESC.FHL_BB = "冰箱背包，收纳的小生命会得到最好的照料"
+    STRINGS.RECIPE_DESC.FHL_BB = "提供防御的冰箱背包\n收纳的小生命会得到最好的照料"
 else
     STRINGS.NAMES.BJ_11 = "Cute girl's treasure"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.BJ_11 = "I can use this to do everything."
@@ -1001,8 +1001,7 @@ AddCharacterRecipe("fhl_reeds", { Ingredient("cutreeds", 8), Ingredient("ancient
 AddCharacterRecipe("fhl_tree", { Ingredient("twigs", 4), Ingredient("ancient_soul", 1) }, TECH.NONE,
     { product = "fhl_tree", builder_tag = "fhl" })
 
-AddCharacterRecipe("bj_11",
-    { Ingredient("twigs", 6), Ingredient("ancient_soul", 6), Ingredient("goldnugget", 6) },
+AddCharacterRecipe("bj_11", { Ingredient("ancient_soul", 6), Ingredient("goldnugget", 6), Ingredient("twigs", 6) },
     TECH.NONE, { product = "bj_11", builder_tag = "fhl" })
 
 AddIngredientValues({ "fhl_cake" }, { dairy = 1, sweetener = 1 })

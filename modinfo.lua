@@ -32,7 +32,7 @@ configuration_options = {
 
     {
         name = "status_key",
-        label = "查看当前状态的按键",
+        label = "查看当前状态的快捷键",
         hover = "The key to check current status",
         options = {
             { description = "B", data = "KEY_B" },
@@ -56,7 +56,7 @@ configuration_options = {
 
     {
         name = "skill_point_key",
-        label = "查看当前技能点的按键",
+        label = "查看加点提示的快捷键",
         hover = "The key to show available skill points",
         options = {
             { description = "B", data = "KEY_B" },
@@ -287,7 +287,7 @@ configuration_options = {
 
     {
         name = "applestore",
-        label = "苹果新零售(仅持铃人可交易，铃铛需在物品栏)",
+        label = "苹果新零售(铃铛在物品栏方可交易)",
         hover = "Enable trading with the Apple(chester)?",
         options = {
             { description = "no(default)", data = false },

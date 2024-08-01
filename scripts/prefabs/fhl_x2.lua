@@ -17,7 +17,7 @@ local prefabs =
 --         local function restoreBuff()
 --             local restorePercent = math.random(5, 15) / 100
 --             if eater.components.sanity:GetPercent() < eater.components.health:GetPercent() then
---                 eater.components.sanity:DoDelta(math.ceil(eater.components.sanity.max * restorePercent))
+--                 eater.components.sanity:DoDelta(math.ceil(eater.components.sanity:GetMaxWithPenalty() * restorePercent))
 --             else
 --                 eater.components.health:DoDelta(math.ceil(eater.components.health:GetMaxWithPenalty() * restorePercent))
 --             end

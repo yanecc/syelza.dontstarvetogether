@@ -102,11 +102,11 @@ local function OnKillOther(inst, data)
     local victim = data.victim
     if not victim.components.lootdropper then return end
     -- if victim.components.freezable or victim:HasTag("monster") then
-    -- if victim:HasTag("monster") or victim:HasTag("hostile") or victim:HasTag("scarytoprey") then
-    --     if victim:HasTag("epic") or math.random() < TUNING.FHL_COS then
-    --         victim.components.lootdropper:SpawnLootPrefab("ancient_soul")
-    --     end
-    -- end
+    if victim:HasTag("monster") or victim:HasTag("hostile") or victim:HasTag("scarytoprey") then
+        if victim:HasTag("epic") or math.random() < TUNING.FHL_COS then
+            victim.components.lootdropper:SpawnLootPrefab("ancient_soul")
+        end
+    end
 end
 
 
@@ -209,7 +209,7 @@ local function oneat(inst, food)
                 applyupgrades(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
             else
-                inst.components.talker:Say("QWQ 满级了! 没获得技能点!\nQWQ level Max! Got no skill points!")
+                inst.components.talker:Say("QWQ 满级了! 没获得技能点!\nQWQ level Max! Got no skill point!")
             end
         elseif hasGoodLuck then
             -- inst.jnd 技能点
