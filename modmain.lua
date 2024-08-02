@@ -929,7 +929,7 @@ local function ReduceFoodHealthPenalty(inst, eater, health)
 end
 
 if TUNING.SKILL_TREE then
-    -- AddPrefabPostInit("reeds", ReedsBonus)
+    AddPrefabPostInit("reeds", ReedsBonus)
     -- AddPrefabPostInit("monkeytail", ReedsBonus)
     AddComponentPostInit("edible", function(self)
         local oldGetHealth = self.GetHealth
