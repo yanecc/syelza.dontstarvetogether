@@ -8,6 +8,7 @@ local assets =
 }
 
 local prefabs = {
+    "buff_zzj"
 }
 
 local function AcceptTest(inst, item)
@@ -112,12 +113,14 @@ local function fn()
                 owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
                 owner.AnimState:Show("ARM_carry")
                 owner.AnimState:Hide("ARM_normal")
-                -- inst.onownerattackedfn = function(owner, data)
-                --     if owner:IsValid() then
-                --         owner:AddDebuff("buff_zzj", "buff_zzj", { damage = data.damage })
-                --     end
-                -- end
-                -- inst:ListenForEvent("attacked", inst.onownerattackedfn, owner)
+                if TUNING.SKILL_TREE then
+                    inst.onownerattackedfn = function(owner, data)
+                        if owner:IsValid() then
+                            owner:AddDebuff("buff_zzj", "buff_zzj", { damage = data.damage })
+                        end
+                    end
+                    inst:ListenForEvent("attacked", inst.onownerattackedfn, owner)
+                end
             else
                 owner:DoTaskInTime(0, function()
                     local inv = owner.components.inventory
@@ -163,7 +166,9 @@ local function fn()
     local function OnUnequip(inst, owner)
         owner.AnimState:Hide("ARM_carry")
         owner.AnimState:Show("ARM_normal")
-        -- inst:RemoveEventCallback("attacked", inst.onownerattackedfn, owner)
+        if TUNING.SKILL_TREE then
+            inst:RemoveEventCallback("attacked", inst.onownerattackedfn, owner)
+        end
     end
 
     local inst = CreateEntity()
@@ -206,9 +211,9 @@ local function fn()
     --inst:AddInherentAction(ACTIONS.TERRAFORM)    --可铲草
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(20 * TUNING.GJBL)
+    -- inst.components.weapon:SetDamage(20 * TUNING.GJBL)
     -- local fixedDamage = 20 * TUNING.GJBL
-    -- inst.components.weapon:SetDamage(inst.owner.zzjFeedBack and inst.owner.zzjFeedBack + fixedDamage or fixedDamage)
+    inst.components.weapon:SetDamage(inst.owner.zzjFeedBack + 20 * TUNING.GJBL)
     inst.components.weapon:SetRange(2)
     inst.components.weapon:SetOnAttack(onattack)
 

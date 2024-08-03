@@ -46,7 +46,7 @@ local function AcceptTest(inst, item)
 end
 
 local function OnTakeDamage(inst, damage_amount)
-    local owner = inst.components.inventoryitem.owner
+    local owner = inst.components.inventoryitem:GetGrandOwner()
     local durability = inst.components.armor:GetPercent()
     if durability < 0.05 and not inst.thirdLowDurabilityWarning then
         inst.thirdLowDurabilityWarning = true

@@ -250,7 +250,7 @@ local function onpreload(inst, data)
     inst.jnd = data.jnd or data.level
     inst.berryCount = data.berryCount or 0
     inst.totalPoints = data.totalPoints or data.level
-    -- inst.zzjFeedBack = data.zzjFeedBack or 0
+    inst.zzjFeedBack = data.zzjFeedBack or 0
 
     applyupgrades(inst)
 
@@ -265,7 +265,7 @@ local function onsave(inst, data)
     data.jnd = inst.jnd
     data.level = inst.level
     data.totalPoints = inst.totalPoints
-    -- data.zzjFeedBack = inst.zzjFeedBack
+    data.zzjFeedBack = inst.zzjFeedBack
 
     -- 保存已经吃的浆果数量
     data.berryCount = inst.berryCount
@@ -295,7 +295,7 @@ local master_postinit = function(inst)
     inst.totalPoints = 0
     inst.berryCount = 0
     inst.berryEnough = false
-    -- inst.zzjFeedBack = 0
+    inst.zzjFeedBack = 0
     inst.starting_inventory = start_inv
     inst.components.eater:SetOnEatFn(oneat)
     applyupgrades(inst)
