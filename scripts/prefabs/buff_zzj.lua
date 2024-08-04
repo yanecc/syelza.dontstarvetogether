@@ -4,25 +4,6 @@ local function OnAttached(inst, target, followsymbol, followoffset, data)
     inst:ListenForEvent("death", function()
         inst.components.debuff:Stop()
     end, target)
-    inst._onattackother = function(attacker, attackData)
-        if attackData.weapon:HasTag("fhlzzj") then
-            if attackData.projectile == nil then
-                --in combat, this is when we're just launching a projectile, so don't do FX yet
-                if attackData.weapon.components.projectile ~= nil then
-                    return
-                elseif attackData.weapon.components.complexprojectile ~= nil then
-                    return
-                elseif attackData.weapon.components.weapon:CanRangedAttack() then
-                    return
-                end
-            end
-            if attacker.zzjFeedBack then
-                attacker.zzjFeedBack = attacker.zzjFeedBack + data.damage * attacker.level * 0.1
-            end
-        end
-        inst.components.debuff:Stop()
-    end
-    inst:ListenForEvent("onattackother", inst._onattackother, target)
 end
 
 local function OnDetached(inst, target)
@@ -35,7 +16,7 @@ end
 local function OnExtended(inst, target)
     -- inst.components.debuff:Stop()
     inst.components.timer:StopTimer("zzjbuffover")
-    inst.components.timer:StartTimer("zzjbuffover", 10)
+    inst.components.timer:StartTimer("zzjbuffover", 5)
 end
 
 local function fn()
@@ -63,7 +44,7 @@ local function fn()
     inst.components.debuff.keepondespawn = true
 
     inst:AddComponent("timer")
-    inst.components.timer:StartTimer("zzjbuffover", 10)
+    inst.components.timer:StartTimer("zzjbuffover", 5)
     inst:ListenForEvent("timerdone", function(inst, data)
         if data.name == "zzjbuffover" then
             inst.components.debuff:Stop()

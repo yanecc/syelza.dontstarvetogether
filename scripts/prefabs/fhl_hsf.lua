@@ -72,7 +72,7 @@ local function UpdateHSFAddon(inst)
             inst.components.equippable.dapperness = -2
         elseif item.prefab == "purebrilliance" then
             inst.components.planardefense:SetBaseDefense(20)
-        elseif item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 0.99 then
+        elseif item.prefab == "ancient_soul" and not inst.components.fueled:IsFull() then
             inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
             item:Remove()
         else

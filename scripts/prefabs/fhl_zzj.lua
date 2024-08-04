@@ -113,11 +113,10 @@ local function fn()
                 owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
                 owner.AnimState:Show("ARM_carry")
                 owner.AnimState:Hide("ARM_normal")
-                if TUNING.SKILL_TREE then
+                if TUNING.SKILL_TREE and not owner.components.health:IsDead() and not owner:HasTag("playerghost") then
                     inst.onownerattackedfn = function(owner, data)
-                        if owner:IsValid() then
-                            owner:AddDebuff("buff_zzj", "buff_zzj", { damage = data.damage })
-                        end
+                        owner.zzjFeedBack = owner.zzjFeedBack + data.damage * owner.level * 0.1
+                        owner:AddDebuff("buff_zzj", "buff_zzj")
                     end
                     inst:ListenForEvent("attacked", inst.onownerattackedfn, owner)
                 end
@@ -192,6 +191,12 @@ local function fn()
         return inst
     end
 
+    inst:AddComponent("inspectable")
+
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_zzj.xml"
+    --inst.components.inventoryitem.keepondeath = true
+    inst.components.inventoryitem.imagename = "fhl_zzj"
 
     inst:AddComponent("tool")
 
@@ -211,18 +216,9 @@ local function fn()
     --inst:AddInherentAction(ACTIONS.TERRAFORM)    --可铲草
 
     inst:AddComponent("weapon")
-    -- inst.components.weapon:SetDamage(20 * TUNING.GJBL)
-    -- local fixedDamage = 20 * TUNING.GJBL
-    inst.components.weapon:SetDamage(inst.owner.zzjFeedBack + 20 * TUNING.GJBL)
+    inst.components.weapon:SetDamage(20 * TUNING.GJBL)
     inst.components.weapon:SetRange(2)
     inst.components.weapon:SetOnAttack(onattack)
-
-    inst:AddComponent("inspectable")
-
-    inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_zzj.xml"
-    --inst.components.inventoryitem.keepondeath = true
-    inst.components.inventoryitem.imagename = "fhl_zzj"
 
     if TUNING.ZZJ_FINITE_USES > 0 then
         inst:AddComponent("finiteuses")

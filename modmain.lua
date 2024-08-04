@@ -42,6 +42,7 @@ PrefabFiles = {
     --"krampus_sack",
     "fhl_bb",
     "buff_x2",
+    "buff_zzj",
 }
 
 

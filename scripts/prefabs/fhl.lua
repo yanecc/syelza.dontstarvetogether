@@ -120,6 +120,10 @@ local function FhlFire(inst)
     end
 end
 
+-- local function BonusDamageFn(inst, target, damage, weapon)
+--     return weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
+-- end
+
 --升级机制
 local function applyupgrades(inst)
     local maxLevel = 10
@@ -313,6 +317,11 @@ local master_postinit = function(inst)
     inst.components.health:SetMaxHealth(150)
     inst.components.hunger:SetMax(150)
     inst.components.sanity:SetMax(150)
+    -- inst.components.combat.bonusdamagefn = function(inst, target, damage, weapon)
+    --     local bonusDamage = weapon and weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
+    --     inst.zzjFeedBack = 0
+    --     return bonusDamage
+    -- end
 
     inst.components.locomotor.walkspeed = 7
     inst.components.locomotor.runspeed = 9

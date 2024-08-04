@@ -36,17 +36,14 @@ AddModRPCHandler(modname, "T", function(player)
     if not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.level > 10 then player.level = 10 end
         if player.jnd and player.je then
-            player.components.talker:Say("Current State : Lv " .. (player.level) ..
-                "\n当前状态:\n寒冷抗性(The cold resistance):" ..
+            player.components.talker:Say("Current State: Lv " .. (player.level) .. "  Sp " .. player.jnd ..
+                "\n寒冷抗性(The cold resistance): " ..
                 (player.components.temperature.inherentinsulation) .. "/240" ..
-                "\n伤害减免(Damage reduction):" ..
+                "\n伤害减免(Damage reduction): " ..
                 (player.components.health.absorb * 100) .. "%" ..
-                "\n伤害提升(Damage ascension):" ..
+                "\n伤害提升(Damage ascension): " ..
                 ((player.components.combat.damagemultiplier - 1) * 100) .. "%" ..
-                "\n饥饿抗性(Hunger resistance):" .. (player.je * 5) .. "%")
-            if player.jnd > 0 then
-                player.components.talker:Say("当前还有未使用的的技能点!\nI have available skill points!")
-            end
+                "\n饥饿抗性(Hunger resistance): " .. (player.je * 5) .. "%")
         end
     end
 end)
