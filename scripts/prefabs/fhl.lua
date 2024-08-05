@@ -101,14 +101,10 @@ local start_inv = {
 local function OnKillOther(inst, data)
     local victim = data.victim
     if not victim.components.lootdropper then return end
-    -- if victim.components.freezable or victim:HasTag("monster") then
-    if victim:HasTag("monster") or victim:HasTag("hostile") or victim:HasTag("scarytoprey") then
-        if victim:HasTag("epic") or math.random() < TUNING.FHL_COS then
-            victim.components.lootdropper:SpawnLootPrefab("ancient_soul")
-        end
+    if victim:HasTag("epic") or victim:HasAnyTag("hostile", "killer", "merm", "monkey", "monster", "spat", "tallbird", "walrus") and math.random() < TUNING.FHL_COS then
+        victim.components.lootdropper:SpawnLootPrefab("ancient_soul")
     end
 end
-
 
 local function FhlFire(inst)
     if TheWorld.state.isnight and TUNING.OPENLIGHT then
@@ -119,10 +115,6 @@ local function FhlFire(inst)
         inst.Light:SetColour(237 / 255, 237 / 255, 209 / 255)
     end
 end
-
--- local function BonusDamageFn(inst, target, damage, weapon)
---     return weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
--- end
 
 --升级机制
 local function applyupgrades(inst)
@@ -317,11 +309,11 @@ local master_postinit = function(inst)
     inst.components.health:SetMaxHealth(150)
     inst.components.hunger:SetMax(150)
     inst.components.sanity:SetMax(150)
-    -- inst.components.combat.bonusdamagefn = function(inst, target, damage, weapon)
-    --     local bonusDamage = weapon and weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
-    --     inst.zzjFeedBack = 0
-    --     return bonusDamage
-    -- end
+    inst.components.combat.bonusdamagefn = function(inst, target, damage, weapon)
+        local bonusDamage = weapon and weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
+        inst.zzjFeedBack = 0
+        return bonusDamage
+    end
 
     inst.components.locomotor.walkspeed = 7
     inst.components.locomotor.runspeed = 9

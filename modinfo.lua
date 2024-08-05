@@ -125,6 +125,7 @@ configuration_options = {
         hover = "Drop probability of the Ancient soul",
         options = {
             { description = "0",            data = 0 },
+            { description = "5%",           data = 0.05 },
             { description = "10%(default)", data = 0.1 },
             { description = "20%",          data = 0.2 },
             { description = "40%",          data = 0.4 },

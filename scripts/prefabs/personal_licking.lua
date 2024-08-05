@@ -76,6 +76,7 @@ end
 
 local function MorphShadowlicking(inst)
     inst.AnimState:SetBuild("licking_shadow_build")
+    inst:RemoveTag("fridge")
     inst:AddTag("spoiler")
 
     if TUNING.LIKEORNOT then

@@ -906,13 +906,7 @@ local function ReedsBonus(inst)
     inst.components.pickable.onpickedfn = function(inst, picker)
         inst.SoundEmitter:PlaySound("dontstarve/wilson/pickup_reeds")
         inst.AnimState:PlayAnimation("picking")
-
-        if inst.components.pickable:IsBarren() then
-            inst.AnimState:PushAnimation("empty_to_dead")
-            inst.AnimState:PushAnimation("idle_dead", false)
-        else
-            inst.AnimState:PushAnimation("picked", false)
-        end
+        inst.AnimState:PushAnimation("picked")
 
         if picker.components.inventory and picker:HasTag("fhl") and math.random() < 0.5 then
             picker.components.inventory:GiveItem(GLOBAL.SpawnPrefab("cutreeds"))
@@ -931,7 +925,6 @@ end
 
 if TUNING.SKILL_TREE then
     AddPrefabPostInit("reeds", ReedsBonus)
-    -- AddPrefabPostInit("monkeytail", ReedsBonus)
     AddComponentPostInit("edible", function(self)
         local oldGetHealth = self.GetHealth
         self.GetHealth = function(self, eater, ...)
