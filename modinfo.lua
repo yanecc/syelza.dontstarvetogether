@@ -338,7 +338,7 @@ configuration_options = {
 
     {
         name = "skill_tree",
-        label = "技能树开发中功能体验(不建议开启)",
+        label = "开启技能树预览功能中的数值型增强",
         hover = "Enable the preview functions about the skill tree?",
         options = {
             { description = "no(default)", data = false },

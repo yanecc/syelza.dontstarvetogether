@@ -209,6 +209,53 @@ local function OnIsShadowlickingDirty(inst)
     end
 end
 
+local function RestoreBooks(inst)
+    local wickerBonus = 1
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local players = FindPlayersInRange(x, y, z, TUNING.BOOKSTATION_BONUS_RANGE, true)
+
+    for _, player in ipairs(players) do
+        if player:HasTag("bookbuilder") then
+            wickerBonus = TUNING.BOOKSTATION_WICKER_BONUS
+            break
+        end
+    end
+
+    for k, v in pairs(inst.components.container.slots) do
+        if v:HasTag("book") and v.components.finiteuses then
+            local percent = v.components.finiteuses:GetPercent()
+            if percent < 1 then
+                v.components.finiteuses:SetPercent(
+                    math.min(1, percent + (TUNING.BOOKSTATION_RESTORE_AMOUNT * wickerBonus)))
+            end
+        end
+    end
+end
+
+local function ItemGet(inst, data)
+    if inst.lickingState == "SHADOW" and inst.RestoreTask == nil then
+        if inst.components.container:HasItemWithTag("book", 1) then
+            inst.RestoreTask = inst:DoPeriodicTask(TUNING.BOOKSTATION_RESTORE_TIME, RestoreBooks)
+        end
+    end
+    if inst.lickingState == "SNOW" and data.item and not data.item:HasTag("frozen") and
+        (data.item.components.perishable and data.item.components.equippable or data.item.prefab == "icecream" or data.item.prefab == "watermelonicle" or data.item.prefab == "frozenbananadaiquiri") then
+        data.item:AddTag("frozen")
+        data.item:AddTag("applefrozen")
+    end
+end
+
+local function ItemLose(inst, data)
+    if inst.RestoreTask ~= nil and not inst.components.container:HasItemWithTag("book", 1) then
+        inst.RestoreTask:Cancel()
+        inst.RestoreTask = nil
+    end
+    if data.prev_item and data.prev_item:HasTag("applefrozen") then
+        data.prev_item:RemoveTag("frozen")
+        data.prev_item:RemoveTag("applefrozen")
+    end
+end
+
 local function create_licking()
     --print("licking - create_licking")
 
@@ -348,6 +395,9 @@ local function create_licking()
 
     inst.OnSave = OnSave
     inst.OnPreLoad = OnPreLoad
+
+    inst:ListenForEvent("itemget", ItemGet)
+    inst:ListenForEvent("itemlose", ItemLose)
 
     return inst
 end
