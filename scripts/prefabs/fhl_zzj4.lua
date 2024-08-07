@@ -39,7 +39,6 @@ local function onzzjremove(inst)
     inst:Remove()
 end
 
-
 local function SpawnIceFx(inst, target)
     if not inst then return end
 
@@ -100,31 +99,18 @@ local function SpawnIceFx(inst, target)
     end
 end
 
-local function fn()
-    local function onequip(inst, owner, target)
-        if owner.prefab == "fhl" then
-            if owner.level >= 9 then
-                owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
-                owner.AnimState:Show("ARM_carry")
-                owner.AnimState:Hide("ARM_normal")
-                if TUNING.SKILL_TREE and not owner.components.health:IsDead() and not owner:HasTag("playerghost") then
-                    inst.onownerattackedfn = function(owner, data)
-                        owner.zzjFeedBack = owner.zzjFeedBack + data.damage * owner.level * 0.1
-                        owner:AddDebuff("buff_zzj", "buff_zzj")
-                    end
-                    inst:ListenForEvent("attacked", inst.onownerattackedfn, owner)
-                end
-            else
-                owner:DoTaskInTime(0, function()
-                    local inv = owner.components.inventory
-                    if inv then
-                        inv:GiveItem(inst)
-                    end
-                    local talker = owner.components.talker
-                    if talker then
-                        talker:Say("我需要到9级才能驾驭这把剑!\nI should at least Lv up to lv9!")
-                    end
-                end)
+local function OnEquip(inst, owner, target)
+    if owner.prefab == "fhl" then
+        inst.onownerattackedfn = function(owner, data)
+            owner.zzjFeedBack = owner.zzjFeedBack + data.damage * owner.level * 0.1
+            owner:AddDebuff("buff_zzj", "buff_zzj")
+        end
+        if owner.level >= 5 then
+            owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
+            owner.AnimState:Show("ARM_carry")
+            owner.AnimState:Hide("ARM_normal")
+            if TUNING.SKILL_TREE and not owner.components.health:IsDead() and not owner:HasTag("playerghost") then
+                inst:ListenForEvent("attacked", inst.onownerattackedfn, owner)
             end
         else
             owner:DoTaskInTime(0, function()
@@ -134,37 +120,49 @@ local function fn()
                 end
                 local talker = owner.components.talker
                 if talker then
-                    talker:Say("我的力量无法驱使这把剑!\nI can't use this sword!")
+                    talker:Say("我需要到5级才能驾驭这把剑!\nI should at least Lv up to lv5!")
                 end
             end)
         end
+    else
+        owner:DoTaskInTime(0, function()
+            local talker = owner.components.talker
+            if talker then
+                talker:Say("这把剑的力量达到了我的极限!\nI could use this sword with difficulty!")
+            end
+            owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
+            owner.AnimState:Show("ARM_carry")
+            owner.AnimState:Hide("ARM_normal")
+        end)
     end
+end
 
-    --攻击燃烧
-    local function onattack(weapon, attacker, target)
-        --普攻燃烧
-        if attacker and TUNING.ZZJ_FIREOPEN then
-            if TheWorld.state.isnight and math.random() < .2 then
-                if target ~= nil and target.components.burnable ~= nil and math.random() < TUNING.TORCH_ATTACK_IGNITE_PERCENT * target.components.burnable.flammability then
-                    target.components.burnable:Ignite(nil, attacker)
-                end
+--攻击燃烧
+local function OnAttack(weapon, attacker, target)
+    --普攻燃烧
+    if attacker and TUNING.ZZJ_FIREOPEN then
+        if TheWorld.state.isnight and math.random() < 0.25 then
+            if target ~= nil and target.components.burnable ~= nil and math.random() < TUNING.TORCH_ATTACK_IGNITE_PERCENT * target.components.burnable.flammability then
+                target.components.burnable:Ignite(nil, attacker)
             end
         end
-
-        if attacker and math.random() < .2 then
-            SpawnIceFx(attacker, target)
-            attacker.components.hunger:DoDelta(-4)
-        end
     end
 
-    local function OnUnequip(inst, owner)
-        owner.AnimState:Hide("ARM_carry")
-        owner.AnimState:Show("ARM_normal")
-        if TUNING.SKILL_TREE then
-            inst:RemoveEventCallback("attacked", inst.onownerattackedfn, owner)
-        end
+    if attacker and math.random() < 0.25 then
+        SpawnIceFx(attacker, target)
+        attacker.components.hunger:DoDelta(-2)
     end
+end
 
+local function OnUnequip(inst, owner)
+    owner.AnimState:Hide("ARM_carry")
+    owner.AnimState:Show("ARM_normal")
+    if TUNING.SKILL_TREE and owner.prefab == "fhl" then
+        inst:RemoveEventCallback("attacked", inst.onownerattackedfn, owner)
+    end
+end
+
+local function fn()
     local inst = CreateEntity()
     local trans = inst.entity:AddTransform()
     local anim = inst.entity:AddAnimState()
@@ -212,8 +210,8 @@ local function fn()
 
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(85 * TUNING.GJBL)
-    inst.components.weapon:SetRange(3.5)
-    inst.components.weapon:SetOnAttack(onattack)
+    inst.components.weapon:SetRange(TUNING.SKILL_TREE and 3 or 2.5)
+    inst.components.weapon:SetOnAttack(OnAttack)
 
     if TUNING.ZZJ_FINITE_USES > 0 then
         inst:AddComponent("finiteuses")
@@ -227,9 +225,9 @@ local function fn()
     end
 
     inst:AddComponent("equippable")
-    inst.components.equippable:SetOnEquip(onequip)
+    inst.components.equippable:SetOnEquip(OnEquip)
     inst.components.equippable:SetOnUnequip(OnUnequip)
-    inst.components.equippable.walkspeedmult = 1.25
+    inst.components.equippable.walkspeedmult = 1.2
 
     inst:AddComponent("trader")
     inst.components.trader:SetAcceptTest(AcceptTest)

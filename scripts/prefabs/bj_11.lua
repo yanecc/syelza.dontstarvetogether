@@ -35,27 +35,37 @@ local function fn()
 
     inst:AddTag("sharp")
     inst:AddTag("nosteal")
+    inst:AddTag("allow_action_on_impassable")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
 
+    inst:AddComponent("inspectable")
+
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/bj_11.xml"
+    inst.components.inventoryitem.imagename = "bj_11"
+
+    inst:AddComponent("equippable")
+    inst.components.equippable:SetOnEquip(onequip)
+    inst.components.equippable:SetOnUnequip(OnUnequip)
+    inst.components.equippable.walkspeedmult = 1.0
+
     inst:AddComponent("tool")
 
-    inst.components.tool:SetAction(ACTIONS.CHOP, 5) --可砍树
+    inst.components.tool:SetAction(ACTIONS.CHOP, 5) -- 可砍树
 
-    inst.components.tool:SetAction(ACTIONS.MINE, 5) --可挖矿
+    inst.components.tool:SetAction(ACTIONS.MINE, 5) -- 可挖矿
 
-    inst.components.tool:EnableToughWork(true)      --可强力开采
+    inst.components.tool:EnableToughWork(true)      -- 可强力开采
 
-    inst.components.tool:SetAction(ACTIONS.DIG)     --可挖掘
+    inst.components.tool:SetAction(ACTIONS.DIG)     -- 可挖掘
 
-    inst.components.tool:SetAction(ACTIONS.HAMMER)  --可锤击
+    inst.components.tool:SetAction(ACTIONS.HAMMER)  -- 可锤击
 
-    inst:AddInherentAction(ACTIONS.TERRAFORM)       --可锄草
-
-    inst:AddComponent("farmtiller")                 --可犁地（九格）
+    inst:AddComponent("farmtiller")                 -- 可犁地
     inst.components.farmtiller.Till = function(self, pt, doer)
         local tilling = false
         local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
@@ -70,10 +80,8 @@ local function fn()
                 end
             end
         end
-        if tilling then
-            if doer ~= nil then
-                doer:PushEvent("tilling")
-            end
+        if tilling and doer ~= nil then
+            doer:PushEvent("tilling")
             return true
         end
         return false
@@ -81,17 +89,6 @@ local function fn()
 
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(15)
-
-    inst:AddComponent("inspectable")
-
-    inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/bj_11.xml"
-    inst.components.inventoryitem.imagename = "bj_11"
-
-    inst:AddComponent("equippable")
-    inst.components.equippable:SetOnEquip(onequip)
-    inst.components.equippable:SetOnUnequip(OnUnequip)
-    inst.components.equippable.walkspeedmult = 1.0
 
     return inst
 end

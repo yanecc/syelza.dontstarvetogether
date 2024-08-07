@@ -22,10 +22,7 @@ modimport("fhl_util/fhl_util.lua")
 PrefabFiles = {
     "fhl",
     "bj_11",
-    "fhl_zzj",
-    "fhl_zzj1",
     "fhl_zzj2",
-    "fhl_zzj3",
     "fhl_zzj4",
     "fhl_zzj5",
     "fhl_hsf",
@@ -64,29 +61,17 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "这是符文的结晶。"
     STRINGS.RECIPE_DESC.ANCIENT_SOUL = "这是符文的结晶"
 
-    STRINGS.NAMES.FHL_ZZJ = "金芜菁之杖-初阶"
-    STRINGS.RECIPE_DESC.FHL_ZZJ = "金芜菁之杖 Lv1\n伤害: 20 冰冻概率:4%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ = "胸大无脑的智障剑"
+    STRINGS.NAMES.FHL_ZZJ2 = "仿金芜菁之杖"
+    STRINGS.RECIPE_DESC.FHL_ZZJ2 = "金芜菁之杖 Lv1\n伤害: 50 冰冻概率:10%"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ2 = "胸大无脑的智障剑也有仿品"
 
-    STRINGS.NAMES.FHL_ZZJ1 = "金芜菁之杖-中阶"
-    STRINGS.RECIPE_DESC.FHL_ZZJ1 = "金芜菁之杖 Lv2\n伤害: 35 冰冻概率:8%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ1 = "胸大无脑的智障剑"
-
-    STRINGS.NAMES.FHL_ZZJ2 = "金芜菁之杖-高阶"
-    STRINGS.RECIPE_DESC.FHL_ZZJ2 = "金芜菁之杖 Lv3\n伤害: 50 冰冻概率:12%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ2 = "胸大无脑的智障剑"
-
-    STRINGS.NAMES.FHL_ZZJ3 = "金芜菁之杖-史诗"
-    STRINGS.RECIPE_DESC.FHL_ZZJ3 = "金芜菁之杖 Lv4\n伤害: 65 冰冻概率:16%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ3 = "胸大无脑的智障剑"
-
-    STRINGS.NAMES.FHL_ZZJ4 = "金芜菁之杖-传说"
-    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "金芜菁之杖 Lv5\n伤害: 85 冰冻概率:20%"
+    STRINGS.NAMES.FHL_ZZJ4 = "金芜菁之杖"
+    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "金芜菁之杖 Lv2\n伤害: 85 冰冻概率:25%"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ4 = "胸大无脑的智障剑"
 
     STRINGS.NAMES.FHL_ZZJ5 = "诸神黄昏之杖"
-    STRINGS.RECIPE_DESC.FHL_ZZJ5 = "金芜菁之杖 Lv6\n伤害: 120 冰冻概率:30%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ5 = "胸大无脑的智障剑"
+    STRINGS.RECIPE_DESC.FHL_ZZJ5 = "金芜菁之杖 Lv3\n伤害: 120 冰冻概率:40%"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ5 = "真正的神灵也要避其锋芒!"
 
     STRINGS.CHARACTER_TITLES.fhl = "风幻龙-瑟尔泽"
     STRINGS.CHARACTER_NAMES.fhl = "风幻龙-瑟尔泽"
@@ -145,29 +130,17 @@ else
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.ANCIENT_SOUL = "this is the ancient soul."
     STRINGS.RECIPE_DESC.ANCIENT_SOUL = "this is the ancient soul."
 
-    STRINGS.NAMES.FHL_ZZJ = "Golden wujing Lv1"
-    STRINGS.RECIPE_DESC.FHL_ZZJ = "Golden wujing Lv1\nATK: 20 Ice chance:4%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ = "This is the Golden wujing Lv1"
+    STRINGS.NAMES.FHL_ZZJ2 = "Golden wujing Lv1"
+    STRINGS.RECIPE_DESC.FHL_ZZJ2 = "Golden wujing Lv1\nATK: 50 Ice chance:10%"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ2 = "This is the Golden wujing Lv1"
 
-    STRINGS.NAMES.FHL_ZZJ1 = "Golden wujing Lv2"
-    STRINGS.RECIPE_DESC.FHL_ZZJ1 = "Golden wujing Lv2\nATK: 35 Ice chance:8%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ1 = "This is the Golden wujing Lv2"
+    STRINGS.NAMES.FHL_ZZJ4 = "Golden wujing Lv2"
+    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "Golden wujing Lv2\nATK: 85 Ice chance:25%"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ4 = "This is the Golden wujing Lv2"
 
-    STRINGS.NAMES.FHL_ZZJ2 = "Golden wujing Lv3"
-    STRINGS.RECIPE_DESC.FHL_ZZJ2 = "Golden wujing Lv3\nATK: 50 Ice chance:12%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ2 = "This is the Golden wujing Lv3"
-
-    STRINGS.NAMES.FHL_ZZJ3 = "Golden wujing Lv4"
-    STRINGS.RECIPE_DESC.FHL_ZZJ3 = "Golden wujing Lv4\nATK: 65 Ice chance:16%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ3 = "This is the Golden wujing Lv4"
-
-    STRINGS.NAMES.FHL_ZZJ4 = "Golden wujing Lv5"
-    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "Golden wujing Lv5\nATK 85 Ice chance:20%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ4 = "This is the Golden wujing Lv5"
-
-    STRINGS.NAMES.FHL_ZZJ5 = "Golden wujing Lv6"
-    STRINGS.RECIPE_DESC.FHL_ZZJ5 = "Golden wujing Lv6\nATK 120 Icechance30%"
-    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ5 = "This is the Golden wujing Lv6"
+    STRINGS.NAMES.FHL_ZZJ5 = "Golden wujing Lv3"
+    STRINGS.RECIPE_DESC.FHL_ZZJ5 = "Golden wujing Lv3\nATK: 120 Ice chance:40%"
+    STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ5 = "This is the Golden wujing Lv3"
 
     STRINGS.CHARACTER_TITLES.fhl = "Syelza"
     STRINGS.CHARACTER_NAMES.fhl = "Syelza"
@@ -250,17 +223,8 @@ Assets = {
     Asset("IMAGE", "images/avatars/avatar_ghost_fhl.tex"),
     Asset("ATLAS", "images/avatars/avatar_ghost_fhl.xml"),
     --剑小图标
-    Asset("ATLAS", "images/inventoryimages/fhl_zzj.xml"),
-    Asset("IMAGE", "images/inventoryimages/fhl_zzj.tex"),
-
-    Asset("ATLAS", "images/inventoryimages/fhl_zzj1.xml"),
-    Asset("IMAGE", "images/inventoryimages/fhl_zzj1.tex"),
-
     Asset("ATLAS", "images/inventoryimages/fhl_zzj2.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_zzj2.tex"),
-
-    Asset("ATLAS", "images/inventoryimages/fhl_zzj3.xml"),
-    Asset("IMAGE", "images/inventoryimages/fhl_zzj3.tex"),
 
     Asset("ATLAS", "images/inventoryimages/fhl_zzj4.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_zzj4.tex"),
@@ -765,10 +729,7 @@ end)
 
 -- 注册图片
 RegisterInventoryItemAtlas("images/inventoryimages/ancient_soul.xml", "ancient_soul.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj.xml", "fhl_zzj.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj1.xml", "fhl_zzj1.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj2.xml", "fhl_zzj2.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj3.xml", "fhl_zzj3.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj4.xml", "fhl_zzj4.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj5.xml", "fhl_zzj5.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_hsf.xml", "fhl_hsf.tex")
@@ -845,8 +806,8 @@ if TUNING.APPLESTORE then
         { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 蓝带鱼排
     AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
         { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 恐怖国王饼
-    AddRecipe2("treasure_mudpie", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "yotp_food2", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 八宝泥馅饼
+    AddRecipe2("treasure_mosquitobomb", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "mosquitobomb", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 蚊子炸弹
     AddRecipe2("treasure_luckyfan", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
         { product = "perdfan", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                    -- 幸运火鸡扇
     AddRecipe2("treasure_luckywhistle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
@@ -940,23 +901,13 @@ if TUNING.SKILL_TREE then
         TECH.NONE, { product = "book_gardening", builder_tag = "fhl" })
 end
 
-AddCharacterRecipe("fhl_zzj", { Ingredient("twigs", 6), Ingredient("ancient_soul", 1), Ingredient("goldnugget", 2) },
-    TECH.NONE, { product = "fhl_zzj", builder_tag = "fhl" })
-
-AddCharacterRecipe("fhl_zzj1", { Ingredient("fhl_zzj", 1), Ingredient("ancient_soul", 2), Ingredient("goldnugget", 4) },
-    TECH.NONE, { product = "fhl_zzj1", builder_tag = "fhl" })
-
-AddCharacterRecipe("fhl_zzj2", { Ingredient("fhl_zzj1", 1), Ingredient("ancient_soul", 4), Ingredient("goldnugget", 8) },
+AddCharacterRecipe("fhl_zzj2", { Ingredient("twigs", 6), Ingredient("ancient_soul", 2), Ingredient("goldnugget", 4) },
     TECH.NONE, { product = "fhl_zzj2", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_zzj3", { Ingredient("fhl_zzj2", 1), Ingredient("ancient_soul", 5), Ingredient("goldnugget", 10) },
-    TECH.NONE, { product = "fhl_zzj3", builder_tag = "fhl" })
-
-AddCharacterRecipe("fhl_zzj4", { Ingredient("fhl_zzj3", 1), Ingredient("ancient_soul", 8), Ingredient("goldnugget", 16) },
+AddCharacterRecipe("fhl_zzj4", { Ingredient("fhl_zzj2", 1), Ingredient("ancient_soul", 5), Ingredient("goldnugget", 10) },
     TECH.NONE, { product = "fhl_zzj4", builder_tag = "fhl" })
 
-AddCharacterRecipe("fhl_zzj5",
-    { Ingredient("fhl_zzj4", 1), Ingredient("ancient_soul", 10), Ingredient("goldnugget", 20) },
+AddCharacterRecipe("fhl_zzj5", { Ingredient("fhl_zzj4", 1), Ingredient("ancient_soul", 8), Ingredient("goldnugget", 16) },
     TECH.NONE, { product = "fhl_zzj5", builder_tag = "fhl" })
 
 AddCharacterRecipe("fhl_bb", { Ingredient("waxpaper", 3), Ingredient("rope", 2), Ingredient("ancient_soul", 8) },
