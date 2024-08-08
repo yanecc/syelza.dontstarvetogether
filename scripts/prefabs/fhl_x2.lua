@@ -11,7 +11,7 @@ local prefabs =
     "spoiled_food",
 }
 
--- It's good, but will stop for a logout
+-- It works fine, but will stop for a logout
 -- local function OnEat(inst, eater)
 --     if eater.components.health and eater.components.sanity then
 --         local function restoreBuff()

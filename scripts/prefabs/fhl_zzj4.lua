@@ -25,9 +25,9 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.3
+        inst.components.finiteuses:Repair(TUNING.ZZJ_FINITE_USES * 0.3)
     elseif item.prefab == "goldnugget" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.15
+        inst.components.finiteuses:Repair(TUNING.ZZJ_FINITE_USES * 0.15)
     end
     if inst.components.finiteuses:GetPercent() > 1 then
         inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
@@ -120,7 +120,7 @@ local function OnEquip(inst, owner, target)
                 end
                 local talker = owner.components.talker
                 if talker then
-                    talker:Say("我需要到5级才能驾驭这把剑!\nI should at least Lv up to lv5!")
+                    talker:Say("我至少要到5级才能驾驭这把剑!\nI should at least Lv up to lv5!")
                 end
             end)
         end
@@ -150,7 +150,7 @@ local function OnAttack(weapon, attacker, target)
 
     if attacker and math.random() < 0.25 then
         SpawnIceFx(attacker, target)
-        attacker.components.hunger:DoDelta(-2)
+        attacker.components.hunger:DoDelta(attacker.prefab == "fhl" and -2 or -4)
     end
 end
 

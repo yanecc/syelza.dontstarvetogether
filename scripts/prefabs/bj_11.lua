@@ -65,6 +65,10 @@ local function fn()
 
     inst.components.tool:SetAction(ACTIONS.HAMMER)  -- 可锤击
 
+    inst:AddComponent("oar")                        -- 可划水
+    inst.components.oar.force = 0.6
+    inst.components.oar.max_velocity = 6
+
     inst:AddComponent("farmtiller")                 -- 可犁地
     inst.components.farmtiller.Till = function(self, pt, doer)
         local tilling = false

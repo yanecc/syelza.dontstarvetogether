@@ -25,9 +25,9 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.2
+        inst.components.finiteuses:Repair(TUNING.ZZJ_FINITE_USES * 0.2)
     elseif item.prefab == "goldnugget" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.1
+        inst.components.finiteuses:Repair(TUNING.ZZJ_FINITE_USES * 0.1)
     end
     if inst.components.finiteuses:GetPercent() > 1 then
         inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
@@ -120,7 +120,7 @@ local function OnEquip(inst, owner, target)
                 end
                 local talker = owner.components.talker
                 if talker then
-                    talker:Say("我只有达到满级才能驾驭这件神兵!\nI should at least Lv up to lv10!")
+                    talker:Say("只有当我达到满级才能驾驭这件神兵!\nI should at least Lv up to lv10!")
                 end
             end)
         end

@@ -25,19 +25,19 @@ end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "ancient_soul" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.5
+        inst.components.finiteuses:Repair(TUNING.ZZJ_FINITE_USES * 0.5)
     elseif item.prefab == "goldnugget" and inst.components.finiteuses:GetPercent() < 1 then
-        inst.components.finiteuses.current = inst.components.finiteuses.current + TUNING.ZZJ_FINITE_USES * 0.25
+        inst.components.finiteuses:Repair(TUNING.ZZJ_FINITE_USES * 0.25)
     end
     if inst.components.finiteuses:GetPercent() > 1 then
         inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
     end
 end
 
-local function onzzjremove(inst)
-    SpawnPrefab("moonrocknugget").Transform:SetPosition(inst.Transform:GetWorldPosition())
-    inst:Remove()
-end
+-- local function onzzjremove(inst)
+--     SpawnPrefab("moonrocknugget").Transform:SetPosition(inst.Transform:GetWorldPosition())
+--     inst:Remove()
+-- end
 
 local function SpawnIceFx(inst, target)
     if not inst then return end
@@ -128,7 +128,7 @@ local function OnEquip(inst, owner, target)
         owner:DoTaskInTime(0, function()
             local talker = owner.components.talker
             if talker then
-                talker:Say("让我试试驱使这件武器!\nMay be i can use this sword!")
+                talker:Say("这是一件趁手的好兵器!\nMaybe I can use this sword!")
             end
             owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
             owner.AnimState:Show("ARM_carry")
@@ -150,7 +150,7 @@ local function OnAttack(weapon, attacker, target)
 
     if attacker and math.random() < 0.1 then
         SpawnIceFx(attacker, target)
-        attacker.components.hunger:DoDelta(-2)
+        attacker.components.hunger:DoDelta(attacker.prefab == "fhl" and -2 or -4)
     end
 end
 
@@ -217,7 +217,7 @@ local function fn()
         inst:AddComponent("finiteuses")
         inst.components.finiteuses:SetMaxUses(TUNING.ZZJ_FINITE_USES)
         inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
-        inst.components.finiteuses:SetOnFinished(onzzjremove)
+        inst.components.finiteuses:SetOnFinished(MakeBroken)
         inst.components.finiteuses:SetConsumption(ACTIONS.CHOP, 1)
         inst.components.finiteuses:SetConsumption(ACTIONS.MINE, 1)
         inst.components.finiteuses:SetConsumption(ACTIONS.HAMMER, 1)

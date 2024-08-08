@@ -791,63 +791,63 @@ if TUNING.APPLESTORE then
 
     -- ----SHOPPING----
     AddRecipe2("free_hot_drink", {}, TECH.APPLESTORE,
-        { product = "winter_food8", nounlock = true, builder_tag = "firstorder", no_deconstruction = true })               -- 热可可
+        { product = "winter_food8", nounlock = true, builder_tag = "firstorder", no_deconstruction = true })                -- 热可可
     AddRecipe2("free_cold_drink", {}, TECH.APPLESTORE,
-        { product = "winter_food9", nounlock = true, builder_tag = "summerorder", no_deconstruction = true })              -- 美味的蛋酒
+        { product = "winter_food9", nounlock = true, builder_tag = "summerorder", no_deconstruction = true })               -- 美味的蛋酒
     AddRecipe2("gold_exchange", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "ancient_soul", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 符文结晶
+        { product = "ancient_soul", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 符文结晶
     AddRecipe2("entree_voltgoatjelly", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "voltgoatjelly", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })              -- 伏特羊肉冻
+        { product = "voltgoatjelly", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 伏特羊肉冻
     AddRecipe2("entree_glowberrymousse", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "glowberrymousse", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 发光浆果慕斯
+        { product = "glowberrymousse", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 发光浆果慕斯
     AddRecipe2("entree_dragonchilisalad", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "dragonchilisalad", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 辣龙椒沙拉
+        { product = "dragonchilisalad", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 辣龙椒沙拉
     AddRecipe2("entree_frogfishbowl", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 蓝带鱼排
+        { product = "frogfishbowl", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 蓝带鱼排
     AddRecipe2("entree_nightmarepie", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 恐怖国王饼
+        { product = "nightmarepie", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 恐怖国王饼
     AddRecipe2("treasure_mosquitobomb", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "mosquitobomb", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 蚊子炸弹
+        { product = "mosquitobomb", numtogive = 2, nounlock = true, builder_tag = "bellholder", no_deconstruction = true }) -- 蚊子炸弹
     AddRecipe2("treasure_luckyfan", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "perdfan", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                    -- 幸运火鸡扇
+        { product = "perdfan", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                     -- 幸运火鸡扇
     AddRecipe2("treasure_luckywhistle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "houndwhistle", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 幸运猎犬哨子
+        { product = "houndwhistle", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 幸运猎犬哨子
     AddRecipe2("treasure_giftwrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "giftwrap", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                   -- 礼物包装
+        { product = "giftwrap", numtogive = 2, nounlock = true, builder_tag = "bellholder", no_deconstruction = true })     -- 礼物包装
     AddRecipe2("treasure_seedpacket_rare", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "yotc_seedpacket_rare", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })       -- 高级种子包
+        { product = "yotc_seedpacket_rare", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })        -- 高级种子包
     AddRecipe2("treasure_surprisingseed", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "ancienttree_seed", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 惊喜种子
+        { product = "ancienttree_seed", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 惊喜种子
     AddRecipe2("treasure_normaltree", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "livingtree_root", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 完全正常的树根
+        { product = "livingtree_root", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 完全正常的树根
     AddRecipe2("treasure_redlantern", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-        { product = "redlantern", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 红灯笼
+        { product = "redlantern", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 红灯笼
     AddRecipe2("treasure_dragonboat_lamp", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-        { product = "mastupgrade_lamp_item_yotd", nounlock = true, builder_tag = "bellholder", no_deconstruction = true }) -- 龙蝇灯套装
+        { product = "mastupgrade_lamp_item_yotd", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })  -- 龙蝇灯套装
     AddRecipe2("treasure_archaic_boat", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
-        { product = "boat_ancient_item", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 古董船套装
+        { product = "boat_ancient_item", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 古董船套装
     AddRecipe2("treasure_dragonboat_pack", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
-        { product = "dragonboat_pack", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 豪华龙蝇船套装
+        { product = "dragonboat_pack", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 豪华龙蝇船套装
     AddRecipe2("raw_scrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "wagpunk_bits", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })               -- 废料
+        { product = "wagpunk_bits", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 废料
     AddRecipe2("raw_emptybottle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "messagebottleempty", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })         -- 空瓶子
+        { product = "messagebottleempty", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 空瓶子
     AddRecipe2("raw_voidcloth", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "voidcloth", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 暗影碎布
+        { product = "voidcloth", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                   -- 暗影碎布
     AddRecipe2("raw_dreadstone", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-        { product = "dreadstone", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 绝望石
+        { product = "dreadstone", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 绝望石
     AddRecipe2("raw_horrorfuel", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-        { product = "horrorfuel", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                 -- 纯粹恐惧
+        { product = "horrorfuel", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 纯粹恐惧
     AddRecipe2("raw_lunarplant_husk", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "lunarplant_husk", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })            -- 亮茄外壳
+        { product = "lunarplant_husk", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 亮茄外壳
     AddRecipe2("raw_moonglass_charged", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "moonglass_charged", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 充能月亮碎片
+        { product = "moonglass_charged", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 充能月亮碎片
     AddRecipe2("raw_purebrilliance", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-        { product = "purebrilliance", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 纯粹辉煌
+        { product = "purebrilliance", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })              -- 纯粹辉煌
     AddRecipe2("raw_enlightened_shard", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
-        { product = "alterguardianhatshard", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })      -- 启迪碎片
+        { product = "alterguardianhatshard", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })       -- 启迪碎片
     AddRecipe2("raw_spark_ark", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
-        { product = "security_pulse_cage_full", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })   -- 充能火花柜
+        { product = "security_pulse_cage_full", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })    -- 充能火花柜
 
     AddPlayerPostInit(function(inst)
         inst:ListenForEvent("makerecipe", function(inst, data)
