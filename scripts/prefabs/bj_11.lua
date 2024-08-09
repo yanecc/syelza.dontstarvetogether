@@ -34,6 +34,7 @@ local function fn()
     anim:PlayAnimation("idle")
 
     inst:AddTag("sharp")
+    -- inst:AddTag("hammer")
     inst:AddTag("nosteal")
     inst:AddTag("allow_action_on_impassable")
 
@@ -69,7 +70,7 @@ local function fn()
     inst.components.oar.force = 0.6
     inst.components.oar.max_velocity = 6
 
-    inst:AddComponent("farmtiller")                 -- 可犁地
+    inst:AddComponent("farmtiller") -- 可犁地
     inst.components.farmtiller.Till = function(self, pt, doer)
         local tilling = false
         local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
@@ -93,6 +94,9 @@ local function fn()
 
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(15)
+
+    -- inst:AddComponent("damagetypebonus")
+    -- inst.components.damagetypebonus:AddBonus("mole", inst, 0.5)
 
     return inst
 end

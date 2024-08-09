@@ -66,17 +66,19 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ2 = "胸大无脑的智障剑也有仿品"
 
     STRINGS.NAMES.FHL_ZZJ4 = "金芜菁之杖"
-    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "金芜菁之杖 Lv2\n伤害: 85 冰冻概率:25%"
+    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "金芜菁之杖 Lv2\n伤害: 80 冰冻概率:20%"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ4 = "胸大无脑的智障剑"
 
     STRINGS.NAMES.FHL_ZZJ5 = "诸神黄昏之杖"
     STRINGS.RECIPE_DESC.FHL_ZZJ5 = "金芜菁之杖 Lv3\n伤害: 120 冰冻概率:40%"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ5 = "真正的神灵也要避其锋芒!"
 
+    STRINGS.NAMES.FHL = "瑟尔泽"
     STRINGS.CHARACTER_TITLES.fhl = "风幻龙-瑟尔泽"
-    STRINGS.CHARACTER_NAMES.fhl = "风幻龙-瑟尔泽"
-    STRINGS.CHARACTER_DESCRIPTIONS.fhl = "*吃火龙果升级! (满级10),移动速度随等级提高加快\n*自带武器金芜菁之杖(附带冰柱/着火特效).\n*是图书管理员的朋友!"
+    STRINGS.CHARACTER_NAMES.fhl = "瑟尔泽"
+    STRINGS.CHARACTER_DESCRIPTIONS.fhl = "*家园的守护者, 击杀怪物掉落符文结晶\n*吃火龙果升级!(满级10) 变得更加强大!\n*会做超好吃的料理! 是图书管理员的朋友!"
     STRINGS.CHARACTER_QUOTES.fhl = "\"风幻龙-瑟尔泽.\""
+    STRINGS.CHARACTER_SURVIVABILITY.fhl = "严峻"
 
     STRINGS.NAMES.FHL_HSF = "瑟尔泽的护身符"
     STRINGS.RECIPE_DESC.FHL_HSF = "由塞尔泽的羽毛制成\n守护持有者"
@@ -135,18 +137,20 @@ else
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ2 = "This is the Golden wujing Lv1"
 
     STRINGS.NAMES.FHL_ZZJ4 = "Golden wujing Lv2"
-    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "Golden wujing Lv2\nATK: 85 Ice chance:25%"
+    STRINGS.RECIPE_DESC.FHL_ZZJ4 = "Golden wujing Lv2\nATK: 80 Ice chance:20%"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ4 = "This is the Golden wujing Lv2"
 
     STRINGS.NAMES.FHL_ZZJ5 = "Golden wujing Lv3"
     STRINGS.RECIPE_DESC.FHL_ZZJ5 = "Golden wujing Lv3\nATK: 120 Ice chance:40%"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_ZZJ5 = "This is the Golden wujing Lv3"
 
+    STRINGS.NAMES.FHL = "Syelza"
     STRINGS.CHARACTER_TITLES.fhl = "Syelza"
     STRINGS.CHARACTER_NAMES.fhl = "Syelza"
     STRINGS.CHARACTER_DESCRIPTIONS.fhl =
-    "*The Dragonfruit can strengthen her force\n*Using The Golden wujing\n*She is the friend of the librarian"
+    "*The Dragonfruit can strengthen her force\n*Using The Golden wujing\n*She is the friend of Wickerbottom"
     STRINGS.CHARACTER_QUOTES.fhl = "\"Syelza.\""
+    STRINGS.CHARACTER_SURVIVABILITY.fhl = "Grim"
 
     STRINGS.NAMES.FHL_HSF = "Syelza's Amulet"
     STRINGS.RECIPE_DESC.FHL_HSF = "Made from Syelza's feathers"
@@ -197,7 +201,7 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.fhl =
 }
 
 -- 人物的名字出现在游戏中
-STRINGS.NAMES.fhl = "风幻龙"
+-- STRINGS.NAMES.fhl = "风幻龙"
 
 -- 人物说话
 STRINGS.CHARACTERS.ESCTEMPLATE = require "speech_fhl"
@@ -210,6 +214,10 @@ Assets = {
     --选择人物界面的人物头像
     Asset("IMAGE", "images/selectscreen_portraits/fhl.tex"),
     Asset("ATLAS", "images/selectscreen_portraits/fhl.xml"),
+
+    --选择人物界面的角色名字图像
+    Asset("IMAGE", "images/names_fhl.tex"),
+    Asset("ATLAS", "images/names_fhl.xml"),
     --人物大图
     Asset("IMAGE", "bigportraits/fhl.tex"),
     Asset("ATLAS", "bigportraits/fhl.xml"),
@@ -308,6 +316,11 @@ TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
 TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
 TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen")
 TUNING.SKILL_TREE = GetModConfigData("skill_tree")
+
+TUNING.FHL_HEALTH = 150
+TUNING.FHL_HUNGER = 150
+TUNING.FHL_SANITY = 150
+TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.FHL = { "fhl_bz", "fhl_cake", "fhl_cy", "bj_11" }
 
 ------------------ Backpack
 local oldwidgetsetup = containers.widgetsetup

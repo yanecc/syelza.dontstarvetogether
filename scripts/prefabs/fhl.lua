@@ -306,14 +306,9 @@ local master_postinit = function(inst)
     inst:ListenForEvent("hungerdelta", FhlFire)
 
     -- 属性设置
-    inst.components.health:SetMaxHealth(150)
-    inst.components.hunger:SetMax(150)
-    inst.components.sanity:SetMax(150)
-    inst.components.combat.bonusdamagefn = function(inst, target, damage, weapon)
-        local bonusDamage = weapon and weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
-        inst.zzjFeedBack = 0
-        return bonusDamage
-    end
+    inst.components.health:SetMaxHealth(TUNING.FHL_HEALTH)
+    inst.components.hunger:SetMax(TUNING.FHL_HUNGER)
+    inst.components.sanity:SetMax(TUNING.FHL_SANITY)
 
     inst.components.locomotor.walkspeed = 7
     inst.components.locomotor.runspeed = 9
@@ -331,6 +326,16 @@ local master_postinit = function(inst)
     -- AFFINITY_15_CALORIES_SUPERHUGE = 1.1
     -- 香蕉奶昔 至少两个(烤)香蕉，不能有鱼度、肉度、怪物度、冰 8,25+15,33
     inst.components.foodaffinity:AddPrefabAffinity("bananajuice", TUNING.AFFINITY_15_CALORIES_MED)
+
+    if TUNING.SKILL_TREE then
+        inst:AddComponent("damagetypebonus")
+        inst.components.damagetypebonus:AddBonus("epic", inst, 1.2)
+        inst.components.combat.bonusdamagefn = function(inst, target, damage, weapon)
+            local bonusDamage = weapon and weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
+            inst.zzjFeedBack = 0
+            return bonusDamage
+        end
+    end
 
     --inst.components.health:StartRegen(1,4)
     -- 增加击杀掉落

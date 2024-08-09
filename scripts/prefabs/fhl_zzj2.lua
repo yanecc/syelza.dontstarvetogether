@@ -11,6 +11,35 @@ local prefabs = {
     "buff_zzj"
 }
 
+-- local function MakeBroken(inst)
+--     if TUNING.SKILL_TREE then
+--         inst.components.equippable.restrictedtag = "notequippable"
+--         local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
+--         if owner and owner:HasTag("player") and inst.components.equippable:IsEquipped() then
+--             if inst.components.inventoryitem.cangoincontainer then
+--                 owner.components.inventory.silentfull = true
+--                 owner.components.inventory:GiveItem(inst)
+--                 owner.components.inventory.silentfull = false
+--             else
+--                 owner.components.inventory:DropItem(inst, true, true)
+--             end
+--         end
+--     else
+--         SpawnPrefab("twiggy_nut").Transform:SetPosition(inst.Transform:GetWorldPosition())
+--         inst:Remove()
+--     end
+-- end
+
+-- local function OnFiniteUsesChange(inst, data)
+--     if data.percent > 0 then
+--         if inst.components.equippable.restrictedtag ~= nil then
+--             inst.components.equippable.restrictedtag = nil
+--         end
+--     else
+--         MakeBroken(inst)
+--     end
+-- end
+
 local function AcceptTest(inst, item)
     if (item.prefab == "ancient_soul" or item.prefab == "goldnugget") and inst.components.finiteuses:GetPercent() < 1 then
         return true
@@ -33,11 +62,6 @@ local function OnGetItemFromPlayer(inst, giver, item)
         inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
     end
 end
-
--- local function onzzjremove(inst)
---     SpawnPrefab("moonrocknugget").Transform:SetPosition(inst.Transform:GetWorldPosition())
---     inst:Remove()
--- end
 
 local function SpawnIceFx(inst, target)
     if not inst then return end
@@ -225,13 +249,16 @@ local function fn()
     end
 
     inst:AddComponent("equippable")
+    inst.components.equippable.insulated = true
+    inst.components.equippable.walkspeedmult = 1.1
     inst.components.equippable:SetOnEquip(OnEquip)
     inst.components.equippable:SetOnUnequip(OnUnequip)
-    inst.components.equippable.walkspeedmult = 1.1
 
     inst:AddComponent("trader")
     inst.components.trader:SetAcceptTest(AcceptTest)
     inst.components.trader.onaccept = OnGetItemFromPlayer
+
+    -- inst:ListenForEvent("percentusedchange", OnFiniteUsesChange)
 
     return inst
 end

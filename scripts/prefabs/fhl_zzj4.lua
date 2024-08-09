@@ -11,6 +11,35 @@ local prefabs = {
     "buff_zzj"
 }
 
+-- local function MakeBroken(inst)
+--     if TUNING.SKILL_TREE then
+--         inst.components.equippable.restrictedtag = "notequippable"
+--         local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
+--         if owner and owner:HasTag("player") and inst.components.equippable:IsEquipped() then
+--             if inst.components.inventoryitem.cangoincontainer then
+--                 owner.components.inventory.silentfull = true
+--                 owner.components.inventory:GiveItem(inst)
+--                 owner.components.inventory.silentfull = false
+--             else
+--                 owner.components.inventory:DropItem(inst, true, true)
+--             end
+--         end
+--     else
+--         SpawnPrefab("palmcone_seed").Transform:SetPosition(inst.Transform:GetWorldPosition())
+--         inst:Remove()
+--     end
+-- end
+
+-- local function OnFiniteUsesChange(inst, data)
+--     if data.percent > 0 then
+--         if inst.components.equippable.restrictedtag ~= nil then
+--             inst.components.equippable.restrictedtag = nil
+--         end
+--     else
+--         MakeBroken(inst)
+--     end
+-- end
+
 local function AcceptTest(inst, item)
     if (item.prefab == "ancient_soul" or item.prefab == "goldnugget") and inst.components.finiteuses:GetPercent() < 1 then
         return true
@@ -148,7 +177,7 @@ local function OnAttack(weapon, attacker, target)
         end
     end
 
-    if attacker and math.random() < 0.25 then
+    if attacker and math.random() < 0.2 then
         SpawnIceFx(attacker, target)
         attacker.components.hunger:DoDelta(attacker.prefab == "fhl" and -2 or -4)
     end
@@ -209,7 +238,7 @@ local function fn()
     --inst:AddInherentAction(ACTIONS.TERRAFORM)    --可铲草
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(85 * TUNING.GJBL)
+    inst.components.weapon:SetDamage(80 * TUNING.GJBL)
     inst.components.weapon:SetRange(TUNING.SKILL_TREE and 3 or 2.5)
     inst.components.weapon:SetOnAttack(OnAttack)
 
@@ -217,7 +246,7 @@ local function fn()
         inst:AddComponent("finiteuses")
         inst.components.finiteuses:SetMaxUses(TUNING.ZZJ_FINITE_USES)
         inst.components.finiteuses:SetUses(TUNING.ZZJ_FINITE_USES)
-        inst.components.finiteuses:SetOnFinished(onzzjremove)
+        inst.components.finiteuses:SetOnFinished(MakeBroken)
         inst.components.finiteuses:SetConsumption(ACTIONS.CHOP, 1)
         inst.components.finiteuses:SetConsumption(ACTIONS.MINE, 1)
         inst.components.finiteuses:SetConsumption(ACTIONS.HAMMER, 1)
@@ -225,13 +254,16 @@ local function fn()
     end
 
     inst:AddComponent("equippable")
+    inst.components.equippable.insulated = true
+    inst.components.equippable.walkspeedmult = 1.2
     inst.components.equippable:SetOnEquip(OnEquip)
     inst.components.equippable:SetOnUnequip(OnUnequip)
-    inst.components.equippable.walkspeedmult = 1.2
 
     inst:AddComponent("trader")
     inst.components.trader:SetAcceptTest(AcceptTest)
     inst.components.trader.onaccept = OnGetItemFromPlayer
+
+    -- inst:ListenForEvent("percentusedchange", OnFiniteUsesChange)
 
     return inst
 end
