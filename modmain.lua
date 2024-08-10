@@ -285,42 +285,45 @@ Assets = {
 }
 
 
-TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
-
-TUNING.STATUS_KEY = GetModConfigData("status_key")
-TUNING.SKILL_POINT_KEY = GetModConfigData("skill_point_key")
-
-TUNING.GJBL = GetModConfigData("zzj_gjbl")
-TUNING.JGEAT = GetModConfigData("fhl_jgeat")
-TUNING.JGEATSL = GetModConfigData("fhl_jgeatsl")
-
---TUNING.LIKEORNOT = GetModConfigData("likeornot")
---TUNING.ZZJ_DAMAGE = GetModConfigData("zzj_damage")
-TUNING.ZZJ_TIMES = .4 --GetModConfigData("zzj_times")
-
-TUNING.FHL_COS = GetModConfigData("fhl_cos")
-TUNING.ZZJ_CAN_USE_AS_HAMMER = GetModConfigData("zzj_canuseashammer")
-TUNING.ZZJ_CAN_USE_AS_SHOVEL = GetModConfigData("zzj_canuseasshovel")
-TUNING.ZZJ_FINITE_USES = GetModConfigData("zzj_finiteuses")
-TUNING.ZZJ_CANKANSHU = GetModConfigData("zzj_cankanshu")
-TUNING.ZZJ_CANWAKUANG = GetModConfigData("zzj_canwakuang")
-TUNING.ZZJ_PRE = GetModConfigData("zzj_pre")
---TUNING.ZZJ_RANGE = GetModConfigData("zzj_range")
-TUNING.OPENLIGHT = GetModConfigData("openlight")
-TUNING.OPENLI = GetModConfigData("openli")
-TUNING.APPLESTORE = GetModConfigData("applestore")
-TUNING.BUFFGO = GetModConfigData("buffgo")
-TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn")
-TUNING.HSF_POSITION = GetModConfigData("hsf_position")
-TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
-TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
-TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen")
-TUNING.SKILL_TREE = GetModConfigData("skill_tree")
-
 TUNING.FHL_HEALTH = 150
 TUNING.FHL_HUNGER = 150
 TUNING.FHL_SANITY = 150
 TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT.FHL = { "fhl_bz", "fhl_cake", "fhl_cy", "bj_11" }
+
+TUNING.BJ_11_PLANAR_DAMAGE = 15
+
+TUNING.STATUS_KEY = GetModConfigData("status_key")
+TUNING.SKILL_POINT_KEY = GetModConfigData("skill_point_key")
+TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
+
+TUNING.JGEAT = GetModConfigData("fhl_jgeat")     -- 吃浆果升级
+TUNING.JGEATSL = GetModConfigData("fhl_jgeatsl") -- 升级需要浆果数量
+
+--TUNING.LIKEORNOT = GetModConfigData("likeornot")
+
+TUNING.FHL_COS = GetModConfigData("fhl_cos")           -- 符文结晶爆率
+
+TUNING.GJBL = GetModConfigData("zzj_gjbl")             -- 普攻伤害倍率
+TUNING.ZZJ_PRE = GetModConfigData("zzj_pre")           -- 特效伤害倍率
+TUNING.ZZJ_FIREOPEN = GetModConfigData("zzj_fireopen") -- 火焰特效
+TUNING.ZZJ_CANKANSHU = GetModConfigData("zzj_cankanshu")
+TUNING.ZZJ_CANWAKUANG = GetModConfigData("zzj_canwakuang")
+TUNING.ZZJ_FINITE_USES = GetModConfigData("zzj_finiteuses")
+TUNING.ZZJ_CAN_USE_AS_HAMMER = GetModConfigData("zzj_canuseashammer")
+TUNING.ZZJ_CAN_USE_AS_SHOVEL = GetModConfigData("zzj_canuseasshovel")
+
+TUNING.OPENLIGHT = GetModConfigData("openlight")       -- 风幻发光
+TUNING.OPENLI = GetModConfigData("openli")             -- 苹果发光
+TUNING.APPLESTORE = GetModConfigData("applestore")     -- 苹果新零售
+
+TUNING.BUFFGO = GetModConfigData("buffgo")             -- 护身符减伤
+TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn")   -- 护身符重生选项
+TUNING.HSF_POSITION = GetModConfigData("hsf_position") -- 护身符格子位置
+
+TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
+TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
+
+TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
 ------------------ Backpack
 local oldwidgetsetup = containers.widgetsetup

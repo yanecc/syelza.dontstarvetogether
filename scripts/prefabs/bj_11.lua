@@ -10,7 +10,27 @@ local assets =
 local prefabs = {
 }
 
-local function onequip(inst, owner)
+local function SleepAttack(inst, attacker, target)
+    if not target:IsValid() or not target.components.combat or target.components.combat.defaultdamage == 0 then
+        --target killed or removed in combat damage phase
+        return
+    end
+    if target.SoundEmitter ~= nil then
+        target.SoundEmitter:PlaySound("dontstarve/wilson/blowdart_impact_sleep")
+    end
+
+    target:DoTaskInTime(1, function(target)
+        if target.components.sleeper ~= nil then
+            target.components.sleeper:AddSleepiness(10, 5, inst)
+        elseif target.components.grogginess ~= nil then
+            target.components.grogginess:AddGrogginess(10, 5)
+        else
+            target:PushEvent("knockedout")
+        end
+    end)
+end
+
+local function OnEquip(inst, owner)
     owner.AnimState:OverrideSymbol("swap_object", "swap_fhl_zzj", "swap_myitem")
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
@@ -34,7 +54,8 @@ local function fn()
     anim:PlayAnimation("idle")
 
     inst:AddTag("sharp")
-    -- inst:AddTag("hammer")
+    inst:AddTag("hammer")
+    inst:AddTag("weapon")
     inst:AddTag("nosteal")
     inst:AddTag("allow_action_on_impassable")
 
@@ -50,9 +71,8 @@ local function fn()
     inst.components.inventoryitem.imagename = "bj_11"
 
     inst:AddComponent("equippable")
-    inst.components.equippable:SetOnEquip(onequip)
+    inst.components.equippable:SetOnEquip(OnEquip)
     inst.components.equippable:SetOnUnequip(OnUnequip)
-    inst.components.equippable.walkspeedmult = 1.0
 
     inst:AddComponent("tool")
 
@@ -70,7 +90,7 @@ local function fn()
     inst.components.oar.force = 0.6
     inst.components.oar.max_velocity = 6
 
-    inst:AddComponent("farmtiller") -- 可犁地
+    inst:AddComponent("farmtiller")                 -- 可犁地
     inst.components.farmtiller.Till = function(self, pt, doer)
         local tilling = false
         local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
@@ -93,10 +113,11 @@ local function fn()
     end
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(15)
+    inst.components.weapon:SetDamage(0)
+    inst.components.weapon:SetOnAttack(SleepAttack)
 
-    -- inst:AddComponent("damagetypebonus")
-    -- inst.components.damagetypebonus:AddBonus("mole", inst, 0.5)
+    inst:AddComponent("planardamage")
+    inst.components.planardamage:SetBaseDamage(15)
 
     return inst
 end

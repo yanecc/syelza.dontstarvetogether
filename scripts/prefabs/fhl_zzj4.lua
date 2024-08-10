@@ -206,6 +206,7 @@ local function fn()
     inst:AddTag("sharp")
     inst:AddTag("fhlzzj")
     inst:AddTag("trader")
+    inst:AddTag("weapon")
     inst:AddTag("nosteal")
 
     inst.entity:SetPristine()
