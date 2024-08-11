@@ -335,9 +335,14 @@ local master_postinit = function(inst)
             inst.zzjFeedBack = 0
             return bonusDamage
         end
+
+        inst:ListenForEvent("picksomething", function(inst, data)
+            if data.object.prefab == "reeds" and math.random() < 0.5 then
+                data.loot.components.stackable:SetStackSize(data.loot.components.stackable.stacksize + 1)
+            end
+        end)
     end
 
-    --inst.components.health:StartRegen(1,4)
     -- 增加击杀掉落
     inst:ListenForEvent("killed", OnKillOther)
 

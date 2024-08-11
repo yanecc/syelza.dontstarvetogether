@@ -76,8 +76,8 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.NAMES.FHL = "瑟尔泽"
     STRINGS.CHARACTER_TITLES.fhl = "风幻龙-瑟尔泽"
     STRINGS.CHARACTER_NAMES.fhl = "瑟尔泽"
-    STRINGS.CHARACTER_DESCRIPTIONS.fhl = "*家园的守护者, 击杀怪物掉落符文结晶\n*吃火龙果升级!(满级10) 变得更加强大!\n*会做超好吃的料理! 是图书管理员的朋友!"
-    STRINGS.CHARACTER_QUOTES.fhl = "\"风幻龙-瑟尔泽.\""
+    STRINGS.CHARACTER_DESCRIPTIONS.fhl = "*掌管永恒的风之神, 击杀怪物掉落符文结晶\n*吃火龙果升级!(满级10) 变得更加强大!\n*会做超好吃的料理! 是图书管理员的朋友!"
+    STRINGS.CHARACTER_QUOTES.fhl = "\"谢谢汝……选择了妾身！\""
     STRINGS.CHARACTER_SURVIVABILITY.fhl = "严峻"
 
     STRINGS.NAMES.FHL_HSF = "瑟尔泽的护身符"
@@ -878,19 +878,6 @@ if TUNING.APPLESTORE then
 end
 
 ----------------------------------------------------------------------------------------
-local function ReedsBonus(inst)
-    if not inst.components.pickable then return end
-    inst.components.pickable.onpickedfn = function(inst, picker)
-        inst.SoundEmitter:PlaySound("dontstarve/wilson/pickup_reeds")
-        inst.AnimState:PlayAnimation("picking")
-        inst.AnimState:PushAnimation("picked")
-
-        if picker.components.inventory and picker:HasTag("fhl") and math.random() < 0.5 then
-            picker.components.inventory:GiveItem(GLOBAL.SpawnPrefab("cutreeds"))
-        end
-    end
-end
-
 local function ReduceFoodHealthPenalty(inst, eater, health)
     for k, v in pairs(eater.components.inventory.equipslots) do
         if v and v:HasTag("foodharm_resistant") then
@@ -901,7 +888,6 @@ local function ReduceFoodHealthPenalty(inst, eater, health)
 end
 
 if TUNING.SKILL_TREE then
-    AddPrefabPostInit("reeds", ReedsBonus)
     AddComponentPostInit("edible", function(self)
         local oldGetHealth = self.GetHealth
         self.GetHealth = function(self, eater, ...)

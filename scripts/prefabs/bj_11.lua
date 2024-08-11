@@ -19,7 +19,7 @@ local function SleepAttack(inst, attacker, target)
         target.SoundEmitter:PlaySound("dontstarve/wilson/blowdart_impact_sleep")
     end
 
-    target:DoTaskInTime(1, function(target)
+    target:DoTaskInTime(math.random(), function(target)
         if target.components.sleeper ~= nil then
             target.components.sleeper:AddSleepiness(10, 5, inst)
         elseif target.components.grogginess ~= nil then
@@ -56,6 +56,8 @@ local function fn()
     inst:AddTag("sharp")
     inst:AddTag("hammer")
     inst:AddTag("weapon")
+	inst:AddTag("aquatic")
+	inst:AddTag("machete")
     inst:AddTag("nosteal")
     inst:AddTag("allow_action_on_impassable")
 
@@ -110,6 +112,10 @@ local function fn()
             return true
         end
         return false
+    end
+
+    if ACTIONS.HACK ~= nil then
+	    inst.components.tool:SetAction(ACTIONS.HACK, 4) -- 可劈砍
     end
 
     inst:AddComponent("weapon")
