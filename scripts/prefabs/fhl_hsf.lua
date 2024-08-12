@@ -10,16 +10,10 @@ local function OnEquip(inst, owner)
 
     if TUNING.BUFFGO and inst.components.fueled then
         inst.consumefn = function(owner, data)
-            if data.amount > -1 then return end
-            for k, v in pairs(owner.components.inventory.equipslots) do
-                if v and v:HasTag("hsf_protection") then
-                    local fuelrate = TUNING.SKILL_TREE and 0.01 or 0.02
-                    inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
-                    break
-                end
-            end
+            if data.amount > 0 then return end
+            local fuelrate = TUNING.SKILL_TREE and 0.01 or 0.02
+            inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
         end
-        inst:AddTag("hsf_protection")
         inst:AddTag("bramble_resistant")
         inst:AddTag("foodharm_resistant")
         inst:ListenForEvent("healthdelta", inst.consumefn, owner)
@@ -169,14 +163,6 @@ local function fn(Sim)
             end
             return false
         end)
-        -- AddHauntableCustomReaction(inst,
-        --     function(inst, haunter)
-        --         if haunter:HasTag("playerghost") then
-        --             haunter:PushEvent("respawnfromghost", { source = inst })
-        --             inst:Remove()
-        --         end
-        --     end
-        --     , true, false, true)
     elseif TUNING.HSF_RESPAWN == -1 then
         inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
     end

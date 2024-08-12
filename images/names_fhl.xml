@@ -1,1 +1,1 @@
-﻿<Atlas><Texture filename="names_fhl.tex" /><Elements><Element name="fhl.tex" u1="0.05" u2="0.935" v1="0.05" v2="0.99" /></Elements></Atlas>
+﻿<Atlas><Texture filename="names_fhl.tex" /><Elements><Element name="fhl.tex" u1="0.00001" u2="0.90" v1="0.1" v2="0.9999999" /></Elements></Atlas>

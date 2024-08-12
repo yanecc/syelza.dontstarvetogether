@@ -881,7 +881,7 @@ end
 local function ReduceFoodHealthPenalty(inst, eater, health)
     for k, v in pairs(eater.components.inventory.equipslots) do
         if v and v:HasTag("foodharm_resistant") then
-            return -1
+            return -2
         end
     end
     return health
@@ -890,9 +890,9 @@ end
 if TUNING.SKILL_TREE then
     AddComponentPostInit("edible", function(self)
         local oldGetHealth = self.GetHealth
-        self.GetHealth = function(self, eater, ...)
-            local health = oldGetHealth(self, eater, ...)
-            if self.healthvalue < -1 then
+        self.GetHealth = function(self, eater)
+            local health = oldGetHealth(self, eater)
+            if self.healthvalue < -2 then
                 health = ReduceFoodHealthPenalty(self.inst, eater, health)
             end
             return health

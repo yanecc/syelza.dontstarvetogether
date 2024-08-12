@@ -328,8 +328,8 @@ local master_postinit = function(inst)
     inst.components.foodaffinity:AddPrefabAffinity("bananajuice", TUNING.AFFINITY_15_CALORIES_MED)
 
     if TUNING.SKILL_TREE then
-        -- inst:AddComponent("damagetypebonus")
-        -- inst.components.damagetypebonus:AddBonus("epic", inst, 1.2)
+        inst:AddComponent("damagetypebonus")
+        inst.components.damagetypebonus:AddBonus("epic", inst, 1.2)
         inst.components.combat.bonusdamagefn = function(inst, target, damage, weapon)
             local bonusDamage = weapon and weapon:HasTag("fhlzzj") and inst.zzjFeedBack or 0
             inst.zzjFeedBack = 0
