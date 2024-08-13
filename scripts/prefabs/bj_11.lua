@@ -61,6 +61,9 @@ local function fn()
     inst:AddTag("nosteal")
     inst:AddTag("allow_action_on_impassable")
 
+    inst:AddComponent("symbolswapdata")
+    inst.components.symbolswapdata:SetData("swap_fhl_zzj", "swap_myitem")
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
