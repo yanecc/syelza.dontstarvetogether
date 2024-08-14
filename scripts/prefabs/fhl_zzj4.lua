@@ -11,34 +11,34 @@ local prefabs = {
     "buff_zzj"
 }
 
--- local function MakeBroken(inst)
---     if TUNING.SKILL_TREE then
---         inst.components.equippable.restrictedtag = "notequippable"
---         local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
---         if owner and owner:HasTag("player") and inst.components.equippable:IsEquipped() then
---             if inst.components.inventoryitem.cangoincontainer then
---                 owner.components.inventory.silentfull = true
---                 owner.components.inventory:GiveItem(inst)
---                 owner.components.inventory.silentfull = false
---             else
---                 owner.components.inventory:DropItem(inst, true, true)
---             end
---         end
---     else
---         SpawnPrefab("palmcone_seed").Transform:SetPosition(inst.Transform:GetWorldPosition())
---         inst:Remove()
---     end
--- end
+local function MakeBroken(inst)
+    if TUNING.SKILL_TREE then
+        inst.components.equippable.restrictedtag = "notequippable"
+        local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
+        if owner and owner:HasTag("player") and inst.components.equippable:IsEquipped() then
+            if inst.components.inventoryitem.cangoincontainer then
+                owner.components.inventory.silentfull = true
+                owner.components.inventory:GiveItem(inst)
+                owner.components.inventory.silentfull = false
+            else
+                owner.components.inventory:DropItem(inst, true, true)
+            end
+        end
+    else
+        -- SpawnPrefab("palmcone_seed").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        inst:Remove()
+    end
+end
 
--- local function OnFiniteUsesChange(inst, data)
---     if data.percent > 0 then
---         if inst.components.equippable.restrictedtag ~= nil then
---             inst.components.equippable.restrictedtag = nil
---         end
---     else
---         MakeBroken(inst)
---     end
--- end
+local function OnFiniteUsesChange(inst, data)
+    if data.percent > 0 then
+        if inst.components.equippable.restrictedtag ~= nil then
+            inst.components.equippable.restrictedtag = nil
+        end
+    else
+        MakeBroken(inst)
+    end
+end
 
 local function AcceptTest(inst, item)
     if (item.prefab == "ancient_soul" or item.prefab == "goldnugget") and inst.components.finiteuses:GetPercent() < 1 then
@@ -230,13 +230,11 @@ local function fn()
         inst.components.tool:SetAction(ACTIONS.MINE, 3) --可挖矿
     end
     if TUNING.ZZJ_CAN_USE_AS_SHOVEL then
-        inst.components.tool:SetAction(ACTIONS.DIG) --可挖..
+        inst.components.tool:SetAction(ACTIONS.DIG) --可挖掘
     end
-    --inst.components.tool:SetAction(ACTIONS.NET)  --可捕虫
     if TUNING.ZZJ_CAN_USE_AS_HAMMER then
-        inst.components.tool:SetAction(ACTIONS.HAMMER) --可重击
+        inst.components.tool:SetAction(ACTIONS.HAMMER) --可锤击
     end
-    --inst:AddInherentAction(ACTIONS.TERRAFORM)    --可铲草
 
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(80 * TUNING.GJBL)
@@ -264,7 +262,7 @@ local function fn()
     inst.components.trader:SetAcceptTest(AcceptTest)
     inst.components.trader.onaccept = OnGetItemFromPlayer
 
-    -- inst:ListenForEvent("percentusedchange", OnFiniteUsesChange)
+    inst:ListenForEvent("percentusedchange", OnFiniteUsesChange)
 
     return inst
 end
