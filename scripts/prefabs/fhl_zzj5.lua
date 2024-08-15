@@ -25,7 +25,7 @@ local function MakeBroken(inst)
             end
         end
     else
-        -- SpawnPrefab("ancienttree_seed").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        SpawnPrefab("ancienttree_seed").Transform:SetPosition(inst.Transform:GetWorldPosition())
         inst:Remove()
     end
 end

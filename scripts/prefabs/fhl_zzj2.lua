@@ -25,7 +25,7 @@ local function MakeBroken(inst)
             end
         end
     else
-        -- SpawnPrefab("twiggy_nut").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        SpawnPrefab("twiggy_nut").Transform:SetPosition(inst.Transform:GetWorldPosition())
         inst:Remove()
     end
 end
