@@ -4,6 +4,11 @@ local assets =
     Asset("ATLAS", "images/inventoryimages/licking_eyebone.xml"),
 }
 
+local prefabs =
+{
+    "personal_licking"
+}
+
 local SPAWN_DIST = 30
 
 local function OpenEye(inst)
@@ -209,8 +214,8 @@ local function fn()
 
     inst:AddTag("_named")
 
-    inst.AnimState:SetBank("licking_eyebone")  --------------
-    inst.AnimState:SetBuild("licking_eyebone") ----------------
+    inst.AnimState:SetBank("licking_eyebone")
+    inst.AnimState:SetBuild("licking_eyebone")
     inst.AnimState:PlayAnimation("idle_loop", true)
 
     inst.entity:SetPristine()
@@ -259,4 +264,4 @@ local function fn()
     return inst
 end
 
-return Prefab("common/inventory/personal_licking_eyebone", fn, assets)
+return Prefab("common/inventory/personal_licking_eyebone", fn, assets, prefabs)

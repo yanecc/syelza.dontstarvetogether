@@ -5,6 +5,21 @@ local assets =
     Asset("IMAGE", "images/inventoryimages/fhl_tree.tex"),
 }
 
+local prefabs =
+{
+    "cave_banana_tree"
+}
+
+local function OnDeploy(inst, pt)
+    local tree = SpawnPrefab("cave_banana_tree")
+    if tree then
+        tree.Transform:SetPosition(pt.x, pt.y, pt.z)
+        inst.components.stackable:Get():Remove()
+        tree.components.pickable:MakeEmpty()
+        tree.SoundEmitter:PlaySound("dontstarve/wilson/plant_tree")
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -42,16 +57,7 @@ local function fn()
     inst.components.tradable.rocktribute = 3 -- 1天
 
     inst:AddComponent("deployable")
-    local function onDeploy(inst, pt)
-        local tree = SpawnPrefab("cave_banana_tree")
-        if tree then
-            tree.Transform:SetPosition(pt.x, pt.y, pt.z)
-            inst.components.stackable:Get():Remove()
-            tree.components.pickable:MakeEmpty()
-            tree.SoundEmitter:PlaySound("dontstarve/wilson/plant_tree")
-        end
-    end
-    inst.components.deployable.ondeploy = onDeploy
+    inst.components.deployable.ondeploy = OnDeploy
     inst.components.deployable.mode = DEPLOYMODE.PLANT
     inst.components.deployable.min_spacing = 6
 
@@ -64,5 +70,5 @@ local function fn()
     return inst
 end
 
-return Prefab("common/inventory/fhl_tree", fn, assets),
+return Prefab("common/inventory/fhl_tree", fn, assets, prefabs),
     MakePlacer("common/fhl_tree_placer", "cave_banana_tree", "cave_banana_tree", "idle_loop")

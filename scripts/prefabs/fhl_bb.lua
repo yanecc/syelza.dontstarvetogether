@@ -1,7 +1,7 @@
 local assets =
 {
-    Asset("ANIM", "anim/swap_fhl_bb.zip"),
     Asset("ANIM", "anim/fhl_bb.zip"),
+    Asset("ANIM", "anim/swap_fhl_bb.zip"),
 
     Asset("ATLAS", "images/inventoryimages/fhl_bb.xml")
 }
@@ -83,10 +83,10 @@ local function fn()
     inst.MiniMapEntity:SetIcon("krampus_sack.png")
 
     inst.AnimState:SetBank("pirate_booty_bag")
-    inst.AnimState:SetBuild("swap_fhl_bb")
+    inst.AnimState:SetBuild("fhl_bb")
     inst.AnimState:PlayAnimation("anim")
 
-    --inst.foleysound = "dontstarve/movement/foley/krampuspack"
+    inst.foleysound = "dontstarve/movement/foley/krampuspack"
 
     inst:AddTag("trader")
     inst:AddTag("fridge")
@@ -95,15 +95,18 @@ local function fn()
     --waterproofer (from waterproofer component) added to pristine state for optimization
     inst:AddTag("waterproofer")
 
-    inst:AddComponent("talker")
-    inst.components.talker.fontsize = 20
-    inst.components.talker.font = TALKINGFONT
-    inst.components.talker.colour = Vector3(0.6, 0.9, 0.9, 1)
-    inst.components.talker.offset = Vector3(0, 100, 0)
-    inst.components.talker.symbol = "swap_object"
+    -- inst:AddComponent("talker")
+    -- inst.components.talker.fontsize = 20
+    -- inst.components.talker.font = TALKINGFONT
+    -- inst.components.talker.colour = Vector3(0.6, 0.9, 0.9, 1)
+    -- inst.components.talker.offset = Vector3(0, 100, 0)
+    -- inst.components.talker.symbol = "swap_object"
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
+        inst.OnEntityReplicated = function(inst)
+            inst.replica.container:WidgetSetup("krampus_sack")
+        end
         return inst
     end
 

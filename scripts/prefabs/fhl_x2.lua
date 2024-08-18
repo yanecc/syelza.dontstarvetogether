@@ -1,4 +1,4 @@
-local Assets =
+local assets =
 {
     Asset("ANIM", "anim/dy_x.zip"),
     Asset("ATLAS", "images/inventoryimages/fhl_x2.xml"),
@@ -8,7 +8,7 @@ local prefabs =
 {
     "fhl_x",
     "buff_x2",
-    "spoiled_food",
+    "spoiled_food"
 }
 
 -- It works fine, but will stop for a logout
@@ -92,4 +92,4 @@ local function fn(Sim)
 end
 
 
-return Prefab("common/inventory/fhl_x2", fn, Assets)
+return Prefab("common/inventory/fhl_x2", fn, assets, prefabs)

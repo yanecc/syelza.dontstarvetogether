@@ -19,7 +19,7 @@ local assets =
 
 local prefabs =
 {
-    "personal_licking_eyebone",
+    "personal_licking_eyebone"
 }
 
 local sounds =

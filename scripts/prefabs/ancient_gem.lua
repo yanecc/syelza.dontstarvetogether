@@ -6,6 +6,11 @@ local assets =
     Asset("IMAGE", "images/inventoryimages/ancient_gem.tex"),
 }
 
+local prefabs = {
+    "ancient_altar",
+    "opalpreciousgem"
+}
+
 local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -49,7 +54,6 @@ local function fn()
     inst.components.burnable:SetOnIgniteFn(DefaultBurnFn)
     inst.components.burnable:SetOnExtinguishFn(DefaultExtinguishFn)
     inst.components.burnable:SetOnBurntFn(function(inst)
-        local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
         local crystal = SpawnPrefab("opalpreciousgem")
         crystal.Transform:SetPosition(inst.Transform:GetWorldPosition())
 
@@ -76,11 +80,8 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/ancient_gem.xml"
 
-    --inst:AddComponent("bait")
-    --inst:AddTag("molebait")
-
     return inst
 end
 
-return Prefab("common/inventory/ancient_gem", fn, assets),
+return Prefab("common/inventory/ancient_gem", fn, assets, prefabs),
     MakePlacer("common/ancient_gem_placer", "crafting_table", "crafting_table", "idle_full")

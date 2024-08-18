@@ -76,24 +76,6 @@ local function UpdateHSFAddon(inst)
     end
 end
 
--- local function AcceptTest(inst, item)
---     if item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 1 then
---         return true
---     elseif inst.components.fueled:GetPercent() == 1 then
---         local owner = item.components.inventoryitem:GetGrandOwner()
---         owner.components.talker:Say("Durability is full!")
---     else
---         local owner = item.components.inventoryitem:GetGrandOwner()
---         owner.components.talker:Say("qwq!\nThis can't be used to repairing the amulet!")
---     end
--- end
-
--- local function OnGetItem(inst, giver, item)
---     if item.prefab == "ancient_soul" and inst.components.fueled:GetPercent() < 1 then
---         inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
---     end
--- end
-
 local function fn(Sim)
     local inst = CreateEntity()
 
@@ -139,19 +121,6 @@ local function fn(Sim)
     inst.components.equippable:SetOnEquipToModel(OnEquipToModel)
 
     inst:AddComponent("planardefense")
-
-    -- inst:AddComponent("trader")
-    -- inst.components.trader:SetAcceptTest(AcceptTest)
-    -- inst.components.trader.onaccept = OnGetItem
-
-    -- inst:AddComponent("armor")
-    -- inst.components.armor:InitCondition(TUNING.ARMORBRAMBLE * 2, 0.5) -- 1050
-
-    -- inst:AddComponent("resistance")
-    -- inst.components.resistance:AddResistance("quakedebris")
-    -- inst.components.resistance:AddResistance("lunarhaildebris")
-    -- inst.components.resistance:SetOnResistDamageFn(fns.woodcarved_onhitbyquakedebris)
-
 
     inst:AddComponent("hauntable")
     if TUNING.HSF_RESPAWN == 1 then

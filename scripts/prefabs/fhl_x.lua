@@ -1,4 +1,4 @@
-local Assets =
+local assets =
 {
     Asset("ANIM", "anim/dy_x.zip"),
     Asset("ATLAS", "images/inventoryimages/fhl_x.xml"),
@@ -57,9 +57,7 @@ local function fn(Sim)
     --end
 
     inst.entity:SetPristine()
-    if TheWorld.ismastersim then
-        inst:WatchWorldState("isfullmoon", OnFullMoon)
-    else
+    if not TheWorld.ismastersim then
         return inst
     end
 
@@ -90,7 +88,9 @@ local function fn(Sim)
 
     inst:AddComponent("tradable")
 
+    inst:WatchWorldState("isfullmoon", OnFullMoon)
+
     return inst
 end
 
-return Prefab("common/inventory/fhl_x", fn, Assets)
+return Prefab("common/inventory/fhl_x", fn, assets, prefabs)

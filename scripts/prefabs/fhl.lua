@@ -75,19 +75,7 @@ local prefabs = {
     "fhl_bz",
     "fhl_cake",
     "fhl_cy",
-    "bj_11",
-
-    "dragonpie",
-    "dragonfruit",
-    "dragonfruit_cooked",
-    "dragonchilisalad",
-
-    "berries",
-    "berries_cooked",
-    "berries_juicy",
-    "berries_juicy_cooked",
-
-    "powcake"
+    "bj_11"
 }
 
 -- 自定义启动项

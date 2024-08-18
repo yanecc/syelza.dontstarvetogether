@@ -8,6 +8,7 @@ local assets =
 }
 
 local prefabs = {
+    "farm_soil"
 }
 
 local function SleepAttack(inst, attacker, target)
@@ -56,8 +57,8 @@ local function fn()
     inst:AddTag("sharp")
     inst:AddTag("hammer")
     inst:AddTag("weapon")
-	inst:AddTag("aquatic")
-	inst:AddTag("machete")
+    inst:AddTag("aquatic")
+    inst:AddTag("machete")
     inst:AddTag("nosteal")
     inst:AddTag("allow_action_on_impassable")
 
@@ -95,7 +96,7 @@ local function fn()
     inst.components.oar.force = 0.6
     inst.components.oar.max_velocity = 6
 
-    inst:AddComponent("farmtiller")                 -- 可犁地
+    inst:AddComponent("farmtiller") -- 可犁地
     inst.components.farmtiller.Till = function(self, pt, doer)
         local tilling = false
         local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
@@ -118,7 +119,7 @@ local function fn()
     end
 
     if ACTIONS.HACK ~= nil then
-	    inst.components.tool:SetAction(ACTIONS.HACK, 4) -- 可劈砍
+        inst.components.tool:SetAction(ACTIONS.HACK, 4) -- 可劈砍
     end
 
     inst:AddComponent("weapon")
@@ -131,4 +132,4 @@ local function fn()
     return inst
 end
 
-return Prefab("common/inventory/bj_11", fn, assets)
+return Prefab("common/inventory/bj_11", fn, assets, prefabs)

@@ -1,4 +1,4 @@
-local Assets =
+local assets =
 {
     Asset("ANIM", "anim/sweet_n_sour.zip"),
     Asset("ATLAS", "images/inventoryimages/fhl_bz.xml"),
@@ -6,7 +6,7 @@ local Assets =
 
 local prefabs =
 {
-    "spoiled_food",
+    "spoiled_food"
 }
 
 -- 彩虹糕
@@ -64,4 +64,4 @@ local function fn(Sim)
 end
 
 
-return Prefab("common/inventory/fhl_bz", fn, Assets)
+return Prefab("common/inventory/fhl_bz", fn, assets, prefabs)

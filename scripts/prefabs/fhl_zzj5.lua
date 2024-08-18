@@ -8,7 +8,8 @@ local assets =
 }
 
 local prefabs = {
-    "buff_zzj"
+    "buff_zzj",
+    "ancienttree_seed"
 }
 
 local function MakeBroken(inst)
@@ -268,4 +269,4 @@ local function fn()
     return inst
 end
 
-return Prefab("common/inventory/fhl_zzj5", fn, assets)
+return Prefab("common/inventory/fhl_zzj5", fn, assets, prefabs)
