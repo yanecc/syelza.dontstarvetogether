@@ -38,7 +38,7 @@ configuration_options = {
         label = "语言设置",
         hover = "Language setting",
         options = {
-            { description = "Chinses", data = 0, hover = "Default" },
+            { description = "中文", data = 0, hover = "Default" },
             { description = "English", data = 1 },
         },
 
@@ -165,7 +165,7 @@ configuration_options = {
     {
         name = "bb_durability",
         label = "背包护甲耐久度",
-        hover = "The Backpack's armor function",
+        hover = "The Backpack's armor durability",
         options = {
             { description = "1200", data = 1200 },
             { description = "1800", data = 1800 },
@@ -176,6 +176,22 @@ configuration_options = {
         },
 
         default = 2400,
+    },
+
+    {
+        name = "bb_waterproofer",
+        label = "背包的防水效果",
+        hover = "The Backpack's waterproofer degree",
+        options = {
+            { description = "0",    data = 0,  hover = "Default" },
+            { description = "20%",  data = 0.2 },
+            { description = "40%",  data = 0.4 },
+            { description = "60%",  data = 0.6 },
+            { description = "80%",  data = 0.8 },
+            { description = "100%", data = 1 },
+        },
+
+        default = 0,
     },
 
     {

@@ -76,7 +76,7 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.NAMES.FHL = "瑟尔泽"
     STRINGS.CHARACTER_TITLES.fhl = "风幻龙-瑟尔泽"
     STRINGS.CHARACTER_NAMES.fhl = "瑟尔泽"
-    STRINGS.CHARACTER_DESCRIPTIONS.fhl = "*掌管永恒的风之神, 击杀怪物掉落符文结晶\n*吃火龙果升级!(满级10) 变得更加强大!\n*会做超好吃的料理! 是图书管理员的朋友!"
+    STRINGS.CHARACTER_DESCRIPTIONS.fhl = "*掌管永恒的风之神, 击杀怪物掉落符文结晶\n*吃火龙果升级!(满级10) 变得更加强大!\n*会做超好吃的甜点! 是图书管理员的朋友!"
     STRINGS.CHARACTER_QUOTES.fhl = "\"谢谢汝……选择了妾身！\""
     STRINGS.CHARACTER_SURVIVABILITY.fhl = "严峻"
 
@@ -108,9 +108,6 @@ if GetModConfigData("fhl_language") == 0 then
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING = "这是......葫芦娃?"
     STRINGS.NAMES.PERSONAL_LICKING_EYEBONE = "风幻的铃铛"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING_EYEBONE = "铃铛的声音很好听."
-
-    --STRINGS.CHARACTERS.GENERIC.DESCRIBE.KRAMPUS_SACK = "it looks great."
-    --STRINGS.RECIPE_DESC.KRAMPUS_SACK = "集冰箱护甲暖石一身的\n高级背包"
 
     STRINGS.NAMES.FHL_BB = "瑟尔泽的背包"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "噢，真漂亮，宠物们该会很高兴住进去"
@@ -181,9 +178,6 @@ else
     STRINGS.NAMES.PERSONAL_LICKING_EYEBONE = "Syelza's Bell"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.PERSONAL_LICKING_EYEBONE = "The sound of the bell is nice."
 
-    --STRINGS.CHARACTERS.GENERIC.DESCRIBE.KRAMPUS_SACK = "it looks great."
-    --STRINGS.RECIPE_DESC.KRAMPUS_SACK = "集冰箱护甲暖石一身的\n高级背包"
-
     STRINGS.NAMES.FHL_BB = "Syelza's Backpack"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "Oh, Nice. Why are my pets still out there?"
     STRINGS.RECIPE_DESC.FHL_BB = "fridge/armor/animal's heaven"
@@ -230,6 +224,9 @@ Assets = {
     --人物死后图像
     Asset("IMAGE", "images/avatars/avatar_ghost_fhl.tex"),
     Asset("ATLAS", "images/avatars/avatar_ghost_fhl.xml"),
+
+    Asset("IMAGE", "images/avatars/self_inspect_fhl.tex"),
+    Asset("ATLAS", "images/avatars/self_inspect_fhl.xml"),
     --剑小图标
     Asset("ATLAS", "images/inventoryimages/fhl_zzj2.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_zzj2.tex"),
@@ -322,6 +319,7 @@ TUNING.HSF_POSITION = GetModConfigData("hsf_position") -- 护身符格子位置
 
 TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
 TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
+TUNING.BB_WATERPROOFER = GetModConfigData("bb_waterproofer")
 
 TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
@@ -878,22 +876,14 @@ if TUNING.APPLESTORE then
 end
 
 ----------------------------------------------------------------------------------------
-local function ReduceFoodHealthPenalty(inst, eater, health)
-    for k, v in pairs(eater.components.inventory.equipslots) do
-        if v and v:HasTag("foodharm_resistant") then
-            return -2
-        end
-    end
-    return health
-end
-
 if TUNING.SKILL_TREE then
     AddComponentPostInit("edible", function(self)
         local oldGetHealth = self.GetHealth
         self.GetHealth = function(self, eater)
             local health = oldGetHealth(self, eater)
-            if self.healthvalue < -2 then
-                health = ReduceFoodHealthPenalty(self.inst, eater, health)
+            if self.healthvalue < -2 and eater and eater:IsValid() and eater.components.inventory and
+                eater.components.inventory:EquipHasTag("foodharm_resistant") then
+                health = -2
             end
             return health
         end

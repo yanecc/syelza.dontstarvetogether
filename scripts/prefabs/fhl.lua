@@ -1,45 +1,7 @@
 local MakePlayerCharacter = require "prefabs/player_common"
--- local skilltreedefs = require "prefabs/skilltree_defs"
 
--- skilltreedefs.CreateSkillTreeFor("fhl", {
---     fhl_alchemy_1 = {
---         title = "fhl_skill_1",
---         desc = "fhl_skill_description_1",
---         icon = "wilson_alchemy_1",
---         pos = {-62,176},
---         --pos = {1,0},
---         group = "alchemy",
---         tags = {"alchemy"},
---         onactivate = function(inst, fromload)
---                 inst:AddTag("alchemist")
---             end,
---         root = true,
---         connects = {
---             "fhl_skill_2",
---         },
---     },
---     fhl_alchemy_2 = {
---         title = "fhl_skill_2",
---         desc = "fhl_skill_description_2",
---         icon = "wilson_alchemy_gem_1",
---         pos = {-62,176-54},
---         --pos = {0,-1},
---         group = "alchemy",
---         tags = {"alchemy"},
---         onactivate = function(inst, fromload)
---                 inst:AddTag("gem_alchemistI")
---             end,
---         connects = {
---         },
---     },
--- })
-
--- skilltreedefs.SKILLTREE_ORDERS["fhl"] = {
---             {"alchemy",   { -62       , 176 + 30 }},
---         }
-
-local assets = {
-
+local assets =
+{
     Asset("ANIM", "anim/player_basic.zip"),
     Asset("ANIM", "anim/player_idles_shiver.zip"),
     Asset("ANIM", "anim/player_actions.zip"),
@@ -75,7 +37,8 @@ local prefabs = {
     "fhl_bz",
     "fhl_cake",
     "fhl_cy",
-    "bj_11"
+    "bj_11",
+    "ancient_soul"
 }
 
 -- 自定义启动项

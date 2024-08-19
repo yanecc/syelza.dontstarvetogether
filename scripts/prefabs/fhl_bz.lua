@@ -28,10 +28,6 @@ local function fn(Sim)
     inst:AddTag("honeyed")
     inst:AddTag("catfood")
 
-    --if not TheNet:GetIsServer() then
-    --    return inst
-    --end
-
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst

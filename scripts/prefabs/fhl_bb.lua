@@ -23,7 +23,7 @@ local function OnUnequip(inst, owner)
 end
 
 local function KeepLives(inst, data)
-    if data.item and data.item.components.perishable and data.item:HasTag("smallcreature") then
+    if data.item and data.item.components.perishable and data.item:HasAnyTag("smallcreature", "smalloceancreature") then
         data.item.components.perishable:StopPerishing()
         data.item:AddTag("fhlpet")
     elseif data.prev_item and data.prev_item:HasTag("fhlpet") then
@@ -66,7 +66,6 @@ local function OnBroken(inst)
         inst.components.container:Close()
         inst:RemoveComponent("container")
         -- inst:RemoveAllEventCallbacks()
-        inst:Remove()
     end
 end
 
@@ -118,7 +117,7 @@ local function fn()
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_bb.xml"
 
     inst:AddComponent("waterproofer")
-    inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_HUGE)
+    inst.components.waterproofer:SetEffectiveness(TUNING.BB_WATERPROOFER)
 
     if TUNING.BB_HJOPEN then
         inst:AddComponent("armor")
