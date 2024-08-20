@@ -117,7 +117,7 @@ local function fn()
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_bb.xml"
 
     inst:AddComponent("waterproofer")
-    inst.components.waterproofer:SetEffectiveness(TUNING.BB_WATERPROOFER)
+    inst.components.waterproofer:SetEffectiveness(TUNING.BB_WATERPROOFNESS)
 
     if TUNING.BB_HJOPEN then
         inst:AddComponent("armor")

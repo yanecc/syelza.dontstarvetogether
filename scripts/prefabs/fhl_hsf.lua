@@ -90,8 +90,8 @@ local function fn(Sim)
     inst.AnimState:PlayAnimation("idel")
 
     inst:AddTag("sharp")
-    -- inst:AddTag("trader")
-    inst:AddComponent("inspectable")
+    inst:AddTag("cattoy")
+    inst:AddTag("nosteal")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
@@ -101,10 +101,13 @@ local function fn(Sim)
         return inst
     end
 
-    inst:AddTag("cattoy")
-    inst:AddTag("nosteal")
+    inst:AddComponent("inspectable")
+
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_hsf.xml"
+
+    inst:AddComponent("waterproofer")
+    inst.components.waterproofer:SetEffectiveness(0)
 
     inst:AddComponent("fueled")
     local fuelLevel = TUNING.SKILL_TREE and 10 or 2

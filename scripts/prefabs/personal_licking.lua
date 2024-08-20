@@ -308,9 +308,9 @@ local function create_licking()
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
-        inst:DoTaskInTime(0.1, function(inst)
+        inst.OnEntityReplicated = function(inst)
             inst.replica.container:WidgetSetup(inst._isshadowlicking:value() and "shadowchester" or "chester")
-        end)
+        end
         inst._clientshadowmorphed = false
         inst:ListenForEvent("onisshadowlickingdirty", OnIsShadowlickingDirty)
         return inst
