@@ -111,7 +111,7 @@ if GetModConfigData("fhl_language") == 0 then
 
     STRINGS.NAMES.FHL_BB = "瑟尔泽的背包"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.FHL_BB = "噢，真漂亮，宠物们该会很高兴住进去"
-    STRINGS.RECIPE_DESC.FHL_BB = "提供防御的冰箱背包\n收纳的小生命会得到最好的照料"
+    STRINGS.RECIPE_DESC.FHL_BB = "防火防潮、提供护甲的冰箱背包\n收纳的小生命会得到最好的照料"
 else
     STRINGS.NAMES.BJ_11 = "Cute girl's treasure"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.BJ_11 = "I can use this to do everything."
@@ -212,6 +212,9 @@ Assets = {
     --选择人物界面的角色名字图像
     Asset("IMAGE", "images/names_fhl.tex"),
     Asset("ATLAS", "images/names_fhl.xml"),
+
+    Asset("IMAGE", "images/names_gold_cn_fhl.tex"),
+    Asset("ATLAS", "images/names_gold_cn_fhl.xml"),
     --人物大图
     Asset("IMAGE", "bigportraits/fhl.tex"),
     Asset("ATLAS", "bigportraits/fhl.xml"),
@@ -323,16 +326,7 @@ TUNING.BB_WATERPROOFNESS = GetModConfigData("bb_waterproofness")
 
 TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
------------------- Backpack
-local oldwidgetsetup = containers.widgetsetup
-containers.widgetsetup = function(container, prefab)
-    if not prefab and container.inst.prefab == "fhl_bb" then
-        prefab = "krampus_sack"
-    end
-    oldwidgetsetup(container, prefab)
-end
-
------------------- The Amulet
+------------------ containers
 local params = {}
 local containers_widgetsetup_base = containers.widgetsetup
 function containers.widgetsetup(container, prefab, data, ...)
@@ -347,6 +341,7 @@ function containers.widgetsetup(container, prefab, data, ...)
     end
 end
 
+------------------ The Amulet
 local Position = {
     DEFAULT = Vector3(108, 50, 0),
     THREEGRID = Vector3(108, 50, 0),
@@ -354,29 +349,44 @@ local Position = {
     FIVEGRID = Vector3(214, 50, 0)
 }
 
-local function hsfAddOn()
-    local container =
+params.hsf_addon =
+{
+    widget =
     {
-        widget =
-        {
-            slotpos = {
-                Vector3(-2, 18, 0),
-            },
-            animbank = "ui_alterguardianhat_1x1",
-            animbuild = "ui_alterguardianhat_1x1",
-            pos = Position[string.upper(TUNING.HSF_POSITION)] or Position.DEFAULT,
+        slotpos = {
+            Vector3(-2, 18, 0),
         },
-        type = "hand_inv",
-        acceptsstacks = false,
-        excludefromcrafting = true,
-        itemtestfn = function(container, item, slot)
-            return item.prefab == "horrorfuel" or item.prefab == "purebrilliance" or item.prefab == "ancient_soul"
-        end
-    }
-    return container
-end
+        animbank = "ui_alterguardianhat_1x1",
+        animbuild = "ui_alterguardianhat_1x1",
+        pos = Position[string.upper(TUNING.HSF_POSITION)] or Position.DEFAULT,
+    },
+    type = "hand_inv",
+    acceptsstacks = false,
+    excludefromcrafting = true,
+    itemtestfn = function(container, item, slot)
+        return item.prefab == "horrorfuel" or item.prefab == "purebrilliance" or item.prefab == "ancient_soul"
+    end
+}
 
-params.hsf_addon = hsfAddOn()
+------------------ The Backpack
+params.fhl_bb =
+{
+    widget =
+    {
+        slotpos = {},
+        animbank = "ui_krampusbag_2x8",
+        animbuild = "ui_krampusbag_2x8",
+        pos = Vector3(-5, -130, 0),
+    },
+    issidewidget = true,
+    type = "pack",
+    openlimit = 1,
+}
+
+for y = 0, 6 do
+    table.insert(params.fhl_bb.widget.slotpos, Vector3(-162, -75 * y + 240, 0))
+    table.insert(params.fhl_bb.widget.slotpos, Vector3(-162 + 75, -75 * y + 240, 0))
+end
 
 for k, v in pairs(params) do
     containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)

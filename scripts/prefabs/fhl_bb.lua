@@ -7,16 +7,16 @@ local assets =
 }
 
 local function OnEquip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_15220700")
-    owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "symbol_b6d8e12e")
+    owner.AnimState:OverrideSymbol("backpack", "swap_fhl_bb", "backpack")
+    owner.AnimState:OverrideSymbol("swap_body", "swap_fhl_bb", "swap_body")
     if inst.components.container ~= nil then
         inst.components.container:Open(owner)
     end
 end
 
 local function OnUnequip(inst, owner)
-    owner.AnimState:ClearOverrideSymbol("swap_body")
     owner.AnimState:ClearOverrideSymbol("backpack")
+    owner.AnimState:ClearOverrideSymbol("swap_body")
     if inst.components.container ~= nil then
         inst.components.container:Close(owner)
     end
@@ -81,7 +81,7 @@ local function fn()
 
     inst.MiniMapEntity:SetIcon("krampus_sack.png")
 
-    inst.AnimState:SetBank("pirate_booty_bag")
+    inst.AnimState:SetBank("fhl_bb")
     inst.AnimState:SetBuild("fhl_bb")
     inst.AnimState:PlayAnimation("anim")
 
@@ -94,17 +94,10 @@ local function fn()
     --waterproofer (from waterproofer component) added to pristine state for optimization
     inst:AddTag("waterproofer")
 
-    -- inst:AddComponent("talker")
-    -- inst.components.talker.fontsize = 20
-    -- inst.components.talker.font = TALKINGFONT
-    -- inst.components.talker.colour = Vector3(0.6, 0.9, 0.9, 1)
-    -- inst.components.talker.offset = Vector3(0, 100, 0)
-    -- inst.components.talker.symbol = "swap_object"
-
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         inst.OnEntityReplicated = function(inst)
-            inst.replica.container:WidgetSetup("krampus_sack")
+            inst.replica.container:WidgetSetup("fhl_bb")
         end
         return inst
     end
@@ -113,7 +106,6 @@ local function fn()
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.cangoincontainer = false
-    inst.components.inventoryitem.foleysound = "dontstarve/movement/foley/marblearmour"
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_bb.xml"
 
     inst:AddComponent("waterproofer")
@@ -139,7 +131,7 @@ local function fn()
     inst.components.equippable:SetOnUnequip(OnUnequip)
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("krampus_sack")
+    inst.components.container:WidgetSetup("fhl_bb")
 
     inst:ListenForEvent("itemget", KeepLives)
     inst:ListenForEvent("itemlose", KeepLives)
