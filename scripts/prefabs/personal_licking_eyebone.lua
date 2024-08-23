@@ -159,11 +159,25 @@ local function OnPickUp(inst)
         inst.fixtask = inst:DoTaskInTime(1, Fixlicking)
     end
     -- 仅在物品栏中有效，放入背包或箱子不行
-    if inst.components.inventoryitem:IsHeldBy(inst.owner) then
-        inst.owner:AddTag("bellholder")
+    local owner = inst.components.inventoryitem:GetGrandOwner()
+    if owner == nil then return end
+    if inst.components.inventoryitem:IsHeldBy(owner) then
+        owner:AddTag("bellholder")
     else
-        inst.owner:RemoveTag("bellholder")
+        owner:RemoveTag("bellholder")
     end
+end
+
+local function OnRemoved(self)
+    local owner = self.inst.components.inventoryitem:GetGrandOwner()
+    if owner then owner:RemoveTag("bellholder") end
+
+    if self.owner then
+        self.owner:RemoveChild(self.inst)
+    end
+    self:ClearOwner()
+    self.inst:ReturnToScene()
+    self:WakeLivingItem()
 end
 
 local function OnSave(inst, data)
@@ -229,9 +243,9 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/licking_eyebone.xml"
     inst.components.inventoryitem:ChangeImageName("licking_eyebone")
+    inst.components.inventoryitem.OnRemoved = OnRemoved
     inst.components.inventoryitem:SetOnPickupFn(OnPickUp)
     inst.components.inventoryitem:SetOnPutInInventoryFn(OnPickUp)
-    inst.components.inventoryitem:SetOnDroppedFn(function(inst) inst.owner:RemoveTag("bellholder") end)
 
     inst.EyeboneState = "NORMAL"
     inst.openEye = "licking_eyebone"
@@ -245,10 +259,9 @@ local function fn()
     inst.components.inspectable:RecordViews()
     inst.components.inspectable.nameoverride = "licking_eyebone"
 
-    inst:AddComponent("leader")
-
-
     inst:AddComponent("named")
+
+    inst:AddComponent("leader")
 
     MakeHauntableLaunch(inst)
 

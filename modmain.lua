@@ -596,54 +596,34 @@ end
 
 AddPlayerPostInit(Personallicking)
 
---No One Enters Chester cept the one with the licking bone!
-
-local function HaslickingBone(doer)
-    if doer.components.inventory and doer.components.inventory:FindItem(function(item)
-            if item.prefab == "personal_licking_eyebone" then return true end
-        end) ~= nil then
-        return true
-    else
-        return false
-    end
-end
-
-local oldACTIONSTORE = GLOBAL.ACTIONS.STORE.fn
+-- Only the Bell holder can use the correlative Apple, unless the Apple itself contains the Bell.
+local old_STORE = GLOBAL.ACTIONS.STORE.fn
 GLOBAL.ACTIONS.STORE.fn = function(act)
-    if act.target and act.target.prefab == "personal_licking" and act.target.components.container ~= nil and act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil then
+    if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
+        act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil then
         print(act.doer.name, "is trying to do something with a licking")
-        if HaslickingBone(act.doer) then
-            print(act.doer.name, "has licking Bone, proceed")
-            return oldACTIONSTORE(act)
+        if act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) or
+            act.target.components.container:IsHolding(act.target.components.follower.leader, true) or
+            act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
+            print(act.doer.name, "can use the licking, proceed")
+            return old_STORE(act)
         else
             print(act.doer.name, "doesn't has the licking Bone, exit")
-            if act.doer.components.talker then act.doer.components.talker:Say("No Can Do!") end
-            return true
+            return false, "NOTALLOWED"
         end
     else
-        return oldACTIONSTORE(act)
+        return old_STORE(act)
     end
 end
 
 local old_RUMMAGE = GLOBAL.ACTIONS.RUMMAGE.fn
 GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
-    if act.target and act.target.prefab == "personal_licking" then
-        print("GLOBAL.ACTIONS.RUMMAGE--" .. tostring(act.doer.components.inventory))
-        result = act.doer.components.inventory:FindItem(function(item)
-            if item.prefab == "personal_licking_eyebone" then
-                print("GLOBAL.ACTIONS.RUMMAGE--" .. tostring(item) .. "--ok--")
-                return true
-            end
-        end)
-        if result then
-            return old_RUMMAGE(act)
-        else
-            print("GLOBAL.ACTIONS.RUMMAGE--" .. tostring(item) .. "--fail--")
-            act.doer:DoTaskInTime(1, function()
-                act.doer.components.talker:Say("No Can Do!")
-            end)
-            return false
-        end
+    -- 检查范围：物品栏、背包、苹果、（递归）苹果内容器、（递归）物品栏内容器
+    if act.target and act.target.prefab == "personal_licking" and
+        not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
+        not act.target.components.container:IsHolding(act.target.components.follower.leader, true) and
+        not act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
+        return false, "NOTALLOWED"
     else
         return old_RUMMAGE(act)
     end
