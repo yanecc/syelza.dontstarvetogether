@@ -3,6 +3,7 @@ local assets =
     Asset("ANIM", "anim/fhl_bb.zip"),
     Asset("ANIM", "anim/swap_fhl_bb.zip"),
 
+    Asset("ATLAS", "images/map_icons/fhl_data.xml"),
     Asset("ATLAS", "images/inventoryimages/fhl_bb.xml")
 }
 
@@ -79,7 +80,7 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-    inst.MiniMapEntity:SetIcon("krampus_sack.png")
+    inst.MiniMapEntity:SetIcon("fhl_bb.tex")
 
     inst.AnimState:SetBank("fhl_bb")
     inst.AnimState:SetBuild("fhl_bb")

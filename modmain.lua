@@ -15,7 +15,6 @@ local containers = require("containers")
 local TheInput = GLOBAL.TheInput
 local Vector3 = GLOBAL.Vector3
 
-
 modimport("fhl_util/fhl_util.lua")
 
 
@@ -36,7 +35,6 @@ PrefabFiles = {
     "ancient_soul",
     "ancient_gem",
     "fhl_tree",
-    --"krampus_sack",
     "fhl_bb",
     "buff_x2",
     "buff_zzj",
@@ -183,7 +181,6 @@ else
     STRINGS.RECIPE_DESC.FHL_BB = "fridge/armor/animal's heaven"
 end
 
-
 -- 人物语言反馈
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.fhl =
 {
@@ -194,9 +191,6 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.fhl =
     GHOST = "风幻虽死不悔.",
 }
 
--- 人物的名字出现在游戏中
--- STRINGS.NAMES.fhl = "风幻龙"
-
 -- 人物说话
 STRINGS.CHARACTERS.ESCTEMPLATE = require "speech_fhl"
 
@@ -204,11 +198,9 @@ Assets = {
     --存档界面人物头像
     Asset("IMAGE", "images/saveslot_portraits/fhl.tex"),
     Asset("ATLAS", "images/saveslot_portraits/fhl.xml"),
-
     --选择人物界面的人物头像
     Asset("IMAGE", "images/selectscreen_portraits/fhl.tex"),
     Asset("ATLAS", "images/selectscreen_portraits/fhl.xml"),
-
     --选择人物界面的角色名字图像
     Asset("IMAGE", "images/names_fhl.tex"),
     Asset("ATLAS", "images/names_fhl.xml"),
@@ -221,6 +213,9 @@ Assets = {
     --地图上的人物图标
     Asset("IMAGE", "images/map_icons/fhl.tex"),
     Asset("ATLAS", "images/map_icons/fhl.xml"),
+    --地图上的物品图标
+    Asset("IMAGE", "images/map_icons/fhl_atlas.tex"),
+    Asset("ATLAS", "images/map_icons/fhl_data.xml"),
     --人物头像
     Asset("IMAGE", "images/avatars/avatar_fhl.tex"),
     Asset("ATLAS", "images/avatars/avatar_fhl.xml"),
@@ -231,6 +226,9 @@ Assets = {
     Asset("IMAGE", "images/avatars/self_inspect_fhl.tex"),
     Asset("ATLAS", "images/avatars/self_inspect_fhl.xml"),
     --剑小图标
+    Asset("ATLAS", "images/inventoryimages/bj_11.xml"),
+    Asset("IMAGE", "images/inventoryimages/bj_11.tex"),
+    --剑小图标
     Asset("ATLAS", "images/inventoryimages/fhl_zzj2.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_zzj2.tex"),
 
@@ -240,10 +238,8 @@ Assets = {
     Asset("ATLAS", "images/inventoryimages/fhl_zzj5.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_zzj5.tex"),
 
-    Asset("ATLAS", "images/inventoryimages/fhltab.xml"),
-    Asset("IMAGE", "images/inventoryimages/fhltab.tex"),
-
     Asset("ATLAS", "images/inventoryimages/fhl_hsf.xml"),
+    Asset("IMAGE", "images/inventoryimages/fhl_hsf.tex"),
 
     Asset("ANIM", "anim/sweet_n_sour.zip"),
     Asset("IMAGE", "images/inventoryimages/fhl_bz.tex"),
@@ -280,10 +276,12 @@ Assets = {
     Asset("ATLAS", "images/inventoryimages/fhl_bb.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_bb.tex"),
 
-    Asset("ATLAS", "images/inventoryimages/fhltab.xml"),
-    Asset("IMAGE", "images/inventoryimages/fhltab.tex"),
-}
+    Asset("ATLAS", "images/inventoryimages/licking_eyebone.xml"),
+    Asset("IMAGE", "images/inventoryimages/licking_eyebone.tex"),
 
+    Asset("ATLAS", "images/inventoryimages/applestore.xml"),
+    Asset("IMAGE", "images/inventoryimages/applestore.tex"),
+}
 
 TUNING.FHL_HEALTH = 150
 TUNING.FHL_HUNGER = 150
@@ -296,10 +294,8 @@ TUNING.STATUS_KEY = GetModConfigData("status_key")
 TUNING.SKILL_POINT_KEY = GetModConfigData("skill_point_key")
 TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
 
-TUNING.JGEAT = GetModConfigData("fhl_jgeat")     -- 吃浆果升级
-TUNING.JGEATSL = GetModConfigData("fhl_jgeatsl") -- 升级需要浆果数量
-
---TUNING.LIKEORNOT = GetModConfigData("likeornot")
+TUNING.JGEAT = GetModConfigData("fhl_jgeat")           -- 吃浆果升级
+TUNING.JGEATSL = GetModConfigData("fhl_jgeatsl")       -- 升级需要浆果数量
 
 TUNING.FHL_COS = GetModConfigData("fhl_cos")           -- 符文结晶爆率
 
@@ -393,7 +389,6 @@ for k, v in pairs(params) do
 end
 
 ----------------------------------------------------------------------------------------------------
-
 local function Givelickingbone(inst)
     local lickingbone = GLOBAL.SpawnPrefab("personal_licking_eyebone")
     if lickingbone then
@@ -596,21 +591,15 @@ end
 
 AddPlayerPostInit(Personallicking)
 
--- Only the Bell holder can use the correlative Apple, unless the Apple itself contains the Bell.
+-- 检查范围：（递归）物品栏、背包、（递归）苹果
 local old_STORE = GLOBAL.ACTIONS.STORE.fn
 GLOBAL.ACTIONS.STORE.fn = function(act)
     if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
-        act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil then
-        print(act.doer.name, "is trying to do something with a licking")
-        if act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) or
-            act.target.components.container:IsHolding(act.target.components.follower.leader, true) or
-            act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
-            print(act.doer.name, "can use the licking, proceed")
-            return old_STORE(act)
-        else
-            print(act.doer.name, "doesn't has the licking Bone, exit")
-            return false, "NOTALLOWED"
-        end
+        act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil and
+        not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
+        not act.target.components.container:IsHolding(act.target.components.follower.leader, true) and
+        not act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
+        return false, "NOTALLOWED"
     else
         return old_STORE(act)
     end
@@ -618,8 +607,7 @@ end
 
 local old_RUMMAGE = GLOBAL.ACTIONS.RUMMAGE.fn
 GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
-    -- 检查范围：物品栏、背包、苹果、（递归）苹果内容器、（递归）物品栏内容器
-    if act.target and act.target.prefab == "personal_licking" and
+    if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
         not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
         not act.target.components.container:IsHolding(act.target.components.follower.leader, true) and
         not act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
@@ -628,9 +616,6 @@ GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
         return old_RUMMAGE(act)
     end
 end
-
-AddMinimapAtlas("images/inventoryimages/personal_licking.xml")
-
 
 ----------------------------------------------------------------------------------------
 local function UseFullMoonRecipe()
@@ -657,56 +642,7 @@ local function CheckFullMoon()
 end
 
 ----------------------------------------------------------------------------------------
--- local function AddFirstOrderTagToPlayer(inst, player)
---     local day = GLOBAL.TheWorld.state.cycles
---     local key = player.userid .. "_" .. tostring(day)
-
---     if not inst.TradingRecord[key] then
---         inst.TradingRecord[key] = true
---         player:AddTag("firstorder")
---     end
--- end
-
--- local function AddFirstOrderTagToAllPlayers(inst)
---     for _, player in ipairs(GLOBAL.AllPlayers) do
---         AddFirstOrderTagToPlayer(inst, player)
---     end
--- end
-
--- local function OnDayComplete(inst)
---     inst:DoTaskInTime(0, AddFirstOrderTagToAllPlayers(inst))
--- end
-
--- local function OnPlayerJoined(inst, player)
---     AddFirstOrderTagToPlayer(inst, player)
---     if GLOBAL.TheWorld.state.isfullmoon then
---         UseFullMoonRecipe()
---     end
--- end
-
 AddPrefabPostInit("world", function(inst)
-    -- local _OnSave = inst.OnSave
-    -- local function onSave(inst, data, ...)
-    --     data.TradingRecord = inst.TradingRecord
-    --     if _OnSave ~= nil then _OnSave(inst, data, ...) end
-    -- end
-    -- inst.OnSave = onSave
-
-    -- local _OnLoad = inst.OnLoad
-    -- local function onLoad(inst, data, ...)
-    --     if data ~= nil then
-    --         inst.TradingRecord = data.TradingRecord or {}
-    --     end
-    --     if _OnLoad ~= nil then
-    --         return _OnLoad(inst, data, ...)
-    --     end
-    -- end
-    -- inst.OnLoad = onLoad
-    -- inst.TradingRecord = {}
-
-    -- inst:WatchWorldState("cycles", OnDayComplete)
-    -- inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
-    -- AddFirstOrderTagToAllPlayers(inst)
     if TUNING.APPLESTORE then
         local season = GLOBAL.TheWorld.state.season
         inst:WatchWorldState("cycles", function()
@@ -731,26 +667,29 @@ AddPrefabPostInit("world", function(inst)
     end)
 end)
 
+----------------------------------------------------------------------------------------
 -- 注册图片
+RegisterInventoryItemAtlas("images/inventoryimages/ancient_gem.xml", "ancient_gem.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/ancient_soul.xml", "ancient_soul.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_bz.xml", "fhl_bz.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_cake.xml", "fhl_cake.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_cy.xml", "fhl_cy.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_x.xml", "fhl_x.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_x2.xml", "fhl_x2.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_hsf.xml", "fhl_hsf.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj2.xml", "fhl_zzj2.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj4.xml", "fhl_zzj4.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj5.xml", "fhl_zzj5.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_hsf.xml", "fhl_hsf.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_bz.xml", "fhl_bz.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_cake.xml", "fhl_cake.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_x.xml", "fhl_x.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_cy.xml", "fhl_cy.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/ancient_gem.xml", "ancient_gem.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/licking_eyebone.xml", "licking_eyebone.tex")
 
 ----------------------------------------------------------------------------------------
 if TUNING.APPLESTORE then
     GLOBAL.PROTOTYPER_DEFS.personal_licking = {
-        icon_atlas = "images/inventoryimages/licking_eyebone.xml",
-        icon_image = "licking_eyebone.tex",
+        icon_atlas = "images/inventoryimages/applestore.xml",
+        icon_image = "applestore.tex",
         is_crafting_station = true,
         action_str = "TRADE",
         filter_text = "苹果杂货铺",
@@ -759,8 +698,8 @@ if TUNING.APPLESTORE then
     GLOBAL.RECIPETABS.PROPERTY = {
         str = "PROPERTY",
         sort = 666,
-        icon = "licking_eyebone.tex",
-        icon_atlas = "images/inventoryimages/licking_eyebone.xml",
+        icon = "applestore.tex",
+        icon_atlas = "images/inventoryimages/applestore.xml",
         crafting_station = true,
         shop = true
     }
@@ -956,5 +895,6 @@ AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespo
     { product = "book_tentacles", builder_tag = "bookbuilder" })
 
 -----------创建地图图标和角色基础属性
+AddMinimapAtlas("images/map_icons/fhl_data.xml")
 AddMinimapAtlas("images/map_icons/fhl.xml")
 AddModCharacter("fhl", "FEMALE")

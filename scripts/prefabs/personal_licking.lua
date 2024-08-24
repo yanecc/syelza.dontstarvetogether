@@ -1,5 +1,4 @@
 require "prefabutil"
-local brain = require "brains/chesterbrain"
 
 local WAKE_TO_FOLLOW_DISTANCE = 4
 local SLEEP_NEAR_LEADER_DISTANCE = 6
@@ -10,11 +9,11 @@ local assets =
     Asset("ANIM", "anim/ui_chest_3x3.zip"),
 
     Asset("ANIM", "anim/chester.zip"),
-    Asset("ANIM", "anim/licking_build.zip"),
-    Asset("ANIM", "anim/licking_shadow_build.zip"),
-    Asset("ANIM", "anim/licking_snow_build.zip"),
+    Asset("ANIM", "anim/fhl_licking.zip"),
 
     Asset("SOUND", "sound/chester.fsb"),
+
+    Asset("ATLAS", "images/map_icons/fhl_data.xml")
 }
 
 local prefabs =
@@ -65,27 +64,19 @@ end
 
 -- eye bone was killed/destroyed
 local function OnStopFollowing(inst)
-    --print("licking - OnStopFollowing")
     inst:RemoveTag("companion")
 end
 
 local function OnStartFollowing(inst)
-    --print("licking - OnStartFollowing")
     inst:AddTag("companion")
 end
 
 local function MorphShadowlicking(inst)
-    inst.AnimState:SetBuild("licking_shadow_build")
+    inst.AnimState:SetBuild("fhl_licking")
     inst:RemoveTag("fridge")
     inst:AddTag("spoiler")
 
-    if TUNING.LIKEORNOT then
-        inst.components.container:WidgetSetup("licking")
-    else
-        inst.components.container:WidgetSetup("shadowchester")
-    end
-
-    --inst.components.container:WidgetSetup("shadowchester")
+    inst.components.container:WidgetSetup("shadowchester")
 
     local leader = inst.components.follower.leader
     if leader ~= nil then
@@ -98,7 +89,7 @@ end
 
 
 local function MorphSnowlicking(inst)
-    inst.AnimState:SetBuild("licking_snow_build")
+    inst.AnimState:SetBuild("fhl_licking")
     inst:RemoveTag("spoiler")
     inst:AddTag("fridge")
 
@@ -279,7 +270,6 @@ local function create_licking()
     inst:AddTag("character")
     inst:AddTag("scarytoprey")
     inst:AddTag("notraptrigger")
-    inst:AddTag("personal_licking")
     if TUNING.APPLESTORE then
         inst:AddTag("prototyper")
     end
@@ -289,8 +279,8 @@ local function create_licking()
     inst.MiniMapEntity:SetIcon("personal_licking.tex")
     inst.MiniMapEntity:SetCanUseCache(false)
 
-    inst.AnimState:SetBank("miho")
-    inst.AnimState:SetBuild("licking_build")
+    inst.AnimState:SetBank("fhl_licking")
+    inst.AnimState:SetBuild("fhl_licking")
 
     inst.DynamicShadow:SetSize(2, 1.5)
 

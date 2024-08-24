@@ -1,7 +1,9 @@
 local assets =
 {
     Asset("ANIM", "anim/licking_eyebone.zip"),
-    Asset("ATLAS", "images/inventoryimages/licking_eyebone.xml"),
+
+    Asset("ATLAS", "images/map_icons/fhl_data.xml"),
+    Asset("ATLAS", "images/inventoryimages/licking_eyebone.xml")
 }
 
 local prefabs =
@@ -51,7 +53,7 @@ end
 
 --[[
 local function MorphNormalEyebone(inst)
-    inst.AnimState:SetBuild("licking_eyebone_build")
+    inst.AnimState:SetBuild("licking_eyebone")
 
     inst.openEye = "licking_eyebone"
     inst.closedEye = "licking_eyebone_closed"
@@ -217,6 +219,7 @@ local function fn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
+    inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
@@ -227,6 +230,8 @@ local function fn()
     inst:AddTag("nonpotatable")
 
     inst:AddTag("_named")
+
+    inst.MiniMapEntity:SetIcon("personal_licking_eyebone.tex")
 
     inst.AnimState:SetBank("licking_eyebone")
     inst.AnimState:SetBuild("licking_eyebone")
