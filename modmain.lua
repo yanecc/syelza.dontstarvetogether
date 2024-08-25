@@ -17,7 +17,6 @@ local Vector3 = GLOBAL.Vector3
 
 modimport("fhl_util/fhl_util.lua")
 
-
 PrefabFiles = {
     "fhl",
     "bj_11",
@@ -241,19 +240,19 @@ Assets = {
     Asset("ATLAS", "images/inventoryimages/fhl_hsf.xml"),
     Asset("IMAGE", "images/inventoryimages/fhl_hsf.tex"),
 
-    Asset("ANIM", "anim/sweet_n_sour.zip"),
+    Asset("ANIM", "anim/fhl_torte.zip"),
     Asset("IMAGE", "images/inventoryimages/fhl_bz.tex"),
     Asset("ATLAS", "images/inventoryimages/fhl_bz.xml"),
 
-    Asset("ANIM", "anim/cake.zip"),
+    Asset("ANIM", "anim/fhl_pudding.zip"),
     Asset("IMAGE", "images/inventoryimages/fhl_cake.tex"),
     Asset("ATLAS", "images/inventoryimages/fhl_cake.xml"),
 
-    Asset("ANIM", "anim/dy_x.zip"),
+    Asset("ANIM", "anim/fhl_x.zip"),
     Asset("IMAGE", "images/inventoryimages/fhl_x.tex"),
     Asset("ATLAS", "images/inventoryimages/fhl_x.xml"),
 
-    Asset("ANIM", "anim/dy_x.zip"),
+    Asset("ANIM", "anim/fhl_x.zip"),
     Asset("IMAGE", "images/inventoryimages/fhl_x2.tex"),
     Asset("ATLAS", "images/inventoryimages/fhl_x2.xml"),
 
@@ -321,6 +320,9 @@ TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
 TUNING.BB_WATERPROOFNESS = GetModConfigData("bb_waterproofness")
 
 TUNING.SKILL_TREE = GetModConfigData("skill_tree")
+
+ACTIONS.ADDFUEL.priority = 1
+GLOBAL.FUELTYPE.ANCIENTSOUL = "ANCIENTSOUL"
 
 ------------------ containers
 local params = {}
@@ -883,8 +885,6 @@ AddDeconstructRecipe("fhl_x2",
 --     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })
 
 -- ----BOOK----
--- 降低了科技等级，相当于老奶奶
-
 AddRecipe2("book_sleep", { Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2) }, TECH.NONE,
     { product = "book_sleep", builder_tag = "bookbuilder" })
 

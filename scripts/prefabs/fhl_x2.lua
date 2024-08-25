@@ -1,6 +1,6 @@
 local assets =
 {
-    Asset("ANIM", "anim/dy_x.zip"),
+    Asset("ANIM", "anim/fhl_x.zip"),
     Asset("ATLAS", "images/inventoryimages/fhl_x2.xml"),
 }
 
@@ -39,8 +39,8 @@ local function fn(Sim)
     MakeSmallBurnable(inst)
     MakeSmallPropagator(inst)
 
-    inst.AnimState:SetBank("dy_x")
-    inst.AnimState:SetBuild("dy_x")
+    inst.AnimState:SetBank("fhl_x")
+    inst.AnimState:SetBuild("fhl_x")
     inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("catfood")
@@ -86,6 +86,5 @@ local function fn(Sim)
 
     return inst
 end
-
 
 return Prefab("common/inventory/fhl_x2", fn, assets, prefabs)

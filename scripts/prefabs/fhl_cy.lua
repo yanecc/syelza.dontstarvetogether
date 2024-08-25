@@ -57,5 +57,4 @@ local function fn(Sim)
     return inst
 end
 
-
 return Prefab("common/inventory/fhl_cy", fn, assets, prefabs)

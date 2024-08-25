@@ -10,9 +10,9 @@ local function OnEquip(inst, owner)
 
     if TUNING.BUFFGO and inst.components.fueled then
         inst.consumefn = function(owner, data)
-            if data.amount > 0 then return end
-            local fuelrate = TUNING.SKILL_TREE and 0.01 or 0.02
-            inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
+            if data.amount < 0 then
+                inst.components.fueled:DoDelta(-0.02 * inst.components.fueled.maxfuel)
+            end
         end
         inst:AddTag("bramble_resistant")
         inst:AddTag("foodharm_resistant")
@@ -41,14 +41,23 @@ local function OnEquipToModel(inst, owner)
     inst.components.fueled:StopConsuming()
 end
 
+local function CanAddFuel(inst, item, doer)
+    if inst.components.fueled:IsFull() then
+        doer:DoTaskInTime(0, function()
+            doer.components.talker:Say("Durability is full!")
+        end)
+        return false
+    end
+    return true
+end
+
 local function OnDepleted(inst)
     if inst.components.container:IsEmpty() then
         inst:Remove()
     else
         local item = inst.components.container:GetItemInSlot(1)
         if item.prefab == "ancient_soul" then
-            inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
-            item:Remove()
+            inst.components.fueled:TakeFuelItem(item)
         else
             inst.components.container:DropEverything()
             inst:Remove()
@@ -66,12 +75,6 @@ local function UpdateHSFAddon(inst)
             inst.components.equippable.dapperness = -2
         elseif item.prefab == "purebrilliance" then
             inst.components.planardefense:SetBaseDefense(20)
-        elseif item.prefab == "ancient_soul" and not inst.components.fueled:IsFull() then
-            inst.components.fueled:DoDelta(inst.components.fueled.maxfuel * 0.5)
-            item:Remove()
-        else
-            local owner = item.components.inventoryitem:GetGrandOwner()
-            owner.components.talker:Say("Durability is full!")
         end
     end
 end
@@ -111,9 +114,15 @@ local function fn(Sim)
 
     inst:AddComponent("fueled")
     local fuelLevel = TUNING.SKILL_TREE and 10 or 2
-    inst.components.fueled.fueltype = FUELTYPE.MAGIC
+    inst.components.fueled.accepting = true
     inst.components.fueled:SetDepletedFn(OnDepleted)
+    inst.components.fueled.fueltype = FUELTYPE.ANCIENTSOUL
+    inst.components.fueled:SetCanTakeFuelItemFn(CanAddFuel)
     inst.components.fueled:InitializeFuelLevel(fuelLevel * TUNING.TOTAL_DAY_TIME)
+    if TUNING.SKILL_TREE then
+        inst.components.fueled.bonusmult = 5
+        inst.components.fueled.secondaryfueltype = FUELTYPE.USAGE
+    end
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD

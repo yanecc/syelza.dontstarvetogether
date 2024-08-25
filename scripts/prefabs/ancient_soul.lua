@@ -40,6 +40,10 @@ local function fn()
 	inst:AddComponent("inventoryitem")
 	inst.components.inventoryitem.atlasname = "images/inventoryimages/ancient_soul.xml"
 
+	inst:AddComponent("fuel")
+	inst.components.fuel.fueltype = FUELTYPE.ANCIENTSOUL
+	inst.components.fuel.fuelvalue = TUNING.TOTAL_DAY_TIME
+
 	return inst
 end
 

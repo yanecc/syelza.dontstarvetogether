@@ -104,7 +104,7 @@ end
 
 --[[
 local function MorphNormallicking(inst)
-    inst.AnimState:SetBuild("licking_build")
+    inst.AnimState:SetBuild("fhl_licking")
     inst:RemoveTag("fridge")
     inst:RemoveTag("spoiler")
 
@@ -248,8 +248,6 @@ local function ItemLose(inst, data)
 end
 
 local function create_licking()
-    --print("licking - create_licking")
-
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -310,31 +308,24 @@ local function create_licking()
     inst.persists = false
 
     ------------------------------------------
-
-
-    --print("   health")
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.CHESTER_HEALTH)
     inst.components.health:StartRegen(TUNING.CHESTER_HEALTH_REGEN_AMOUNT, TUNING.CHESTER_HEALTH_REGEN_PERIOD)
     inst:AddTag("noauradamage")
 
-    --print("   inspectable")
     inst:AddComponent("inspectable")
     inst.components.inspectable:RecordViews()
     --inst.components.inspectable.getstatus = GetStatus
     inst.components.inspectable.nameoverride = "licking"
 
-    --print("   locomotor")
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = 14
     inst.components.locomotor.runspeed = 14
 
-    --print("   follower")
     inst:AddComponent("follower")
     inst:ListenForEvent("stopfollowing", OnStopFollowing)
     inst:ListenForEvent("startfollowing", OnStartFollowing)
 
-    --print("   knownlocations")
     inst:AddComponent("knownlocations")
 
     if TUNING.APPLESTORE then
@@ -342,16 +333,13 @@ local function create_licking()
         inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
     end
 
-    --print("   burnable")
     MakeSmallBurnableCharacter(inst, "licking_body")
 
-    --("   container")
     inst:AddComponent("container")
     inst.components.container:WidgetSetup("chester")
     inst.components.container.onopenfn = OnOpen
     inst.components.container.onclosefn = OnClose
 
-    --print("   sleeper")
     inst:AddComponent("sleeper")
     inst.components.sleeper:SetResistance(3)
     inst.components.sleeper.testperiod = GetRandomWithVariance(6, 2)
