@@ -27,13 +27,6 @@ local function OnFullMoon(inst)
     end
 end
 
-local function OnEat(inst, eater)
-    if eater.components.sanity then
-        local currentSanity = eater.components.sanity.current
-        eater.components.sanity:DoDelta(-currentSanity * 0.75)
-    end
-end
-
 local function fn(Sim)
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -61,13 +54,11 @@ local function fn(Sim)
     inst.components.edible.foodtype = "MEAT"
     inst.components.edible.healthvalue = -90
     inst.components.edible.hungervalue = 40
-    inst.components.edible.sanityvalue = 0
-    inst.components.edible:SetOnEatenFn(OnEat)
+    inst.components.edible.getsanityfn = function(inst, eater)
+        return eater and eater.components.sanity and -0.75 * eater.components.sanity.current or 0
+    end
 
     inst:AddComponent("inspectable")
-
-    inst:AddComponent("halloweenmoonmutable")
-    inst.components.halloweenmoonmutable:SetPrefabMutated("fhl_x2")
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_x.xml"
@@ -79,6 +70,9 @@ local function fn(Sim)
     inst.components.perishable:SetPerishTime(TUNING.PERISH_PRESERVED * 5)
     inst.components.perishable:StartPerishing()
     inst.components.perishable.onperishreplacement = "spoiled_food"
+
+    inst:AddComponent("halloweenmoonmutable")
+    inst.components.halloweenmoonmutable:SetPrefabMutated("fhl_x2")
 
     inst:AddComponent("bait")
 

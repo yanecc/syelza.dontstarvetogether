@@ -282,6 +282,7 @@ Assets = {
     Asset("IMAGE", "images/inventoryimages/applestore.tex"),
 }
 
+
 TUNING.FHL_HEALTH = 150
 TUNING.FHL_HUNGER = 150
 TUNING.FHL_SANITY = 150
@@ -323,6 +324,7 @@ TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
 ACTIONS.ADDFUEL.priority = 1
 GLOBAL.FUELTYPE.ANCIENTSOUL = "ANCIENTSOUL"
+
 
 ------------------ containers
 local params = {}
@@ -390,6 +392,7 @@ for k, v in pairs(params) do
     containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
 end
 
+
 ----------------------------------------------------------------------------------------------------
 local function Givelickingbone(inst)
     local lickingbone = GLOBAL.SpawnPrefab("personal_licking_eyebone")
@@ -414,8 +417,8 @@ local function Personallicking(inst)
         return
     end
 
-    local OnDespawn_prev = inst.OnDespawn
-    local OnDespawn_new = function(inst)
+    local _OnDespawn = inst.OnDespawn
+    inst.OnDespawn = function(inst)
         -- Remove licking
         if inst.licking then
             -- Don't allow licking to despawn with irreplaceable items
@@ -454,15 +457,14 @@ local function Personallicking(inst)
         else
             print("Error: Player has no linked lickingbone!")
         end
-        if OnDespawn_prev then
-            return OnDespawn_prev(inst)
+        if _OnDespawn then
+            return _OnDespawn(inst)
         end
     end
-    inst.OnDespawn = OnDespawn_new
 
-    local OnSave_prev = inst.OnSave
-    local OnSave_new = function(inst, data)
-        local references = OnSave_prev and OnSave_prev(inst, data)
+    local _OnSave = inst.OnSave
+    inst.OnSave = function(inst, data)
+        local references = _OnSave and _OnSave(inst, data)
         if inst.licking then
             -- Save licking
             local refs = {}
@@ -497,10 +499,9 @@ local function Personallicking(inst)
         end
         return references
     end
-    inst.OnSave = OnSave_new
 
-    local OnLoad_prev = inst.OnLoad
-    local OnLoad_new = function(inst, data, newents)
+    local _OnLoad = inst.OnLoad
+    inst.OnLoad = function(inst, data, newents)
         if data.licking ~= nil then
             -- Load licking
             inst.licking = GLOBAL.SpawnSaveRecord(data.licking, newents)
@@ -530,22 +531,19 @@ local function Personallicking(inst)
 
         inst.lickingbone.owner = inst
 
-
-        if OnLoad_prev then
-            return OnLoad_prev(inst, data, newents)
+        if _OnLoad then
+            return _OnLoad(inst, data, newents)
         end
     end
-    inst.OnLoad = OnLoad_new
 
-    local OnNewSpawn_prev = inst.OnNewSpawn
-    local OnNewSpawn_new = function(inst)
+    local _OnNewSpawn = inst.OnNewSpawn
+    inst.OnNewSpawn = function(inst)
         -- Give new lickingbone. Let licking spawn naturally.
         Givelickingbone(inst)
-        if OnNewSpawn_prev then
-            return OnNewSpawn_prev(inst)
+        if _OnNewSpawn then
+            return _OnNewSpawn(inst)
         end
     end
-    inst.OnNewSpawn = OnNewSpawn_new
 
     if GLOBAL.TheNet:GetServerGameMode() == "wilderness" then
         local function ondeath(inst, data)
@@ -593,8 +591,9 @@ end
 
 AddPlayerPostInit(Personallicking)
 
+
 -- 检查范围：（递归）物品栏、背包、（递归）苹果
-local old_STORE = GLOBAL.ACTIONS.STORE.fn
+local STORE_FN = GLOBAL.ACTIONS.STORE.fn
 GLOBAL.ACTIONS.STORE.fn = function(act)
     if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
         act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil and
@@ -603,11 +602,11 @@ GLOBAL.ACTIONS.STORE.fn = function(act)
         not act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
         return false, "NOTALLOWED"
     else
-        return old_STORE(act)
+        return STORE_FN(act)
     end
 end
 
-local old_RUMMAGE = GLOBAL.ACTIONS.RUMMAGE.fn
+local RUMMAGE_FN = GLOBAL.ACTIONS.RUMMAGE.fn
 GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
     if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
         not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
@@ -615,9 +614,10 @@ GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
         not act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
         return false, "NOTALLOWED"
     else
-        return old_RUMMAGE(act)
+        return RUMMAGE_FN(act)
     end
 end
+
 
 ----------------------------------------------------------------------------------------
 local function UseFullMoonRecipe()
@@ -809,10 +809,10 @@ end
 ----------------------------------------------------------------------------------------
 if TUNING.SKILL_TREE then
     AddComponentPostInit("edible", function(self)
-        local oldGetHealth = self.GetHealth
+        local _GetHealth = self.GetHealth
         self.GetHealth = function(self, eater)
-            local health = oldGetHealth(self, eater)
-            if self.healthvalue < -2 and eater and eater:IsValid() and eater.components.inventory and
+            local health = _GetHealth(self, eater)
+            if self.healthvalue < -2 and eater and eater.components.inventory and
                 eater.components.inventory:EquipHasTag("foodharm_resistant") then
                 health = -2
             end

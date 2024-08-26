@@ -13,7 +13,7 @@ local prefabs =
 local function OnDeploy(inst, pt)
     local tree = SpawnPrefab("cave_banana_tree")
     if tree then
-        tree.Transform:SetPosition(pt.x, pt.y, pt.z)
+        tree.Transform:SetPosition(pt:Get())
         inst.components.stackable:Get():Remove()
         tree.components.pickable:MakeEmpty()
         tree.SoundEmitter:PlaySound("dontstarve/wilson/plant_tree")
@@ -59,7 +59,7 @@ local function fn()
     inst:AddComponent("deployable")
     inst.components.deployable.ondeploy = OnDeploy
     inst.components.deployable.mode = DEPLOYMODE.PLANT
-    inst.components.deployable.min_spacing = 6
+    inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.DEFAULT) -- 2
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_tree.xml"

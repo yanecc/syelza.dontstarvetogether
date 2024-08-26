@@ -73,7 +73,6 @@ local function fn()
     end
     inst:AddComponent("deployable")
     inst.components.deployable.ondeploy = onDeploy
-    inst.components.deployable.min_spacing = 8
     inst.components.deployable:SetDeployMode(DEPLOYMODE.DEFAULT)
 
     inst:AddComponent("stackable")

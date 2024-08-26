@@ -11,7 +11,7 @@ local prefabs =
     "spoiled_food"
 }
 
--- It works fine, but will stop for a logout
+-- It does the same all but stopping for a logout
 -- local function OnEat(inst, eater)
 --     if eater.components.health and eater.components.sanity then
 --         local function restoreBuff()
@@ -57,6 +57,7 @@ local function fn(Sim)
     inst.components.edible.healthvalue = 0
     inst.components.edible.hungervalue = 40
     inst.components.edible.sanityvalue = 0
+    inst.components.edible.degrades_with_spoilage = false
     inst.components.edible.oneaten = function(inst, eater)
         if eater.components.debuffable and eater.components.debuffable:IsEnabled() and
             not (eater.components.health and eater.components.health:IsDead()) and

@@ -9,7 +9,11 @@ local assets =
 
 local prefabs = {
     "buff_zzj",
-    "palmcone_seed"
+    "palmcone_seed",
+    "icespike_fx_1",
+    "icespike_fx_2",
+    "icespike_fx_3",
+    "icespike_fx_4"
 }
 
 local function MakeBroken(inst)
@@ -69,28 +73,19 @@ local function onzzjremove(inst)
     inst:Remove()
 end
 
-local function SpawnIceFx(inst, target)
-    if not inst then return end
-
-    inst.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/swipe")
-
-    local function GetPos()
-        local multiplayer_portal = c_findnext("multiplayer_portal")
-        if multiplayer_portal and multiplayer_portal:IsValid() then
-            return multiplayer_portal:GetPosition()
-        end
-    end
-
+local function SpawnIceFx(attacker, target)
     local numFX = math.random(15, 20)
-    local pos = inst:GetPosition()
+    local pos = attacker:GetPosition()
     local targetPos = target and target:GetPosition()
-    local vec = targetPos - pos
-    vec = vec:Normalize()
+    local vec = (targetPos - pos):Normalize()
     local dist = pos:Dist(targetPos)
-    local angle = inst:GetAngleToPoint(targetPos:Get())
+    local angle = attacker:GetAngleToPoint(targetPos:Get())
+    local leader = attacker.components.follower ~= nil and attacker.components.follower:GetLeader()
+
+    attacker.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/swipe")
 
     for i = 1, numFX do
-        inst:DoTaskInTime(math.random() * 0.25, function(inst)
+        attacker:DoTaskInTime(math.random() * 0.25, function(attacker)
             local prefab = "icespike_fx_" .. math.random(1, 4)
             local fx = SpawnPrefab(prefab)
             if fx then
@@ -109,14 +104,15 @@ local function SpawnIceFx(inst, target)
 
                 local ents = TheSim:FindEntities(x, y, z, r)
                 for k, v in pairs(ents) do
-                    ----发招忽略队友
-                    if v and v.components.health and not v.components.health:IsDead() and v.components.combat and
-                        v ~= inst and
-                        not (v.components.follower and v.components.follower.leader == inst) and
-                        (TheNet:GetPVPEnabled() or not v:HasTag("player")) and
-                        --检查实体是否在玩家的背包或物品栏中，如果是，则跳过攻击
-                        not (v.components.inventoryitem and v.components.inventoryitem:GetGrandOwner() == inst) then
-                        v.components.combat:GetAttacked(inst, dmg)
+                    local isAlly = attacker.components.combat:IsAlly(v) or leader and leader.components.combat:IsAlly(v)
+                    if not TheNet:GetPVPEnabled() then
+                        isAlly = isAlly or v:HasAnyTag("player", "companion") or v.components.follower and
+                            v.components.follower:GetLeader() and v.components.follower.leader:HasTag("player")
+                    end
+                    if v:IsValid() and v.entity:IsVisible() and
+                        not (v.components.health and v.components.health:IsDead()) and
+                        attacker.components.combat:CanTarget(v) and not isAlly then
+                        v.components.combat:GetAttacked(attacker, dmg)
 
                         if v.components.freezable then
                             v.components.freezable:AddColdness(2)
@@ -170,15 +166,16 @@ end
 --攻击燃烧
 local function OnAttack(weapon, attacker, target)
     --普攻燃烧
-    if attacker and TUNING.ZZJ_FIREOPEN then
+    if attacker and attacker:IsValid() and TUNING.ZZJ_FIREOPEN then
         if TheWorld.state.isnight and math.random() < 0.25 then
-            if target ~= nil and target.components.burnable ~= nil and math.random() < TUNING.TORCH_ATTACK_IGNITE_PERCENT * target.components.burnable.flammability then
+            if target ~= nil and target.components.burnable ~= nil and
+                math.random() < TUNING.TORCH_ATTACK_IGNITE_PERCENT * target.components.burnable.flammability then
                 target.components.burnable:Ignite(nil, attacker)
             end
         end
     end
 
-    if attacker and math.random() < 0.2 then
+    if attacker and attacker:IsValid() and math.random() < 0.2 then
         SpawnIceFx(attacker, target)
         attacker.components.hunger:DoDelta(attacker.prefab == "fhl" and -2 or -4)
     end
