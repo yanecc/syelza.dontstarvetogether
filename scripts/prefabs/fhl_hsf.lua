@@ -108,9 +108,7 @@ local function fn(Sim)
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_hsf.xml"
-
-    inst:AddComponent("waterproofer")
-    inst.components.waterproofer:SetEffectiveness(0)
+    inst.components.inventoryitem:EnableMoisture(false)
 
     inst:AddComponent("fueled")
     local fuelLevel = TUNING.SKILL_TREE and 10 or 2

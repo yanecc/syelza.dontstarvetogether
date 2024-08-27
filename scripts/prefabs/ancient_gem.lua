@@ -74,6 +74,7 @@ local function fn()
     inst:AddComponent("deployable")
     inst.components.deployable.ondeploy = onDeploy
     inst.components.deployable:SetDeployMode(DEPLOYMODE.DEFAULT)
+    inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.PLACER_DEFAULT) -- 3.2
 
     inst:AddComponent("stackable")
     inst:AddComponent("inventoryitem")

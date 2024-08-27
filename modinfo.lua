@@ -195,6 +195,20 @@ configuration_options = {
     },
 
     {
+        name = "zzj_finiteuses",
+        label = "配剑耐久度",
+        hover = "The Golden wujing's finiteuses",
+        options = {
+            { description = "120",     data = 120 },
+            { description = "240",     data = 240, hover = "Default" },
+            { description = "480",     data = 480 },
+            { description = "960",     data = 960 },
+            { description = "endless", data = 0 },
+        },
+        default = 240,
+    },
+
+    {
         name = "zzj_gjbl",
         label = "配剑普通攻击伤害倍率",
         hover = "Normal attack multiplier with sword",
@@ -212,17 +226,6 @@ configuration_options = {
     },
 
     {
-        name = "zzj_fireopen",
-        label = "配剑火焰特效",
-        hover = "With sword and flame special effects",
-        options = {
-            { description = "off", data = false, hover = "Default" },
-            { description = "on",  data = true },
-        },
-        default = false,
-    },
-
-    {
         name = "zzj_pre",
         label = "配剑特效伤害倍率",
         hover = "Sword special effect damage percentage",
@@ -237,9 +240,9 @@ configuration_options = {
     },
 
     {
-        name = "openlight",
-        label = "幻儿自己发光",
-        hover = "Can Syelza herself shine all the time?",
+        name = "zzj_fireopen",
+        label = "配剑火焰特效",
+        hover = "With sword and flame special effects",
         options = {
             { description = "off", data = false, hover = "Default" },
             { description = "on",  data = true },
@@ -292,17 +295,14 @@ configuration_options = {
     },
 
     {
-        name = "zzj_finiteuses",
-        label = "配剑耐久度",
-        hover = "The Golden wujing's finiteuses",
+        name = "openlight",
+        label = "幻儿自己发光",
+        hover = "Can Syelza herself shine all the time?",
         options = {
-            { description = "120",     data = 120 },
-            { description = "240",     data = 240, hover = "Default" },
-            { description = "480",     data = 480 },
-            { description = "960",     data = 960 },
-            { description = "endless", data = 0 },
+            { description = "off", data = false, hover = "Default" },
+            { description = "on",  data = true },
         },
-        default = 240,
+        default = false,
     },
 
     {
