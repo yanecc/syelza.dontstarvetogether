@@ -348,7 +348,8 @@ configuration_options = {
         options = {
             { description = "off",     data = 0, hover = "Default" },
             { description = "one-off", data = 1 },
-            { description = "always",  data = -1 },
+            { description = "once",    data = 2 },
+            { description = "always",  data = 3 },
         },
 
         default = 0,

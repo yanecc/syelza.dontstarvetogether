@@ -88,13 +88,14 @@ local function fn(Sim)
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank("fhl_hsf")
-    inst.AnimState:SetBuild("fhl_hsf")
-    inst.AnimState:PlayAnimation("idel")
-
     inst:AddTag("sharp")
     inst:AddTag("cattoy")
     inst:AddTag("nosteal")
+    inst:AddTag("open_top_hat")
+
+    inst.AnimState:SetBank("fhl_hsf")
+    inst.AnimState:SetBuild("fhl_hsf")
+    inst.AnimState:PlayAnimation("idel")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
@@ -133,7 +134,7 @@ local function fn(Sim)
     inst:AddComponent("planardefense")
 
     inst:AddComponent("hauntable")
-    if TUNING.HSF_RESPAWN == 1 then
+    if TUNING.HSF_RESPAWN == 1 then -- 复活1次后消失
         inst.components.hauntable:SetOnHauntFn(function(inst, haunter)
             if haunter:HasTag("playerghost") then
                 haunter:PushEvent("respawnfromghost", { source = inst })
@@ -142,7 +143,9 @@ local function fn(Sim)
             end
             return false
         end)
-    elseif TUNING.HSF_RESPAWN == -1 then
+    elseif TUNING.HSF_RESPAWN == 2 then -- 复活1次后失效
+        inst.components.hauntable.hauntvalue = TUNING.HAUNT_INSTANT_REZ
+    elseif TUNING.HSF_RESPAWN == 3 then -- 无限复活
         inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
     end
 
