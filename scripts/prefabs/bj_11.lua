@@ -20,7 +20,7 @@ local function SleepAttack(inst, attacker, target)
         target.SoundEmitter:PlaySound("dontstarve/wilson/blowdart_impact_sleep")
     end
 
-    target:DoTaskInTime(math.random(), function(target)
+    target:DoTaskInTime(math.max(math.random(),math.random()), function(target)
         if target.components.sleeper ~= nil then
             target.components.sleeper:AddSleepiness(10, 5, inst)
         elseif target.components.grogginess ~= nil then

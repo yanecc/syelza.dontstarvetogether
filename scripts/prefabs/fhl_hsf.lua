@@ -7,11 +7,18 @@ local assets =
 local function OnEquip(inst, owner)
     inst.components.fueled:StartConsuming()
     owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
+    if inst.components.container:Has("purebrilliance", 1) then
+        owner:AddTag("lunarprayer")
+        if owner.components.grogginess ~= nil then
+            owner.components.grogginess:AddResistanceSource(inst, 10000)
+        end
+    end
 
-    if TUNING.BUFFGO and inst.components.fueled then
+    if TUNING.BUFFGO then
         inst.consumefn = function(owner, data)
             if data.amount < 0 then
-                inst.components.fueled:DoDelta(-0.02 * inst.components.fueled.maxfuel)
+                local fuelrate = TUNING.SKILL_TREE and owner:HasTag("fhl") and 0.02 or 0.025
+                inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
             end
         end
         inst:AddTag("bramble_resistant")
@@ -22,18 +29,22 @@ local function OnEquip(inst, owner)
 end
 
 local function OnUnequip(inst, owner)
-    if TUNING.BUFFGO and inst.components.fueled then
+    if TUNING.BUFFGO then
         inst:RemoveEventCallback("healthdelta", inst.consumefn, owner)
         owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
     end
 
     inst.components.container:Close()
     inst.components.fueled:StopConsuming()
+    owner:RemoveTag("lunarprayer")
+    if owner.components.grogginess ~= nil then
+        owner.components.grogginess:RemoveResistanceSource(inst)
+    end
     owner.AnimState:ClearOverrideSymbol("swap_hat")
 end
 
 local function OnEquipToModel(inst, owner)
-    if TUNING.BUFFGO and inst.components.fueled then
+    if TUNING.BUFFGO then
         inst:RemoveEventCallback("healthdelta", inst.consumefn, owner)
         owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
     end
@@ -51,6 +62,14 @@ local function CanAddFuel(inst, item, doer)
     return true
 end
 
+local function OnFuelChanged(inst, data)
+    if TUNING.SKILL_TREE and data.percent < 1 then
+        inst:AddTag("needssewing")
+    else
+        inst:RemoveTag("needssewing")
+    end
+end
+
 local function OnDepleted(inst)
     if inst.components.container:IsEmpty() then
         inst:Remove()
@@ -66,15 +85,28 @@ local function OnDepleted(inst)
 end
 
 local function UpdateHSFAddon(inst)
+    local owner = inst.components.inventoryitem:GetGrandOwner()
     if inst.components.container:IsEmpty() then
         inst.components.equippable.dapperness = 1
         inst.components.planardefense:SetBaseDefense(0)
+        if owner ~= nil then
+            owner:RemoveTag("lunarprayer")
+            if owner.components.grogginess ~= nil then
+                owner.components.grogginess:RemoveResistanceSource(inst)
+            end
+        end
     else
         local item = inst.components.container:GetItemInSlot(1)
         if item.prefab == "horrorfuel" then
             inst.components.equippable.dapperness = -2
         elseif item.prefab == "purebrilliance" then
             inst.components.planardefense:SetBaseDefense(20)
+            if inst.components.equippable:IsEquipped() and owner ~= nil then
+                owner:AddTag("lunarprayer")
+                if owner.components.grogginess ~= nil then
+                    owner.components.grogginess:AddResistanceSource(inst, 10000)
+                end
+            end
         end
     end
 end
@@ -112,16 +144,12 @@ local function fn(Sim)
     inst.components.inventoryitem:EnableMoisture(false)
 
     inst:AddComponent("fueled")
-    local fuelLevel = TUNING.SKILL_TREE and 10 or 2
-    inst.components.fueled.accepting = true
-    inst.components.fueled:SetDepletedFn(OnDepleted)
     inst.components.fueled.fueltype = FUELTYPE.ANCIENTSOUL
+    inst.components.fueled.accepting = true
+    inst.components.fueled.bonusmult = 5
+    inst.components.fueled:SetDepletedFn(OnDepleted)
     inst.components.fueled:SetCanTakeFuelItemFn(CanAddFuel)
-    inst.components.fueled:InitializeFuelLevel(fuelLevel * TUNING.TOTAL_DAY_TIME)
-    if TUNING.SKILL_TREE then
-        inst.components.fueled.bonusmult = 5
-        inst.components.fueled.secondaryfueltype = FUELTYPE.USAGE
-    end
+    inst.components.fueled:InitializeFuelLevel(10 * TUNING.TOTAL_DAY_TIME)
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
@@ -155,6 +183,7 @@ local function fn(Sim)
 
     inst:ListenForEvent("itemget", UpdateHSFAddon)
     inst:ListenForEvent("itemlose", UpdateHSFAddon)
+    inst:ListenForEvent("percentusedchange", OnFuelChanged)
 
     return inst
 end

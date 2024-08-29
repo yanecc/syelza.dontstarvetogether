@@ -35,7 +35,7 @@ local function MakeBroken(inst)
     end
 end
 
-local function OnFiniteUsesChange(inst, data)
+local function OnFiniteUsesChanged(inst, data)
     if data.percent > 0 then
         if inst.components.equippable.restrictedtag ~= nil then
             inst.components.equippable.restrictedtag = nil
@@ -260,7 +260,7 @@ local function fn()
     inst.components.trader:SetAcceptTest(AcceptTest)
     inst.components.trader.onaccept = OnGetItemFromPlayer
 
-    inst:ListenForEvent("percentusedchange", OnFiniteUsesChange)
+    inst:ListenForEvent("percentusedchange", OnFiniteUsesChanged)
 
     return inst
 end

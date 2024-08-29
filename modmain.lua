@@ -39,7 +39,6 @@ PrefabFiles = {
     "buff_zzj",
 }
 
-
 GLOBAL.TUNING.FHL = {}
 if GetModConfigData("fhl_language") == 0 then
     STRINGS.NAMES.BJ_11 = "萌妹子的宝具"
@@ -282,7 +281,6 @@ Assets = {
     Asset("IMAGE", "images/inventoryimages/applestore.tex"),
 }
 
-
 TUNING.FHL_HEALTH = 150
 TUNING.FHL_HUNGER = 150
 TUNING.FHL_SANITY = 150
@@ -324,7 +322,6 @@ TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
 ACTIONS.ADDFUEL.priority = 1
 GLOBAL.FUELTYPE.ANCIENTSOUL = "ANCIENTSOUL"
-
 
 ------------------ containers
 local params = {}
@@ -391,7 +388,6 @@ end
 for k, v in pairs(params) do
     containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
 end
-
 
 ----------------------------------------------------------------------------------------------------
 local function Givelickingbone(inst)
@@ -512,7 +508,6 @@ local function Personallicking(inst)
         if data.lickingbone ~= nil then
             -- Load licking
             inst.lickingbone = GLOBAL.SpawnSaveRecord(data.lickingbone, newents)
-
             -- Look for lickingbone at spawn point and re-equip
             inst:DoTaskInTime(0, function(inst)
                 if data.holdinglickingbone or (inst.lickingbone and inst:IsNear(inst.lickingbone, 4)) then
@@ -591,7 +586,6 @@ end
 
 AddPlayerPostInit(Personallicking)
 
-
 -- 检查范围：（递归）物品栏、背包、（递归）苹果
 local STORE_FN = GLOBAL.ACTIONS.STORE.fn
 GLOBAL.ACTIONS.STORE.fn = function(act)
@@ -617,7 +611,6 @@ GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
         return RUMMAGE_FN(act)
     end
 end
-
 
 ----------------------------------------------------------------------------------------
 local function UseFullMoonRecipe()
@@ -668,6 +661,19 @@ AddPrefabPostInit("world", function(inst)
         end
     end)
 end)
+
+----------------------------------------------------------------------------------------
+for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
+    AddPrefabPostInit(v, function(inst)
+        inst.components.combat:AddNoAggroTag("lunarprayer")
+    end)
+end
+
+for i, v in pairs({ "crawlinghorror", "terrorbeak", "oceanhorror", "crawlingnightmare", "nightmarebeak" }) do
+    AddPrefabPostInit(v, function(inst)
+        inst.components.combat:AddNoAggroTag("shadowprayer")
+    end)
+end
 
 ----------------------------------------------------------------------------------------
 -- 注册图片

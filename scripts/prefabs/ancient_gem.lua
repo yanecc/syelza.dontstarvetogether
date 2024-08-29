@@ -11,6 +11,18 @@ local prefabs = {
     "opalpreciousgem"
 }
 
+local function OnGemBurnt(inst)
+    local opal = SpawnPrefab("opalpreciousgem")
+    opal.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+    if inst.components.stackable then
+        opal.components.stackable:SetStackSize(math.min(opal.components.stackable.maxsize,
+            inst.components.stackable.stacksize))
+    end
+
+    inst:Remove()
+end
+
 local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
@@ -42,43 +54,35 @@ local function fn()
     inst:AddComponent("edible")
     inst.components.edible.foodtype = "ELEMENTAL"
     inst.components.edible.hungervalue = 2
+
+    inst:AddComponent("inspectable")
+
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/ancient_gem.xml"
+
+    inst:AddComponent("stackable")
+
     inst:AddComponent("tradable")
     inst.components.tradable.goldvalue = 9   -- 9金块
     inst.components.tradable.rocktribute = 9 -- 3天
 
-    inst:AddComponent("inspectable")
     inst:AddComponent("burnable")
     inst.components.burnable:SetFXLevel(2)
     inst.components.burnable:SetBurnTime(10)
     inst.components.burnable:AddBurnFX("fire", Vector3(0, 0, 0))
     inst.components.burnable:SetOnIgniteFn(DefaultBurnFn)
+    inst.components.burnable:SetOnBurntFn(OnGemBurnt)
     inst.components.burnable:SetOnExtinguishFn(DefaultExtinguishFn)
-    inst.components.burnable:SetOnBurntFn(function(inst)
-        local crystal = SpawnPrefab("opalpreciousgem")
-        crystal.Transform:SetPosition(inst.Transform:GetWorldPosition())
 
-        if inst.components.stackable then
-            crystal.components.stackable:SetStackSize(math.min(crystal.components.stackable.maxsize,
-                inst.components.stackable.stacksize))
-        end
-
-        inst:Remove()
-    end)
-
-    MakeSmallPropagator(inst)
-
-    local function onDeploy(inst, pt)
-        SpawnPrefab("ancient_altar").Transform:SetPosition(pt.x, pt.y, pt.z)
+    inst:AddComponent("deployable")
+    inst.components.deployable.ondeploy = function(inst, pt)
+        SpawnPrefab("ancient_altar").Transform:SetPosition(pt:Get())
         inst.components.stackable:Get():Remove()
     end
-    inst:AddComponent("deployable")
-    inst.components.deployable.ondeploy = onDeploy
     inst.components.deployable:SetDeployMode(DEPLOYMODE.DEFAULT)
     inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.PLACER_DEFAULT) -- 3.2
 
-    inst:AddComponent("stackable")
-    inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/ancient_gem.xml"
+    MakeSmallPropagator(inst)
 
     return inst
 end

@@ -49,8 +49,12 @@ local function fn()
         return inst
     end
 
-    inst:AddComponent("stackable")
     inst:AddComponent("inspectable")
+
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_tree.xml"
+
+    inst:AddComponent("stackable")
 
     inst:AddComponent("tradable")
     inst.components.tradable.goldvalue = 3   -- 3金块
@@ -60,9 +64,6 @@ local function fn()
     inst.components.deployable.ondeploy = OnDeploy
     inst.components.deployable.mode = DEPLOYMODE.PLANT
     inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.DEFAULT) -- 2
-
-    inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/fhl_tree.xml"
 
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
