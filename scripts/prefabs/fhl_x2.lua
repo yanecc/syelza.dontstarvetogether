@@ -11,25 +11,7 @@ local prefabs =
     "spoiled_food"
 }
 
--- It does the same all but stopping for a logout
--- local function OnEat(inst, eater)
---     if eater.components.health and eater.components.sanity then
---         local function restoreBuff()
---             local restorePercent = math.random(5, 15) / 100
---             if eater.components.sanity:GetPercent() < eater.components.health:GetPercent() then
---                 eater.components.sanity:DoDelta(math.ceil(eater.components.sanity:GetMaxWithPenalty() * restorePercent))
---             else
---                 eater.components.health:DoDelta(math.ceil(eater.components.health:GetMaxWithPenalty() * restorePercent))
---             end
---         end
-
---         for i = 1, 10 do
---             inst:DoTaskInTime(2 * i - 1, restoreBuff)
---         end
---     end
--- end
-
-local function fn(Sim)
+local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()

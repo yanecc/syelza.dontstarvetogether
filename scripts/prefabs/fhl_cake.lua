@@ -9,7 +9,7 @@ local prefabs =
     "spoiled_food"
 }
 
-local function fn(Sim)
+local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()

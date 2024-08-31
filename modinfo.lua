@@ -17,7 +17,7 @@ description = [[居于塞尔菲亚镇掌握符文之力的圣龙, 击杀怪物�
 
 (更多信息请前往mod主页查看)]]
 author = "Sunrise"
-version = "2.1.9"
+version = "2.2.0"
 
 --------更新网址
 forumthread = ""
@@ -196,7 +196,7 @@ configuration_options = {
 
     {
         name = "zzj_finiteuses",
-        label = "配剑耐久度",
+        label = "金芜菁之杖耐久度",
         hover = "The Golden wujing's finiteuses",
         options = {
             { description = "120",     data = 120 },
@@ -210,7 +210,7 @@ configuration_options = {
 
     {
         name = "zzj_gjbl",
-        label = "配剑普通攻击伤害倍率",
+        label = "金芜菁之杖普通攻击伤害倍率",
         hover = "Normal attack multiplier with sword",
         options = {
             { description = "50%",  data = 0.5 },
@@ -227,7 +227,7 @@ configuration_options = {
 
     {
         name = "zzj_pre",
-        label = "配剑特效伤害倍率",
+        label = "金芜菁之杖特效伤害倍率",
         hover = "Sword special effect damage percentage",
         options = {
             { description = "50%",  data = 0.5 },
@@ -241,7 +241,7 @@ configuration_options = {
 
     {
         name = "zzj_fireopen",
-        label = "配剑火焰特效",
+        label = "金芜菁之杖火焰特效",
         hover = "With sword and flame special effects",
         options = {
             { description = "off", data = false, hover = "Default" },
@@ -252,7 +252,7 @@ configuration_options = {
 
     {
         name = "zzj_cankanshu",
-        label = "配剑可以用做斧子",
+        label = "金芜菁之杖可以用做斧子",
         hover = "Can The Golden wujing cut down trees?",
         options = {
             { description = "off", data = false, hover = "Default" },
@@ -263,7 +263,7 @@ configuration_options = {
 
     {
         name = "zzj_canwakuang",
-        label = "配剑可以用做镐头",
+        label = "金芜菁之杖可以用做镐头",
         hover = "Can The Golden wujing mining?",
         options = {
             { description = "off", data = false, hover = "Default" },
@@ -274,7 +274,7 @@ configuration_options = {
 
     {
         name = "zzj_canuseasshovel",
-        label = "配剑可以用做铲子",
+        label = "金芜菁之杖可以用做铲子",
         hover = "Can The Golden wujing use as shovel?",
         options = {
             { description = "off", data = false, hover = "Default" },
@@ -285,7 +285,7 @@ configuration_options = {
 
     {
         name = "zzj_canuseashammer",
-        label = "配剑可以用做锤子",
+        label = "金芜菁之杖可以用做锤子",
         hover = "Can The Golden wujing use as hammer?",
         options = {
             { description = "off", data = false, hover = "Default" },
@@ -360,12 +360,12 @@ configuration_options = {
         label = "护身符格子显示在第几个装备格上方",
         hover = "Which grid should the Amulet be shown above?",
         options = {
-            { description = "3", data = "threegrid", hover = "Default" },
-            { description = "4", data = "fourgrid" },
-            { description = "5", data = "fivegrid" },
+            { description = "3", data = 108, hover = "Default" },
+            { description = "4", data = 160 },
+            { description = "5", data = 214 },
         },
 
-        default = "threegrid",
+        default = 108,
     },
 
     {

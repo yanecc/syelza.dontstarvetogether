@@ -33,6 +33,7 @@ local function fn()
     inst:AddTag("plant")
     inst:AddTag("cattoy")
     inst:AddTag("deployedplant")
+
     inst.AnimState:SetBank("fhl_tree")
     inst.AnimState:SetBuild("fhl_tree")
     inst.AnimState:PlayAnimation("idle")

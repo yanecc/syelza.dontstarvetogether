@@ -97,9 +97,6 @@ local function fn()
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
-        inst.OnEntityReplicated = function(inst)
-            inst.replica.container:WidgetSetup("fhl_bb")
-        end
         return inst
     end
 
@@ -127,12 +124,11 @@ local function fn()
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.BACK or EQUIPSLOTS.BODY
-
     inst.components.equippable:SetOnEquip(OnEquip)
     inst.components.equippable:SetOnUnequip(OnUnequip)
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("fhl_bb")
+    inst.components.container:WidgetSetup("krampus_sack")
 
     inst:ListenForEvent("itemget", KeepLives)
     inst:ListenForEvent("itemlose", KeepLives)

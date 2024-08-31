@@ -11,7 +11,6 @@ local TheNet = GLOBAL.TheNet
 local next = GLOBAL.next
 local ThePlayer = GLOBAL.ThePlayer
 local IsServer = GLOBAL.TheNet:GetIsServer()
-local containers = require("containers")
 local TheInput = GLOBAL.TheInput
 local Vector3 = GLOBAL.Vector3
 
@@ -294,7 +293,6 @@ TUNING.LEVELUP_FAILURE_FACTOR = GetModConfigData("fhl_levelup_failure_factor")
 
 TUNING.JGEAT = GetModConfigData("fhl_jgeat")           -- 吃浆果升级
 TUNING.JGEATSL = GetModConfigData("fhl_jgeatsl")       -- 升级需要浆果数量
-
 TUNING.FHL_COS = GetModConfigData("fhl_cos")           -- 符文结晶爆率
 
 TUNING.GJBL = GetModConfigData("zzj_gjbl")             -- 普攻伤害倍率
@@ -306,13 +304,13 @@ TUNING.ZZJ_FINITE_USES = GetModConfigData("zzj_finiteuses")
 TUNING.ZZJ_CAN_USE_AS_HAMMER = GetModConfigData("zzj_canuseashammer")
 TUNING.ZZJ_CAN_USE_AS_SHOVEL = GetModConfigData("zzj_canuseasshovel")
 
-TUNING.OPENLIGHT = GetModConfigData("openlight")       -- 风幻发光
-TUNING.OPENLI = GetModConfigData("openli")             -- 苹果发光
-TUNING.APPLESTORE = GetModConfigData("applestore")     -- 苹果新零售
+TUNING.OPENLIGHT = GetModConfigData("openlight")     -- 风幻发光
+TUNING.OPENLI = GetModConfigData("openli")           -- 苹果发光
+TUNING.APPLESTORE = GetModConfigData("applestore")   -- 苹果新零售
 
-TUNING.BUFFGO = GetModConfigData("buffgo")             -- 护身符减伤
-TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn")   -- 护身符重生选项
-TUNING.HSF_POSITION = GetModConfigData("hsf_position") -- 护身符格子位置
+TUNING.BUFFGO = GetModConfigData("buffgo")           -- 护身符减伤
+TUNING.HSF_RESPAWN = GetModConfigData("hsf_respawn") -- 护身符重生选项
+TUNING.HSF_POS_X = GetModConfigData("hsf_position")  -- 护身符格子位置
 
 TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
 TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
@@ -322,72 +320,6 @@ TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
 ACTIONS.ADDFUEL.priority = 1
 GLOBAL.FUELTYPE.ANCIENTSOUL = "ANCIENTSOUL"
-
------------------- containers
-local params = {}
-local containers_widgetsetup_base = containers.widgetsetup
-function containers.widgetsetup(container, prefab, data, ...)
-    local t = params[prefab or container.inst.prefab]
-    if t ~= nil then
-        for k, v in pairs(t) do
-            container[k] = v
-        end
-        container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
-    else
-        containers_widgetsetup_base(container, prefab, data, ...)
-    end
-end
-
------------------- The Amulet
-local Position = {
-    DEFAULT = Vector3(108, 50, 0),
-    THREEGRID = Vector3(108, 50, 0),
-    FOURGRID = Vector3(160, 50, 0),
-    FIVEGRID = Vector3(214, 50, 0)
-}
-
-params.hsf_addon =
-{
-    widget =
-    {
-        slotpos = {
-            Vector3(-2, 18, 0),
-        },
-        animbank = "ui_alterguardianhat_1x1",
-        animbuild = "ui_alterguardianhat_1x1",
-        pos = Position[string.upper(TUNING.HSF_POSITION)] or Position.DEFAULT,
-    },
-    type = "hand_inv",
-    acceptsstacks = false,
-    excludefromcrafting = true,
-    itemtestfn = function(container, item, slot)
-        return item.prefab == "horrorfuel" or item.prefab == "purebrilliance" or item.prefab == "ancient_soul"
-    end
-}
-
------------------- The Backpack
-params.fhl_bb =
-{
-    widget =
-    {
-        slotpos = {},
-        animbank = "ui_krampusbag_2x8",
-        animbuild = "ui_krampusbag_2x8",
-        pos = Vector3(-5, -130, 0),
-    },
-    issidewidget = true,
-    type = "pack",
-    openlimit = 1,
-}
-
-for y = 0, 6 do
-    table.insert(params.fhl_bb.widget.slotpos, Vector3(-162, -75 * y + 240, 0))
-    table.insert(params.fhl_bb.widget.slotpos, Vector3(-162 + 75, -75 * y + 240, 0))
-end
-
-for k, v in pairs(params) do
-    containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)
-end
 
 ----------------------------------------------------------------------------------------------------
 local function Givelickingbone(inst)
@@ -666,12 +598,6 @@ end)
 for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
     AddPrefabPostInit(v, function(inst)
         inst.components.combat:AddNoAggroTag("lunarprayer")
-    end)
-end
-
-for i, v in pairs({ "crawlinghorror", "terrorbeak", "oceanhorror", "crawlingnightmare", "nightmarebeak" }) do
-    AddPrefabPostInit(v, function(inst)
-        inst.components.combat:AddNoAggroTag("shadowprayer")
     end)
 end
 

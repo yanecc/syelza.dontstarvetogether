@@ -10,24 +10,20 @@ local prefabs =
     "spoiled_food"
 }
 
-local function OnFullMoon(inst)
-    if not TheWorld.state.isfullmoon then return end
-    for _, player in ipairs(AllPlayers) do
-        local inventory = player.components.inventory
-        local items = inventory:FindItems(function(item) return item.prefab == "fhl_x" end)
-        for _, item in ipairs(items) do
-            local newItem = SpawnPrefab("fhl_x2")
-            local slot = inventory:GetItemSlot(item)
-            newItem.components.stackable:SetStackSize(item.components.stackable:StackSize())
-            newItem.components.perishable:SetPercent(item.components.perishable:GetPercent())
-            inventory:RemoveItem(item, false)
-            item:Remove()
-            inventory:GiveItem(newItem, slot)
-        end
-    end
+local function OnFullMoon(inst, isfullmoon)
+    local owner = inst.components.inventoryitem:GetGrandOwner()
+    if not isfullmoon or not owner or not owner:HasTag("player") then return end
+    owner = inst.components.inventoryitem.owner
+    local holder = owner.components.inventory or owner.components.container
+    local slot = holder:GetItemSlot(inst)
+    local newItem = SpawnPrefab("fhl_x2")
+    newItem.components.stackable:SetStackSize(inst.components.stackable:StackSize())
+    newItem.components.perishable:SetPercent(inst.components.perishable:GetPercent())
+    inst:Remove()
+    holder:GiveItem(newItem, slot)
 end
 
-local function fn(Sim)
+local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
