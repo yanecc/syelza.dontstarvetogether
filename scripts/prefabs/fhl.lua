@@ -131,7 +131,7 @@ local function oneat(inst, food)
 
     -- 浆果 烤浆果 多汁浆果 烤多汁浆果
     -- 吃浆果可以升级，满级以后获取技能点只能吃火龙果
-    if berryUp and (food.prefab == "berries" or food.prefab == "berries_cooked" or food.prefab == "berries_juicy" or food.prefab == "berries_juicy_cooked") then
+    if berryUp and table.contains({ "berries", "berries_cooked", "berries_juicy", "berries_juicy_cooked" }, food.prefab) then
         inst.berryCount = inst.berryCount + 1
         if inst.berryCount % 5 == 0 then
             inst.components.talker:Say("已经吃了: " .. inst.berryCount .. " / " .. berryLimit .. " 个浆果" ..
@@ -144,7 +144,7 @@ local function oneat(inst, food)
     end
 
     -- 火龙果、烤火龙果、火龙果派、辣龙椒沙拉
-    if food.prefab == "dragonfruit" or food.prefab == "dragonfruit_cooked" or food.prefab == "dragonpie" or food.prefab == "dragonchilisalad" or inst.berryEnough then
+    if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or inst.berryEnough then
         local hasGoodLuck = math.random() > failureFactor * math.tan(inst.level * 0.1)
         -- 满级以后再吃浆果inst.berryEnough不会为true
         if (levelmax) then

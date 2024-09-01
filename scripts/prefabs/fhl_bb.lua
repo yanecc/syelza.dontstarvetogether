@@ -1,3 +1,6 @@
+local containers = require("containers")
+containers.params.fhl_bb = deepcopy(containers.params.krampus_sack)
+
 local assets =
 {
     Asset("ANIM", "anim/fhl_bb.zip"),
@@ -128,7 +131,7 @@ local function fn()
     inst.components.equippable:SetOnUnequip(OnUnequip)
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("krampus_sack")
+    inst.components.container:WidgetSetup("fhl_bb")
 
     inst:ListenForEvent("itemget", KeepLives)
     inst:ListenForEvent("itemlose", KeepLives)

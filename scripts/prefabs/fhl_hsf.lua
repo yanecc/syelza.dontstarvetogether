@@ -22,14 +22,41 @@ local assets =
     Asset("ATLAS", "images/inventoryimages/fhl_hsf.xml")
 }
 
-local function LiftHeavy(inst, owner)
-    if not owner.components.inventory:IsHeavyLifting() then return end
-    owner.components.inventory:ForEachEquipment(function(equip)
-        if not equip:HasTag("heavy") then return end
-        equip.components.equippable.GetWalkSpeedMult = function(self)
-            return not owner:HasTag("glommerprayer") and self.walkspeedmult or 1.0
+local function AvoidShadowAggro(inst, owner, isworking)
+    if not owner.components.combat then return end
+    if isworking then
+        inst._shouldavoidaggrofn = owner.components.combat.shouldavoidaggrofn
+        owner.components.combat.shouldavoidaggrofn = function(attacker, owner)
+            return not attacker:HasAnyTag("shadowcreature", "nightmarecreature") or -- 是暗影生物
+                attacker.components.combat.lastattacker == owner                    -- 返回true才能攻击
         end
-    end)
+    else
+        owner.components.combat.shouldavoidaggrofn = inst._shouldavoidaggrofn
+    end
+end
+
+local function LevitateHeavy(inst, owner, isworking)
+    inst._onownerequip = function(owner, data)
+        if owner ~= nil and data ~= nil and data.item:HasTag("heavy") then
+            data.item.components.equippable.GetWalkSpeedMult = function(self)
+                return not owner:HasTag("glommerprayer") and self.walkspeedmult or 1.0
+            end
+        end
+    end
+    if isworking then
+        owner:AddTag("glommerprayer")
+        inst:ListenForEvent("equip", inst._onownerequip, owner)
+        if not owner.components.inventory:IsHeavyLifting() then return end
+        owner.components.inventory:ForEachEquipment(function(equip)
+            if not equip:HasTag("heavy") then return end
+            equip.components.equippable.GetWalkSpeedMult = function(self)
+                return not owner:HasTag("glommerprayer") and self.walkspeedmult or 1.0
+            end
+        end)
+    else
+        owner:RemoveTag("glommerprayer")
+        inst:RemoveEventCallback("equip", inst._onownerequip, owner)
+    end
 end
 
 local function OnEquip(inst, owner)
@@ -37,17 +64,10 @@ local function OnEquip(inst, owner)
     owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
     if inst.components.container:Has("purebrilliance", 1) then
         owner:AddTag("lunarprayer")
-    elseif inst.components.container:Has("horrorfuel", 1) and owner.components.combat then
-        -- owner:AddTag("shadowprayer")
-        inst.shouldavoidaggrofn = owner.components.combat.shouldavoidaggrofn
-        owner.components.combat.shouldavoidaggrofn = function(attacker, owner)
-            return not attacker:HasAnyTag("shadowcreature", "nightmarecreature") or -- 是暗影生物
-                attacker.components.combat.lastattacker == owner                    -- 返回true才能攻击
-        end
+    elseif inst.components.container:Has("horrorfuel", 1) then
+        AvoidShadowAggro(inst, owner, true)
     elseif inst.components.container:Has("glommerwings", 1) then
-        owner:AddTag("glommerprayer")
-        LiftHeavy(inst, owner)
-        inst:ListenForEvent("equip", inst.onownerequip, owner)
+        LevitateHeavy(inst, owner, true)
         if owner.components.grogginess ~= nil then
             owner.components.grogginess:AddResistanceSource(inst, 10000)
         end
@@ -75,13 +95,9 @@ local function OnUnequip(inst, owner)
 
     inst.components.container:Close()
     inst.components.fueled:StopConsuming()
-    inst:RemoveEventCallback("equip", inst.onownerequip, owner)
+    AvoidShadowAggro(inst, owner, false)
+    LevitateHeavy(inst, owner, false)
     owner:RemoveTag("lunarprayer")
-    owner:RemoveTag("glommerprayer")
-    -- owner:RemoveTag("shadowprayer")
-    if owner.components.combat ~= nil then
-        owner.components.combat.shouldavoidaggrofn = inst.shouldavoidaggrofn
-    end
     if owner.components.grogginess ~= nil then
         owner.components.grogginess:RemoveResistanceSource(inst)
     end
@@ -130,47 +146,34 @@ local function OnDepleted(inst)
 end
 
 local function UpdateHSFAddon(inst)
+    local item = inst.components.container:GetItemInSlot(1)
     local owner = inst.components.inventoryitem:GetGrandOwner()
-    if inst.components.container:IsEmpty() then
+    if item == nil then
         inst.components.equippable.dapperness = 1
         inst.components.planardefense:SetBaseDefense(0)
         if owner ~= nil then
             owner:RemoveTag("lunarprayer")
-            owner:RemoveTag("glommerprayer")
-            -- owner:RemoveTag("shadowprayer")
-            if owner.components.combat ~= nil then
-                owner.components.combat.shouldavoidaggrofn = inst.shouldavoidaggrofn
-            end
+            LevitateHeavy(inst, owner, false)
+            AvoidShadowAggro(inst, owner, false)
             if owner.components.grogginess ~= nil then
                 owner.components.grogginess:RemoveResistanceSource(inst)
             end
-            inst:RemoveEventCallback("equip", inst.onownerequip, owner)
         end
-    else
-        local item = inst.components.container:GetItemInSlot(1)
-        if item.prefab == "horrorfuel" then
-            inst.components.equippable.dapperness = -2
-            if inst.components.equippable:IsEquipped() and owner and owner.components.combat then
-                -- owner:AddTag("shadowprayer")
-                inst.shouldavoidaggrofn = owner.components.combat.shouldavoidaggrofn
-                owner.components.combat.shouldavoidaggrofn = function(attacker, owner)
-                    return not attacker:HasAnyTag("shadowcreature", "nightmarecreature") or
-                        attacker.components.combat.lastattacker == owner
-                end
-            end
-        elseif item.prefab == "purebrilliance" then
-            inst.components.planardefense:SetBaseDefense(20)
-            if inst.components.equippable:IsEquipped() and owner ~= nil then
-                owner:AddTag("lunarprayer")
-            end
-        elseif item.prefab == "glommerwings" then
-            if inst.components.equippable:IsEquipped() and owner ~= nil then
-                owner:AddTag("glommerprayer")
-                LiftHeavy(inst, owner)
-                inst:ListenForEvent("equip", inst.onownerequip, owner)
-                if owner.components.grogginess ~= nil then
-                    owner.components.grogginess:AddResistanceSource(inst, 10000)
-                end
+    elseif item.prefab == "horrorfuel" then
+        inst.components.equippable.dapperness = -2
+        if inst.components.equippable:IsEquipped() and owner ~= nil then
+            AvoidShadowAggro(inst, owner, true)
+        end
+    elseif item.prefab == "purebrilliance" then
+        inst.components.planardefense:SetBaseDefense(20)
+        if inst.components.equippable:IsEquipped() and owner ~= nil then
+            owner:AddTag("lunarprayer")
+        end
+    elseif item.prefab == "glommerwings" then
+        if inst.components.equippable:IsEquipped() and owner ~= nil then
+            LevitateHeavy(inst, owner, true)
+            if owner.components.grogginess ~= nil then
+                owner.components.grogginess:AddResistanceSource(inst, 10000)
             end
         end
     end
@@ -246,14 +249,6 @@ local function fn()
     inst:ListenForEvent("itemget", UpdateHSFAddon)
     inst:ListenForEvent("itemlose", UpdateHSFAddon)
     inst:ListenForEvent("percentusedchange", OnFuelChanged)
-
-    inst.onownerequip = function(owner, data)
-        if owner ~= nil and data ~= nil and data.item:HasTag("heavy") then
-            data.item.components.equippable.GetWalkSpeedMult = function(self)
-                return not owner:HasTag("glommerprayer") and self.walkspeedmult or 1.0
-            end
-        end
-    end
 
     return inst
 end
