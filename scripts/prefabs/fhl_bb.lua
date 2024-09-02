@@ -1,6 +1,3 @@
-local containers = require("containers")
-containers.params.fhl_bb = deepcopy(containers.params.krampus_sack)
-
 local assets =
 {
     Asset("ANIM", "anim/fhl_bb.zip"),

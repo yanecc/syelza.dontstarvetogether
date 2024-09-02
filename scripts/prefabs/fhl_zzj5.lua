@@ -102,6 +102,8 @@ local function SpawnIceFx(attacker, target)
                 --每根冰柱的伤害
                 local dmg = math.random() * 65 * TUNING.ZZJ_PRE
 
+                local count = 0
+
                 local ents = TheSim:FindEntities(x, y, z, r)
                 for k, v in pairs(ents) do
                     local isAlly = attacker.components.combat:IsAlly(v) or leader and leader.components.combat:IsAlly(v)
@@ -113,12 +115,16 @@ local function SpawnIceFx(attacker, target)
                         not (v.components.health and v.components.health:IsDead()) and
                         attacker.components.combat:CanTarget(v) and not isAlly then
                         v.components.combat:GetAttacked(attacker, dmg)
+                        count = count + 1
 
                         if v.components.freezable then
                             v.components.freezable:AddColdness(2)
                             v.components.freezable:SpawnShatterFX()
                         end
                     end
+                end
+                if TUNING.SKILL_TREE and attacker:HasTag("fhl") then
+                    attacker.components.health:DoDelta(count)
                 end
             end
         end)

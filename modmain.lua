@@ -1,18 +1,17 @@
 local require = GLOBAL.require
 local STRINGS = GLOBAL.STRINGS
-local resolvefilepath = GLOBAL.resolvefilepath
-local Ingredient = GLOBAL.Ingredient
-local RECIPETABS = GLOBAL.RECIPETABS
+local ACTIONS = GLOBAL.ACTIONS
+local Vector3 = GLOBAL.Vector3
+local TheNet = GLOBAL.TheNet
 local Recipe = GLOBAL.Recipe
 local TECH = GLOBAL.TECH
-local TechTree = require("techtree")
-local ACTIONS = GLOBAL.ACTIONS
-local TheNet = GLOBAL.TheNet
-local next = GLOBAL.next
+local deepcopy = GLOBAL.deepcopy
 local ThePlayer = GLOBAL.ThePlayer
-local IsServer = GLOBAL.TheNet:GetIsServer()
-local TheInput = GLOBAL.TheInput
-local Vector3 = GLOBAL.Vector3
+local AllPlayers = GLOBAL.AllPlayers
+local Ingredient = GLOBAL.Ingredient
+local RECIPETABS = GLOBAL.RECIPETABS
+local TechTree = require("techtree")
+local containers = require("containers")
 
 modimport("fhl_util/fhl_util.lua")
 
@@ -38,7 +37,6 @@ PrefabFiles = {
     "buff_zzj",
 }
 
-GLOBAL.TUNING.FHL = {}
 if GetModConfigData("fhl_language") == 0 then
     STRINGS.NAMES.BJ_11 = "萌妹子的宝具"
     STRINGS.CHARACTERS.GENERIC.DESCRIBE.BJ_11 = "我可以用它来做所有事情。"
@@ -280,6 +278,7 @@ Assets = {
     Asset("IMAGE", "images/inventoryimages/applestore.tex"),
 }
 
+TUNING.FHL = {}
 TUNING.FHL_HEALTH = 150
 TUNING.FHL_HUNGER = 150
 TUNING.FHL_SANITY = 150
@@ -320,6 +319,25 @@ TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
 ACTIONS.ADDFUEL.priority = 1
 GLOBAL.FUELTYPE.ANCIENTSOUL = "ANCIENTSOUL"
+
+----------------------------------------------------------------------------------------------------
+containers.params.fhl_bb = deepcopy(containers.params.krampus_sack)
+containers.params.fhl_hsf = {
+    widget = {
+        slotpos = {
+            Vector3(-2, 18, 0),
+        },
+        animbank = "ui_alterguardianhat_1x1",
+        animbuild = "ui_alterguardianhat_1x1",
+        pos = Vector3(TUNING.HSF_POS_X, 50, 0),
+    },
+    type = "hand_inv",
+    acceptsstacks = false,
+    excludefromcrafting = true,
+    itemtestfn = function(container, item, slot)
+        return table.contains({ "horrorfuel", "purebrilliance", "glommerwings", "ancient_soul" }, item.prefab)
+    end
+}
 
 ----------------------------------------------------------------------------------------------------
 local function Givelickingbone(inst)
@@ -472,7 +490,7 @@ local function Personallicking(inst)
         end
     end
 
-    if GLOBAL.TheNet:GetServerGameMode() == "wilderness" then
+    if TheNet:GetServerGameMode() == "wilderness" then
         local function ondeath(inst, data)
             -- Kill player's licking in wilderness mode :(
             if inst.licking then
@@ -507,7 +525,7 @@ end
 
 GLOBAL.c_returnlickingbone = function(inst)
     if not inst then
-        inst = GLOBAL.ThePlayer or GLOBAL.AllPlayers[1]
+        inst = ThePlayer or AllPlayers[1]
     end
     if not inst or not inst.Returnlickingbone then
         print("Error: Cannot return lickingbone")
@@ -519,8 +537,8 @@ end
 AddPlayerPostInit(Personallicking)
 
 -- 检查范围：（递归）物品栏、背包、（递归）苹果
-local STORE_FN = GLOBAL.ACTIONS.STORE.fn
-GLOBAL.ACTIONS.STORE.fn = function(act)
+local STORE_FN = ACTIONS.STORE.fn
+ACTIONS.STORE.fn = function(act)
     if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
         act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil and
         not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
@@ -532,8 +550,8 @@ GLOBAL.ACTIONS.STORE.fn = function(act)
     end
 end
 
-local RUMMAGE_FN = GLOBAL.ACTIONS.RUMMAGE.fn
-GLOBAL.ACTIONS.RUMMAGE.fn = function(act)
+local RUMMAGE_FN = ACTIONS.RUMMAGE.fn
+ACTIONS.RUMMAGE.fn = function(act)
     if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
         not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
         not act.target.components.container:IsHolding(act.target.components.follower.leader, true) and
@@ -563,7 +581,7 @@ local function RestoreOriginalRecipe()
     end)
 end
 local function CheckFullMoon()
-    if GLOBAL.TheWorld.state.isfullmoon then
+    if TheWorld.state.isfullmoon then
         UseFullMoonRecipe()
     end
 end
@@ -571,9 +589,9 @@ end
 ----------------------------------------------------------------------------------------
 AddPrefabPostInit("world", function(inst)
     if TUNING.APPLESTORE then
-        local season = GLOBAL.TheWorld.state.season
+        local season = TheWorld.state.season
         inst:WatchWorldState("cycles", function()
-            for _, player in ipairs(GLOBAL.AllPlayers) do
+            for _, player in ipairs(AllPlayers) do
                 if season == "summer" then
                     player:RemoveTag("firstorder")
                     player:AddTag("summerorder")
@@ -597,7 +615,9 @@ end)
 ----------------------------------------------------------------------------------------
 for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
     AddPrefabPostInit(v, function(inst)
-        inst.components.combat:AddNoAggroTag("lunarprayer")
+        if inst.components.combat ~= nil then
+            inst.components.combat:AddNoAggroTag("lunarprayer")
+        end
     end)
 end
 

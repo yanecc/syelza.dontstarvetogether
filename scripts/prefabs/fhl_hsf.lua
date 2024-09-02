@@ -1,21 +1,3 @@
-local containers = require("containers")
-containers.params.hsf_addon = {
-    widget = {
-        slotpos = {
-            Vector3(-2, 18, 0),
-        },
-        animbank = "ui_alterguardianhat_1x1",
-        animbuild = "ui_alterguardianhat_1x1",
-        pos = Vector3(TUNING.HSF_POS_X, 50, 0),
-    },
-    type = "hand_inv",
-    acceptsstacks = false,
-    excludefromcrafting = true,
-    itemtestfn = function(container, item, slot)
-        return table.contains({ "horrorfuel", "purebrilliance", "glommerwings", "ancient_soul" }, item.prefab)
-    end
-}
-
 local assets =
 {
     Asset("ANIM", "anim/fhl_hsf.zip"),
@@ -243,7 +225,7 @@ local function fn()
     end
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("hsf_addon")
+    inst.components.container:WidgetSetup("fhl_hsf")
     inst.components.container.acceptsstacks = false
 
     inst:ListenForEvent("itemget", UpdateHSFAddon)
