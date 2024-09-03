@@ -15,10 +15,7 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-
     MakeInventoryPhysics(inst)
-    MakeSmallBurnable(inst)
-    MakeSmallPropagator(inst)
 
     inst.AnimState:SetBank("fhl_torte")
     inst.AnimState:SetBuild("fhl_torte")

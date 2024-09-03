@@ -68,15 +68,11 @@ local function FhlFire(inst)
 end
 
 --升级机制
-local function applyupgrades(inst)
+local function ApplyUpgrades(inst)
     local maxLevel = 10
     local curLevel = math.min(inst.level, maxLevel)
     local pointsKey = TUNING.SKILL_POINT_KEY:sub(-1)
     local statusKey = TUNING.STATUS_KEY:sub(-1)
-
-    local hungerPercent = inst.components.hunger:GetPercent()
-    local healthPercent = inst.components.health:GetPercent()
-    local sanityPercent = inst.components.sanity:GetPercent()
 
     inst.components.hunger.max = 150 + curLevel * 15                  --300
     inst.components.health.maxhealth = 150 + curLevel * 15            --300
@@ -99,31 +95,9 @@ local function applyupgrades(inst)
             "\nyou have " .. (inst.jnd) .. " skill points!" ..
             "\nClick " .. pointsKey .. " for help, Click " .. statusKey .. " for State!")
     end
-
-    inst.components.hunger:SetPercent(hungerPercent)
-    inst.components.health:SetPercent(healthPercent)
-    inst.components.sanity:SetPercent(sanityPercent)
 end
 
--- 当这个角色从人类复活
-local function onbecamehuman(inst)
-    -- 设置速度加载或恢复时从鬼(可选)
-    inst.components.locomotor.walkspeed = 7
-    inst.components.locomotor.runspeed = 9
-    applyupgrades(inst)
-end
-
-
-local function onload(inst)
-    inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
-
-    if not inst:HasTag("playerghost") then
-        onbecamehuman(inst)
-    end
-end
-
-
-local function oneat(inst, food)
+local function OnEat(inst, food)
     local berryUp = TUNING.JGEAT                        -- 吃浆果升级
     local berryLimit = TUNING.JGEATSL                   -- 吃浆果升级的临界值
     local levelmax = inst.level == 10                   -- 是否已满级
@@ -132,46 +106,46 @@ local function oneat(inst, food)
     -- 浆果 烤浆果 多汁浆果 烤多汁浆果
     -- 吃浆果可以升级，满级以后获取技能点只能吃火龙果
     if berryUp and table.contains({ "berries", "berries_cooked", "berries_juicy", "berries_juicy_cooked" }, food.prefab) then
-        inst.berryCount = inst.berryCount + 1
-        if inst.berryCount % 5 == 0 then
-            inst.components.talker:Say("已经吃了: " .. inst.berryCount .. " / " .. berryLimit .. " 个浆果" ..
-                "\nHave eaten " .. inst.berryCount .. " / " .. berryLimit .. " berries")
+        inst.berrycount = inst.berrycount + 1
+        if inst.berrycount % 5 == 0 then
+            inst.components.talker:Say("已经吃了: " .. inst.berrycount .. " / " .. berryLimit .. " 个浆果" ..
+                "\nHave eaten " .. inst.berrycount .. " / " .. berryLimit .. " berries")
         end
-        if not levelmax and inst.berryCount >= berryLimit then
-            inst.berryEnough = true
-            inst.berryCount = inst.berryCount - berryLimit
+        if not levelmax and inst.berrycount >= berryLimit then
+            inst.berryenough = true
+            inst.berrycount = inst.berrycount - berryLimit
         end
     end
 
     -- 火龙果、烤火龙果、火龙果派、辣龙椒沙拉
-    if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or inst.berryEnough then
+    if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or inst.berryenough then
         local hasGoodLuck = math.random() > failureFactor * math.tan(inst.level * 0.1)
-        -- 满级以后再吃浆果inst.berryEnough不会为true
+        -- 满级以后再吃浆果inst.berryenough不会为true
         if (levelmax) then
-            if inst.totalPoints < 42 and hasGoodLuck then
+            if inst.totalpoints < 42 and hasGoodLuck then
                 -- inst.jnd 技能点
-                local points = math.max(inst.totalPoints + 1, inst.level, inst.jnd)
-                inst.totalPoints = points
+                local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
+                inst.totalpoints = points
                 inst.jnd = inst.jnd + 1
-                applyupgrades(inst)
+                ApplyUpgrades(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
             else
                 inst.components.talker:Say("QWQ 满级了! 没获得技能点!\nQWQ level Max! Got no skill point!")
             end
         elseif hasGoodLuck then
             -- inst.jnd 技能点
-            -- inst.totalPoints 总技能点42可以将全部方向点满 抗寒8 减伤16 增伤10 抗饿8
-            if inst.totalPoints < 42 then
-                local points = math.max(inst.totalPoints + 1, inst.level, inst.jnd)
-                inst.totalPoints = points
+            -- inst.totalpoints 总技能点42可以将全部方向点满 抗寒8 减伤16 增伤10 抗饿8
+            if inst.totalpoints < 42 then
+                local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
+                inst.totalpoints = points
                 inst.jnd = inst.jnd + 1
             end
             inst.level = inst.level + 1
-            inst.berryEnough = false
-            applyupgrades(inst)
+            inst.berryenough = false
+            ApplyUpgrades(inst)
             inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
         else
-            inst.berryEnough = false
+            inst.berryenough = false
             inst.components.talker:Say("QWQ 升级失败了!\nlevel up failed!")
         end
     end
@@ -179,27 +153,104 @@ local function oneat(inst, food)
     -- 吃芝士蛋糕会重置等级和技能点，必须等级大于0才能洗点
     if food.prefab == "powcake" and inst.level > 0 then
         inst.level = 0
-        inst.jnd = inst.totalPoints
+        inst.jnd = inst.totalpoints
 
         inst.je = 0
         inst.components.health.absorb = 0
         inst.components.combat.damagemultiplier = 1
         inst.components.temperature.inherentinsulation = 0
         inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
-        applyupgrades(inst)
+        ApplyUpgrades(inst)
         inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
     end
 end
 
-local function onpreload(inst, data)
+-- 当这个角色从人类复活
+local function onbecamehuman(inst)
+    -- 设置速度加载或恢复时从鬼(可选)
+    inst.components.locomotor.walkspeed = 7
+    inst.components.locomotor.runspeed = 9
+    ApplyUpgrades(inst)
+end
+
+local function GiveNewBell(inst)
+    local bell = SpawnPrefab("personal_licking_eyebone")
+    if bell then
+        bell.owner = inst
+        inst.lickingbone = bell
+        inst.components.inventory.ignoresound = true
+        inst.components.inventory:GiveItem(bell)
+        inst.components.inventory.ignoresound = false
+        bell.components.named:SetName(inst.name .. "的铃铛")
+        return bell
+    end
+end
+
+local function GetSpawnPoint(pt)
+    local theta = math.random() * 2 * PI
+    local radius = 4
+    local offset = FindWalkableOffset(pt, theta, radius, 12, true)
+    return offset ~= nil and (pt + offset) or nil
+end
+
+local function ReturnBell(inst)
+    if inst.lickingbone and inst.lickingbone:IsValid() then
+        if inst.lickingbone.components.inventoryitem.owner ~= inst then
+            inst.components.inventory:GiveItem(inst.lickingbone)
+        end
+    else
+        GiveNewBell(inst)
+    end
+    if inst.licking and not inst:IsNear(inst.licking, 20) then
+        local pt = inst:GetPosition()
+        local spawn_pt = GetSpawnPoint(pt)
+        if spawn_pt ~= nil then
+            inst.licking.Physics:Teleport(spawn_pt:Get())
+            inst.licking:FacePoint(pt:Get())
+        end
+    end
+end
+
+local function ondeath(inst, data)
+    -- Kill player's licking in wilderness mode :(
+    if inst.licking then
+        inst.licking.components.health:Kill()
+    end
+    if inst.lickingbone then
+        inst.lickingbone:Remove()
+    end
+end
+
+local function OnDespawn(inst)
+    local apple = inst.licking
+    local bell = inst.lickingbone
+
+    if apple and apple:IsValid() and apple.components.container then
+        if GetGameModeProperty("drop_everything_on_despawn") then
+            apple.components.container:DropEverything()
+        else
+            apple.components.container:DropEverythingWithTag("irreplaceable")
+        end
+        apple:DoTaskInTime(FRAMES, apple.Remove)
+    end
+
+    -- local owner = bell.components.inventoryitem:GetGrandOwner()
+    -- if owner == nil or owner:HasTag("player") then end
+    -- inst.lickingbone.isheld = owner and owner == inst or false
+    if bell ~= nil and bell:IsValid() then
+        bell:DoTaskInTime(FRAMES, bell.Remove)
+    end
+end
+
+local function OnPreload(inst, data)
     inst.je = data.je or 0
     inst.level = data.level or 0
     inst.jnd = data.jnd or data.level
-    inst.berryCount = data.berryCount or 0
-    inst.totalPoints = data.totalPoints or data.level
+    inst.berrycount = data.berrycount or 0
+    inst.totalpoints = data.totalpoints or data.level
     inst.zzjFeedBack = data.zzjFeedBack or 0
 
-    applyupgrades(inst)
+    ApplyUpgrades(inst)
 
     inst.components.health.absorb = data.absorb or 0.00
     inst.components.hunger.hungerrate = data.hungerrate or TUNING.WILSON_HUNGER_RATE
@@ -207,20 +258,44 @@ local function onpreload(inst, data)
     inst.components.temperature.inherentinsulation = data.inherentinsulation or 0.00
 end
 
-local function onsave(inst, data)
+local function OnLoad(inst, data)
+    if not inst:HasTag("playerghost") then
+        onbecamehuman(inst)
+    end
+
+    inst.lickingbone = data.lickingbone and SpawnSaveRecord(data.lickingbone)
+    if inst.lickingbone and data.licking then
+        inst.lickingbone.owner = inst
+        inst.licking = SpawnSaveRecord(data.licking)
+        if inst.licking then
+            inst.lickingbone:RebindLicking(inst.licking)
+            inst.licking.components.named:SetName(inst.name .. "的铃铛")
+        end
+    else
+        GiveNewBell(inst)
+    end
+end
+
+local function OnNewSpawn(inst)
+    onbecamehuman(inst)
+    GiveNewBell(inst)
+end
+
+local function OnSave(inst, data)
     data.je = inst.je
     data.jnd = inst.jnd
     data.level = inst.level
-    data.totalPoints = inst.totalPoints
+    data.berrycount = inst.berrycount
+    data.totalpoints = inst.totalpoints
     data.zzjFeedBack = inst.zzjFeedBack
-
-    -- 保存已经吃的浆果数量
-    data.berryCount = inst.berryCount
 
     data.hungerrate = inst.components.hunger.hungerrate
     data.absorb = inst.components.health.absorb
     data.damagemultiplier = inst.components.combat.damagemultiplier
     data.inherentinsulation = inst.components.temperature.inherentinsulation
+
+    data.licking = inst.licking and inst.licking:GetSaveRecord()
+    data.lickingbone = inst.lickingbone and inst.lickingbone:GetSaveRecord()
 end
 
 -- 这对服务器和客户端初始化。可以添加标注。
@@ -229,23 +304,27 @@ local common_postinit = function(inst)
     inst.MiniMapEntity:SetIcon("fhl.tex")
     inst.soundsname = "willow"
     inst:AddTag("fhl")
-    inst:AddTag("speciallickingowner")
     inst:AddTag("bookbuilder")
     --inst:AddTag("insomniac")
 end
 
 -- 这对于服务器初始化。组件被添加。
 local master_postinit = function(inst)
-    inst.level = 0
-    inst.jnd = 0
     inst.je = 0
-    inst.totalPoints = 0
-    inst.berryCount = 0
-    inst.berryEnough = false
+    inst.jnd = 0
+    inst.level = 0
+    inst.totalpoints = 0
+    inst.berrycount = 0
+    inst.berryenough = false
     inst.zzjFeedBack = 0
     inst.starting_inventory = start_inv
-    inst.components.eater:SetOnEatFn(oneat)
-    applyupgrades(inst)
+
+    inst.licking = nil
+    inst.lickingbone = nil
+    -- Debug function to return the Bell
+    inst.ReturnBell = ReturnBell
+
+    ApplyUpgrades(inst)
 
     inst:AddComponent("reader")
     ------------------------------------------
@@ -261,6 +340,7 @@ local master_postinit = function(inst)
     inst.components.hunger:SetMax(TUNING.FHL_HUNGER)
     inst.components.sanity:SetMax(TUNING.FHL_SANITY)
 
+    inst.components.eater:SetOnEatFn(OnEat)
     inst.components.locomotor.walkspeed = 7
     inst.components.locomotor.runspeed = 9
     inst.components.health.absorb = 0.00
@@ -296,11 +376,17 @@ local master_postinit = function(inst)
 
     -- 增加击杀掉落
     inst:ListenForEvent("killed", OnKillOther)
+    if TheNet:GetServerGameMode() == "wilderness" then
+        inst:ListenForEvent("death", ondeath)
+    end
+    inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
+    inst:ListenForEvent("ms_playerreroll", function(inst) OnDespawn(inst) end)
 
-    inst.OnSave = onsave
-    inst.OnPreLoad = onpreload
-    inst.OnLoad = onload
-    inst.OnNewSpawn = onload
+    inst.OnSave = OnSave
+    inst.OnLoad = OnLoad
+    inst.OnPreload = OnPreload
+    inst.OnDespawn = OnDespawn
+    inst.OnNewSpawn = OnNewSpawn
 end
 
 return MakePlayerCharacter("fhl", prefabs, assets, common_postinit, master_postinit)

@@ -102,7 +102,7 @@ local function StopRespawn(inst)
     end
 end
 
-local function Rebindlicking(inst, licking)
+local function RebindLicking(inst, licking)
     licking = licking or (inst.owner and inst.owner.licking)
     if licking ~= nil then
         if inst.owner then
@@ -126,7 +126,7 @@ end
 
 local function Respawnlicking(inst)
     StopRespawn(inst)
-    Rebindlicking(inst, (inst.owner and inst.owner.licking) or Spawnlicking(inst))
+    RebindLicking(inst, (inst.owner and inst.owner.licking) or Spawnlicking(inst))
 end
 
 StartRespawn = function(inst, time)
@@ -139,9 +139,9 @@ StartRespawn = function(inst, time)
     CloseEye(inst)
 end
 
-local function Fixlicking(inst)
+local function FixLicking(inst)
     inst.fixtask = nil
-    if not Rebindlicking(inst) then
+    if not RebindLicking(inst) then
         inst.AnimState:PlayAnimation("dead", true)
         CloseEye(inst)
 
@@ -158,7 +158,7 @@ end
 
 local function OnPickUp(inst)
     if inst.fixtask == nil then
-        inst.fixtask = inst:DoTaskInTime(1, Fixlicking)
+        inst.fixtask = inst:DoTaskInTime(1, FixLicking)
     end
     -- 仅在物品栏中有效，放入背包或箱子不行
     local owner = inst.components.inventoryitem:GetGrandOwner()
@@ -224,12 +224,9 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-    inst:AddTag("personal_licking_eyebone")
-    inst:AddTag("nosteal")
-    inst:AddTag("irreplaceable")
-    inst:AddTag("nonpotatable")
-
     inst:AddTag("_named")
+    inst:AddTag("nosteal")
+    inst:AddTag("nonpotatable")
 
     inst.MiniMapEntity:SetIcon("personal_licking_eyebone.tex")
 
@@ -276,8 +273,8 @@ local function fn()
     inst.OnLoad = OnLoad
     inst.OnSave = OnSave
 
-    inst.fixtask = inst:DoTaskInTime(1, Fixlicking)
-    inst.Rebindlicking = Rebindlicking
+    inst.fixtask = inst:DoTaskInTime(1, FixLicking)
+    inst.RebindLicking = RebindLicking
 
     return inst
 end

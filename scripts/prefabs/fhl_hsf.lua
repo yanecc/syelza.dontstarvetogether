@@ -17,6 +17,20 @@ local function AvoidShadowAggro(inst, owner, isworking)
     end
 end
 
+local function ResistGrogginess(inst, owner, isworking)
+    if not owner.components.grogginess then return end
+    if isworking then
+        inst._enablespeedmod = owner.components.grogginess.enablespeedmod
+        inst._knockouttestfn = owner.components.grogginess.knockouttestfn
+        owner.components.grogginess.knockouttestfn = function() return false end
+        owner.components.grogginess:SetEnableSpeedMod(false)
+    else
+        owner.components.grogginess:ResetGrogginess()
+        owner.components.grogginess:SetKnockOutTest(inst._knockouttestfn)
+        owner.components.grogginess:SetEnableSpeedMod(inst._enablespeedmod)
+    end
+end
+
 local function LevitateHeavy(inst, owner, isworking)
     inst._onownerequip = function(owner, data)
         if owner ~= nil and data ~= nil and data.item:HasTag("heavy") then
@@ -28,7 +42,6 @@ local function LevitateHeavy(inst, owner, isworking)
     if isworking then
         owner:AddTag("glommerprayer")
         inst:ListenForEvent("equip", inst._onownerequip, owner)
-        if not owner.components.inventory:IsHeavyLifting() then return end
         owner.components.inventory:ForEachEquipment(function(equip)
             if not equip:HasTag("heavy") then return end
             equip.components.equippable.GetWalkSpeedMult = function(self)
@@ -49,10 +62,8 @@ local function OnEquip(inst, owner)
     elseif inst.components.container:Has("horrorfuel", 1) then
         AvoidShadowAggro(inst, owner, true)
     elseif inst.components.container:Has("glommerwings", 1) then
+        ResistGrogginess(inst, owner, true)
         LevitateHeavy(inst, owner, true)
-        if owner.components.grogginess ~= nil then
-            owner.components.grogginess:AddResistanceSource(inst, 10000)
-        end
     end
 
     if TUNING.BUFFGO then
@@ -78,11 +89,9 @@ local function OnUnequip(inst, owner)
     inst.components.container:Close()
     inst.components.fueled:StopConsuming()
     AvoidShadowAggro(inst, owner, false)
+    ResistGrogginess(inst, owner, false)
     LevitateHeavy(inst, owner, false)
     owner:RemoveTag("lunarprayer")
-    if owner.components.grogginess ~= nil then
-        owner.components.grogginess:RemoveResistanceSource(inst)
-    end
     owner.AnimState:ClearOverrideSymbol("swap_hat")
 end
 
@@ -137,9 +146,7 @@ local function UpdateHSFAddon(inst)
             owner:RemoveTag("lunarprayer")
             LevitateHeavy(inst, owner, false)
             AvoidShadowAggro(inst, owner, false)
-            if owner.components.grogginess ~= nil then
-                owner.components.grogginess:RemoveResistanceSource(inst)
-            end
+            ResistGrogginess(inst, owner, false)
         end
     elseif item.prefab == "horrorfuel" then
         inst.components.equippable.dapperness = -2
@@ -153,10 +160,8 @@ local function UpdateHSFAddon(inst)
         end
     elseif item.prefab == "glommerwings" then
         if inst.components.equippable:IsEquipped() and owner ~= nil then
+            ResistGrogginess(inst, owner, true)
             LevitateHeavy(inst, owner, true)
-            if owner.components.grogginess ~= nil then
-                owner.components.grogginess:AddResistanceSource(inst, 10000)
-            end
         end
     end
 end
@@ -167,7 +172,6 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-
     MakeInventoryPhysics(inst)
 
     inst:AddTag("sharp")

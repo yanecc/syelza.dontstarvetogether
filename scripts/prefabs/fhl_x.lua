@@ -13,8 +13,7 @@ local prefabs =
 local function OnFullMoon(inst, isfullmoon)
     local owner = inst.components.inventoryitem:GetGrandOwner()
     if not isfullmoon or not owner or not owner:HasTag("player") then return end
-    owner = inst.components.inventoryitem.owner
-    local holder = owner.components.inventory or owner.components.container
+    local holder = inst.components.inventoryitem:GetContainer()
     local slot = holder:GetItemSlot(inst)
     local newItem = SpawnPrefab("fhl_x2")
     newItem.components.stackable:SetStackSize(inst.components.stackable:StackSize())
@@ -28,10 +27,7 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-
     MakeInventoryPhysics(inst)
-    MakeSmallBurnable(inst)
-    MakeSmallPropagator(inst)
 
     inst.AnimState:SetBank("fhl_x")
     inst.AnimState:SetBuild("fhl_x")

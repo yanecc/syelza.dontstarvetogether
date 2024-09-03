@@ -320,6 +320,34 @@ TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 ACTIONS.ADDFUEL.priority = 1
 GLOBAL.FUELTYPE.ANCIENTSOUL = "ANCIENTSOUL"
 
+----------------------------------------------------------------------------------------
+-- 注册图片
+RegisterInventoryItemAtlas("images/inventoryimages/ancient_gem.xml", "ancient_gem.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/ancient_soul.xml", "ancient_soul.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_bz.xml", "fhl_bz.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_cake.xml", "fhl_cake.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_cy.xml", "fhl_cy.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_x.xml", "fhl_x.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_x2.xml", "fhl_x2.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_hsf.xml", "fhl_hsf.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj2.xml", "fhl_zzj2.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj4.xml", "fhl_zzj4.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj5.xml", "fhl_zzj5.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/licking_eyebone.xml", "licking_eyebone.tex")
+
+----------------------------------------------------------------------------------------------------
+GLOBAL.c_givebell = function(inst)
+    inst = inst or ThePlayer or AllPlayers[1]
+    if inst and inst.ReturnBell then
+        inst:ReturnBell()
+    else
+        print("Error: No bell to get")
+    end
+end
+
 ----------------------------------------------------------------------------------------------------
 containers.params.fhl_bb = deepcopy(containers.params.krampus_sack)
 containers.params.fhl_hsf = {
@@ -340,202 +368,6 @@ containers.params.fhl_hsf = {
 }
 
 ----------------------------------------------------------------------------------------------------
-local function Givelickingbone(inst)
-    local lickingbone = GLOBAL.SpawnPrefab("personal_licking_eyebone")
-    if lickingbone then
-        lickingbone.owner = inst
-        inst.lickingbone = lickingbone
-        inst.components.inventory.ignoresound = true
-        inst.components.inventory:GiveItem(lickingbone)
-        inst.components.inventory.ignoresound = false
-        lickingbone.components.named:SetName(inst.name .. "的铃铛")
-        return lickingbone
-    end
-end
-local function GetSpawnPoint(pt)
-    local theta = math.random() * 2 * GLOBAL.PI
-    local radius = 4
-    local offset = GLOBAL.FindWalkableOffset(pt, theta, radius, 12, true)
-    return offset ~= nil and (pt + offset) or nil
-end
-local function Personallicking(inst)
-    if not inst:HasTag("speciallickingowner") then
-        return
-    end
-
-    local _OnDespawn = inst.OnDespawn
-    inst.OnDespawn = function(inst)
-        -- Remove licking
-        if inst.licking then
-            -- Don't allow licking to despawn with irreplaceable items
-            inst.licking.components.container:DropEverythingWithTag("irreplaceable")
-
-            -- We need time to save before despawning.
-            inst.licking:DoTaskInTime(0.1, function(inst)
-                if inst and inst:IsValid() then
-                    inst:Remove()
-                end
-            end)
-        end
-
-        if inst.lickingbone then
-            -- lickingbone drops from whatever its in
-            local owner = inst.lickingbone.components.inventoryitem.owner
-            if owner then
-                -- Remember if lickingbone is held
-                if owner == inst then
-                    inst.lickingbone.isheld = true
-                else
-                    inst.lickingbone.isheld = false
-                end
-                if owner.components.container then
-                    owner.components.container:DropItem(inst.lickingbone)
-                elseif owner.components.inventory then
-                    owner.components.inventory:DropItem(inst.lickingbone)
-                end
-            end
-            -- Remove lickingbone
-            inst.lickingbone:DoTaskInTime(0.1, function(inst)
-                if inst and inst:IsValid() then
-                    inst:Remove()
-                end
-            end)
-        else
-            print("Error: Player has no linked lickingbone!")
-        end
-        if _OnDespawn then
-            return _OnDespawn(inst)
-        end
-    end
-
-    local _OnSave = inst.OnSave
-    inst.OnSave = function(inst, data)
-        local references = _OnSave and _OnSave(inst, data)
-        if inst.licking then
-            -- Save licking
-            local refs = {}
-            if not references then
-                references = {}
-            end
-            data.licking, refs = inst.licking:GetSaveRecord()
-            if refs then
-                for k, v in pairs(refs) do
-                    table.insert(references, v)
-                end
-            end
-        end
-        if inst.lickingbone then
-            -- Save lickingbone
-            local refs = {}
-            if not references then
-                references = {}
-            end
-            data.lickingbone, refs = inst.lickingbone:GetSaveRecord()
-            if refs then
-                for k, v in pairs(refs) do
-                    table.insert(references, v)
-                end
-            end
-            -- Remember if was holding lickingbone
-            if inst.lickingbone.isheld then
-                data.holdinglickingbone = true
-            else
-                data.holdinglickingbone = false
-            end
-        end
-        return references
-    end
-
-    local _OnLoad = inst.OnLoad
-    inst.OnLoad = function(inst, data, newents)
-        if data.licking ~= nil then
-            -- Load licking
-            inst.licking = GLOBAL.SpawnSaveRecord(data.licking, newents)
-        else
-            --print("Warning: No licking was loaded from save file!")
-        end
-
-        if data.lickingbone ~= nil then
-            -- Load licking
-            inst.lickingbone = GLOBAL.SpawnSaveRecord(data.lickingbone, newents)
-            -- Look for lickingbone at spawn point and re-equip
-            inst:DoTaskInTime(0, function(inst)
-                if data.holdinglickingbone or (inst.lickingbone and inst:IsNear(inst.lickingbone, 4)) then
-                    --inst.components.inventory:GiveItem(inst.lickingbone)
-                    inst:Returnlickingbone()
-                end
-            end)
-        else
-            print("Warning: No lickingbone was loaded from save file!")
-        end
-
-        -- Create new lickingbone if none loaded
-        if not inst.lickingbone then
-            Givelickingbone(inst)
-        end
-
-        inst.lickingbone.owner = inst
-
-        if _OnLoad then
-            return _OnLoad(inst, data, newents)
-        end
-    end
-
-    local _OnNewSpawn = inst.OnNewSpawn
-    inst.OnNewSpawn = function(inst)
-        -- Give new lickingbone. Let licking spawn naturally.
-        Givelickingbone(inst)
-        if _OnNewSpawn then
-            return _OnNewSpawn(inst)
-        end
-    end
-
-    if TheNet:GetServerGameMode() == "wilderness" then
-        local function ondeath(inst, data)
-            -- Kill player's licking in wilderness mode :(
-            if inst.licking then
-                inst.licking.components.health:Kill()
-            end
-            if inst.lickingbone then
-                inst.lickingbone:Remove()
-            end
-        end
-        inst:ListenForEvent("death", ondeath)
-    end
-
-    -- Debug function to return lickingbone
-    inst.Returnlickingbone = function()
-        if inst.lickingbone and inst.lickingbone:IsValid() then
-            if inst.lickingbone.components.inventoryitem.owner ~= inst then
-                inst.components.inventory:GiveItem(inst.lickingbone)
-            end
-        else
-            Givelickingbone(inst)
-        end
-        if inst.licking and not inst:IsNear(inst.licking, 20) then
-            local pt = inst:GetPosition()
-            local spawn_pt = GetSpawnPoint(pt)
-            if spawn_pt ~= nil then
-                inst.licking.Physics:Teleport(spawn_pt:Get())
-                inst.licking:FacePoint(pt:Get())
-            end
-        end
-    end
-end
-
-GLOBAL.c_returnlickingbone = function(inst)
-    if not inst then
-        inst = ThePlayer or AllPlayers[1]
-    end
-    if not inst or not inst.Returnlickingbone then
-        print("Error: Cannot return lickingbone")
-        return
-    end
-    inst:Returnlickingbone()
-end
-
-AddPlayerPostInit(Personallicking)
-
 -- 检查范围：（递归）物品栏、背包、（递归）苹果
 local STORE_FN = ACTIONS.STORE.fn
 ACTIONS.STORE.fn = function(act)
@@ -581,7 +413,7 @@ local function RestoreOriginalRecipe()
     end)
 end
 local function CheckFullMoon()
-    if TheWorld.state.isfullmoon then
+    if GLOBAL.TheWorld.state.isfullmoon then
         UseFullMoonRecipe()
     end
 end
@@ -589,7 +421,7 @@ end
 ----------------------------------------------------------------------------------------
 AddPrefabPostInit("world", function(inst)
     if TUNING.APPLESTORE then
-        local season = TheWorld.state.season
+        local season = GLOBAL.TheWorld.state.season
         inst:WatchWorldState("cycles", function()
             for _, player in ipairs(AllPlayers) do
                 if season == "summer" then
@@ -620,24 +452,6 @@ for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
         end
     end)
 end
-
-----------------------------------------------------------------------------------------
--- 注册图片
-RegisterInventoryItemAtlas("images/inventoryimages/ancient_gem.xml", "ancient_gem.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/ancient_soul.xml", "ancient_soul.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/bj_11.xml", "bj_11.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_bb.xml", "fhl_bb.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_bz.xml", "fhl_bz.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_cake.xml", "fhl_cake.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_cy.xml", "fhl_cy.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_x.xml", "fhl_x.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_x2.xml", "fhl_x2.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_hsf.xml", "fhl_hsf.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj2.xml", "fhl_zzj2.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj4.xml", "fhl_zzj4.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_zzj5.xml", "fhl_zzj5.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/licking_eyebone.xml", "licking_eyebone.tex")
 
 ----------------------------------------------------------------------------------------
 if TUNING.APPLESTORE then

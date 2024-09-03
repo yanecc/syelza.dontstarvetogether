@@ -33,7 +33,6 @@ local sounds =
     lick = "dontstarve/creatures/chester/lick",
 }
 
-
 local function ShouldWakeUp(inst)
     return DefaultWakeTest(inst) or not inst.components.follower:IsNearLeader(WAKE_TO_FOLLOW_DISTANCE)
 end
@@ -42,11 +41,6 @@ local function ShouldSleep(inst)
     --print(inst, "ShouldSleep", DefaultSleepTest(inst), not inst.sg:HasStateTag("open"), inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE))
     return DefaultSleepTest(inst) and not inst.sg:HasStateTag("open") and
         inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE) and not TheWorld.state.isfullmoon
-end
-
-
-local function ShouldKeepTarget()
-    return false -- licking can't attack, and won't sleep if he has a target
 end
 
 local function OnOpen(inst)
@@ -264,15 +258,14 @@ local function create_licking()
     inst.Physics:CollidesWith(COLLISION.OBSTACLES)
     inst.Physics:CollidesWith(COLLISION.CHARACTERS)
 
-    inst:AddTag("companion")
+    inst:AddTag("_named")
     inst:AddTag("character")
+    inst:AddTag("companion")
     inst:AddTag("scarytoprey")
     inst:AddTag("notraptrigger")
     if TUNING.APPLESTORE then
         inst:AddTag("prototyper")
     end
-
-    inst:AddTag("_named")
 
     inst.MiniMapEntity:SetIcon("personal_licking.tex")
     inst.MiniMapEntity:SetCanUseCache(false)
