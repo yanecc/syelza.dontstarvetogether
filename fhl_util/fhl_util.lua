@@ -128,7 +128,7 @@ AddPlayerPostInit(function(inst)
     inst:DoTaskInTime(0, function()
         -- We check if the character is ourselves
         -- So if another horo player joins, we don't get the handlers
-        if inst == GLOBAL.ThePlayer then
+        if inst == ThePlayer then
             -- If we are horo
             if inst.prefab == "fhl" then
                 -- We create and store the key handlers

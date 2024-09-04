@@ -58,12 +58,14 @@ local function OnKillOther(inst, data)
 end
 
 local function FhlFire(inst)
-    if TheWorld.state.isnight and TUNING.OPENLIGHT then
+    if TUNING.OPENLIGHT and (TheWorld:HasTag("cave") or TheWorld.state.isnight) then
         inst.Light:Enable(true)
         inst.Light:SetRadius(6)
         inst.Light:SetFalloff(.8)
         inst.Light:SetIntensity(.8)
         inst.Light:SetColour(237 / 255, 237 / 255, 209 / 255)
+    else
+        inst.Light:Enable(false)
     end
 end
 
@@ -78,8 +80,8 @@ local function ApplyUpgrades(inst)
     inst.components.health.maxhealth = 150 + curLevel * 15            --300
     inst.components.sanity.max = 150 + curLevel * 15                  --300
 
-    inst.components.locomotor.walkspeed = math.ceil(7 + curLevel / 4) --10
-    inst.components.locomotor.runspeed = math.ceil(9 + curLevel / 4)  --12
+    inst.components.locomotor.walkspeed = math.ceil(6 + curLevel / 3) --10
+    inst.components.locomotor.runspeed = math.ceil(8 + curLevel / 3)  --12
 
 
     inst.components.talker:Say("QWQ Level now: " .. (inst.level) ..
@@ -168,8 +170,8 @@ end
 -- 当这个角色从人类复活
 local function onbecamehuman(inst)
     -- 设置速度加载或恢复时从鬼(可选)
-    inst.components.locomotor.walkspeed = 7
-    inst.components.locomotor.runspeed = 9
+    inst.components.locomotor.walkspeed = 6
+    inst.components.locomotor.runspeed = 8
     ApplyUpgrades(inst)
 end
 
@@ -242,15 +244,13 @@ local function OnDespawn(inst)
     end
 end
 
-local function OnPreload(inst, data)
+local function OnPreLoad(inst, data)
     inst.je = data.je or 0
     inst.level = data.level or 0
     inst.jnd = data.jnd or data.level
     inst.berrycount = data.berrycount or 0
     inst.totalpoints = data.totalpoints or data.level
     inst.zzjFeedBack = data.zzjFeedBack or 0
-
-    ApplyUpgrades(inst)
 
     inst.components.health.absorb = data.absorb or 0.00
     inst.components.hunger.hungerrate = data.hungerrate or TUNING.WILSON_HUNGER_RATE
@@ -305,7 +305,6 @@ local common_postinit = function(inst)
     inst.soundsname = "willow"
     inst:AddTag("fhl")
     inst:AddTag("bookbuilder")
-    --inst:AddTag("insomniac")
 end
 
 -- 这对于服务器初始化。组件被添加。
@@ -313,9 +312,8 @@ local master_postinit = function(inst)
     inst.je = 0
     inst.jnd = 0
     inst.level = 0
-    inst.totalpoints = 0
     inst.berrycount = 0
-    inst.berryenough = false
+    inst.totalpoints = 0
     inst.zzjFeedBack = 0
     inst.starting_inventory = start_inv
 
@@ -323,8 +321,6 @@ local master_postinit = function(inst)
     inst.lickingbone = nil
     -- Debug function to return the Bell
     inst.ReturnBell = ReturnBell
-
-    ApplyUpgrades(inst)
 
     inst:AddComponent("reader")
     ------------------------------------------
@@ -341,12 +337,12 @@ local master_postinit = function(inst)
     inst.components.sanity:SetMax(TUNING.FHL_SANITY)
 
     inst.components.eater:SetOnEatFn(OnEat)
-    inst.components.locomotor.walkspeed = 7
-    inst.components.locomotor.runspeed = 9
+    inst.components.locomotor.walkspeed = 6
+    inst.components.locomotor.runspeed = 8
     inst.components.health.absorb = 0.00
     inst.components.combat.damagemultiplier = 1.00
-    inst.components.hunger.hungerrate = (TUNING.WILSON_HUNGER_RATE * 1.00)
-    inst.components.temperature.inherentinsulation = (TUNING.INSULATION_PER_BEARD_BIT * 0.00)
+    inst.components.temperature.inherentinsulation = 0
+    inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
 
     -- food affinity multipliers to add 15 calories
     -- AFFINITY_15_CALORIES_TINY = 2.6
@@ -374,19 +370,20 @@ local master_postinit = function(inst)
         end)
     end
 
+    inst.OnSave = OnSave
+    inst.OnLoad = OnLoad
+    inst.OnPreLoad = OnPreLoad
+    inst.OnDespawn = OnDespawn
+    inst.OnNewSpawn = OnNewSpawn
+    inst.LoadForReroll = OnNewSpawn
+
     -- 增加击杀掉落
     inst:ListenForEvent("killed", OnKillOther)
     if TheNet:GetServerGameMode() == "wilderness" then
         inst:ListenForEvent("death", ondeath)
     end
+    inst:ListenForEvent("ms_playerreroll", inst.OnDespawn)
     inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
-    inst:ListenForEvent("ms_playerreroll", function(inst) OnDespawn(inst) end)
-
-    inst.OnSave = OnSave
-    inst.OnLoad = OnLoad
-    inst.OnPreload = OnPreload
-    inst.OnDespawn = OnDespawn
-    inst.OnNewSpawn = OnNewSpawn
 end
 
 return MakePlayerCharacter("fhl", prefabs, assets, common_postinit, master_postinit)
