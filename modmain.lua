@@ -368,14 +368,12 @@ containers.params.fhl_hsf = {
 }
 
 ----------------------------------------------------------------------------------------------------
--- 检查范围：（递归）物品栏、背包、（递归）苹果
 local STORE_FN = ACTIONS.STORE.fn
 ACTIONS.STORE.fn = function(act)
     if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
         act.invobject.components.inventoryitem ~= nil and act.doer.components.inventory ~= nil and
-        not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
-        not act.target.components.container:IsHolding(act.target.components.follower.leader, true) and
-        not act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
+        act.target.components.follower ~= nil and act.doer ~= act.target.components.follower.leader.owner and
+        not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) then
         return false, "NOTALLOWED"
     else
         return STORE_FN(act)
@@ -385,9 +383,8 @@ end
 local RUMMAGE_FN = ACTIONS.RUMMAGE.fn
 ACTIONS.RUMMAGE.fn = function(act)
     if act.target and act.target.prefab == "personal_licking" and act.target.components.container and
-        not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) and
-        not act.target.components.container:IsHolding(act.target.components.follower.leader, true) and
-        not act.doer.components.inventory:IsHolding(act.target.components.follower.leader, true) then
+        act.target.components.follower ~= nil and act.doer ~= act.target.components.follower.leader.owner and
+        not act.doer.components.inventory:FindItem(function(item) return item == act.target.components.follower.leader end) then
         return false, "NOTALLOWED"
     else
         return RUMMAGE_FN(act)
