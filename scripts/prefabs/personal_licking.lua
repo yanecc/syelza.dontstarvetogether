@@ -262,6 +262,7 @@ local function create_licking()
     inst:AddTag("character")
     inst:AddTag("companion")
     inst:AddTag("scarytoprey")
+    inst:AddTag("noauradamage")
     inst:AddTag("notraptrigger")
     if TUNING.APPLESTORE then
         inst:AddTag("prototyper")
@@ -304,7 +305,6 @@ local function create_licking()
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.CHESTER_HEALTH)
     inst.components.health:StartRegen(TUNING.CHESTER_HEALTH_REGEN_AMOUNT, TUNING.CHESTER_HEALTH_REGEN_PERIOD)
-    inst:AddTag("noauradamage")
 
     inst:AddComponent("inspectable")
     inst.components.inspectable:RecordViews()
@@ -326,8 +326,6 @@ local function create_licking()
         inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
     end
 
-    MakeSmallBurnableCharacter(inst, "licking_body")
-
     inst:AddComponent("container")
     inst.components.container:WidgetSetup("chester")
     inst.components.container.onopenfn = OnOpen
@@ -340,17 +338,6 @@ local function create_licking()
     inst.components.sleeper:SetWakeTest(ShouldWakeUp)
 
     inst:AddComponent("named")
-
-    MakeHauntableDropFirstItem(inst)
-    AddHauntableCustomReaction(inst, function(inst, haunter)
-        if math.random() <= TUNING.HAUNT_CHANCE_ALWAYS then
-            inst.components.hauntable.panic = true
-            inst.components.hauntable.panictimer = TUNING.HAUNT_PANIC_TIME_SMALL
-            inst.components.hauntable.hauntvalue = TUNING.HAUNT_SMALL
-            return true
-        end
-        return false
-    end, false, false, true)
 
     local brain = require "brains/lickingbrain"
     inst:SetBrain(brain)
@@ -369,6 +356,18 @@ local function create_licking()
 
     inst:ListenForEvent("itemget", ItemGet)
     inst:ListenForEvent("itemlose", ItemLose)
+
+    MakeHauntableDropFirstItem(inst)
+    MakeSmallBurnableCharacter(inst, "licking_body")
+    AddHauntableCustomReaction(inst, function(inst, haunter)
+        if math.random() <= TUNING.HAUNT_CHANCE_ALWAYS then
+            inst.components.hauntable.panic = true
+            inst.components.hauntable.panictimer = TUNING.HAUNT_PANIC_TIME_SMALL
+            inst.components.hauntable.hauntvalue = TUNING.HAUNT_SMALL
+            return true
+        end
+        return false
+    end, false, false, true)
 
     return inst
 end

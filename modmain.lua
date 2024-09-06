@@ -12,6 +12,7 @@ local Ingredient = GLOBAL.Ingredient
 local RECIPETABS = GLOBAL.RECIPETABS
 local TechTree = require("techtree")
 local containers = require("containers")
+local curse = require("curse_monkey_util")
 
 modimport("fhl_util/fhl_util.lua")
 
@@ -339,7 +340,7 @@ RegisterInventoryItemAtlas("images/inventoryimages/fhl_tree.xml", "fhl_tree.tex"
 RegisterInventoryItemAtlas("images/inventoryimages/licking_eyebone.xml", "licking_eyebone.tex")
 
 ----------------------------------------------------------------------------------------------------
-GLOBAL.c_givebell = function(inst)
+GLOBAL.c_returnbell = function(inst)
     inst = inst or ThePlayer or AllPlayers[1]
     if inst and inst.ReturnBell then
         inst:ReturnBell()
@@ -390,6 +391,20 @@ ACTIONS.RUMMAGE.fn = function(act)
         return RUMMAGE_FN(act)
     end
 end
+
+AddComponentPostInit("thief", function(self)
+    local _StealItem = self.StealItem
+    self.StealItem = function(self, victim, itemtosteal, attack)
+        if victim.prefab == "personal_licking" and victim.components.container and victim.components.follower and
+            victim.components.container:IsHolding(victim.components.follower.leader, true) then
+            if self.inst.components.inventory ~= nil then
+                self.inst.components.inventory:DropEverything(false)
+            end
+            return false
+        end
+        return _StealItem(self, victim, itemtosteal, attack)
+    end
+end)
 
 ----------------------------------------------------------------------------------------
 local function UseFullMoonRecipe()
