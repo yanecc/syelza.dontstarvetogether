@@ -224,7 +224,8 @@ local function ItemGet(inst, data)
         end
     end
     if inst.lickingState == "SNOW" and data.item and not data.item:HasTag("frozen") and
-        (data.item.components.perishable and data.item.components.equippable or data.item.prefab == "icecream" or data.item.prefab == "watermelonicle" or data.item.prefab == "frozenbananadaiquiri") then
+        (data.item.components.perishable and data.item.components.equippable or
+            table.contains({ "icecream", "watermelonicle", "frozenbananadaiquiri" }, data.item.prefab)) then
         data.item:AddTag("frozen")
         data.item:AddTag("applefrozen")
     end

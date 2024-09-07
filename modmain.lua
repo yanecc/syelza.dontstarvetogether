@@ -465,6 +465,44 @@ for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
     end)
 end
 
+local function OnDeploy(inst, pt, doer)
+    local flower = GLOBAL.SpawnPrefab("flower_evil")
+    if flower then
+        flower.Transform:SetPosition(pt:Get())
+        inst.components.stackable:Get():Remove()
+        if doer and doer.SoundEmitter then
+            doer.SoundEmitter:PlaySound("dontstarve/common/plant")
+        end
+    end
+    if math.random() < 0.8 then
+        doer.components.playerlightningtarget:SetHitChance(1)
+        GLOBAL.TheWorld:PushEvent("ms_sendlightningstrike", doer:GetPosition())
+        doer.components.playerlightningtarget:SetHitChance(0.3)
+    else
+        local pos = GLOBAL.TheWorld.Map:FindRandomPointWithFilter(50, function(map, x, y, z)
+            -- 远古档案馆除外
+            return map:IsLandTileAtPoint(x, y, z) and not map:NodeAtPointHasTag(x, y, z, "nocavein")
+        end)
+        if pos ~= nil then
+            doer.Physics:Teleport(pos.x, 0, pos.z)
+            doer:ResetMinimapOffset()
+            doer:SnapCamera()
+        end
+    end
+    if doer.components.cursable ~= nil then
+        doer.components.cursable.curses["MONKEY"] = math.max(0, (doer.components.cursable.curses["MONKEY"] or 0) - 1)
+        curse.uncurse(doer, doer.components.cursable.curses["MONKEY"])
+    end
+end
+
+AddPrefabPostInit("cursed_monkey_token", function(inst)
+    inst:AddComponent("deployable")
+    inst.components.deployable.ondeploy = OnDeploy
+    inst.components.deployable.restrictedtag = "fhl"
+    inst.components.deployable:SetDeployMode(GLOBAL.DEPLOYMODE.PLANT)
+    inst.components.deployable:SetDeploySpacing(GLOBAL.DEPLOYSPACING.LESS)
+end)
+
 ----------------------------------------------------------------------------------------
 if TUNING.APPLESTORE then
     GLOBAL.PROTOTYPER_DEFS.personal_licking = {

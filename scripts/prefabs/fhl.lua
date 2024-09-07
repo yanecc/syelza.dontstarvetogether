@@ -169,7 +169,6 @@ end
 
 -- 当这个角色从人类复活
 local function onbecamehuman(inst)
-    -- 设置速度加载或恢复时从鬼(可选)
     inst.components.locomotor.walkspeed = 6
     inst.components.locomotor.runspeed = 8
     ApplyUpgrades(inst)
@@ -214,7 +213,6 @@ local function ReturnBell(inst)
 end
 
 local function ondeath(inst, data)
-    -- Kill player's licking in wilderness mode :(
     if inst.licking then
         inst.licking.components.health:Kill()
     end
@@ -235,10 +233,6 @@ local function OnDespawn(inst)
         end
         apple:DoTaskInTime(FRAMES, apple.Remove)
     end
-
-    -- local owner = bell.components.inventoryitem:GetGrandOwner()
-    -- if owner == nil or owner:HasTag("player") then end
-    -- inst.lickingbone.isheld = owner and owner == inst or false
     if bell ~= nil and bell:IsValid() then
         bell:DoTaskInTime(FRAMES, bell.Remove)
     end
@@ -248,8 +242,8 @@ local function OnPreLoad(inst, data)
     inst.je = data.je or 0
     inst.level = data.level or 0
     inst.jnd = data.jnd or data.level
-    inst.berrycount = data.berrycount or 0
-    inst.totalpoints = data.totalpoints or data.level
+    inst.berrycount = data.berrycount or data.berryCount or 0
+    inst.totalpoints = data.totalpoints or data.totalPoints or math.max(inst.level, inst.jnd)
     inst.zzjFeedBack = data.zzjFeedBack or 0
 
     inst.components.health.absorb = data.absorb or 0.00
@@ -270,6 +264,9 @@ local function OnLoad(inst, data)
         if inst.licking then
             inst.lickingbone:RebindLicking(inst.licking)
             inst.licking.components.named:SetName(inst.name .. "的铃铛")
+        end
+        if data.bellinv then
+            inst:ReturnBell()
         end
     else
         GiveNewBell(inst)
@@ -294,8 +291,10 @@ local function OnSave(inst, data)
     data.damagemultiplier = inst.components.combat.damagemultiplier
     data.inherentinsulation = inst.components.temperature.inherentinsulation
 
-    data.licking = inst.licking and inst.licking:GetSaveRecord()
+    data.bellinv = inst.lickingbone and inst.lickingbone.components.inventoryitem:IsHeld() and
+        inst.lickingbone.components.inventoryitem:GetGrandOwner().components.inventory and true
     data.lickingbone = inst.lickingbone and inst.lickingbone:GetSaveRecord()
+    data.licking = inst.licking and inst.licking:GetSaveRecord()
 end
 
 -- 这对服务器和客户端初始化。可以添加标注。

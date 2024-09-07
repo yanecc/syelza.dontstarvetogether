@@ -227,6 +227,7 @@ local function fn()
     inst:AddTag("_named")
     inst:AddTag("nosteal")
     inst:AddTag("nonpotatable")
+    inst:AddTag("irreplaceable")
 
     inst.MiniMapEntity:SetIcon("personal_licking_eyebone.tex")
 
