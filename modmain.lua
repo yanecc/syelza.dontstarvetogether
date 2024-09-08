@@ -6,6 +6,7 @@ local TheNet = GLOBAL.TheNet
 local Recipe = GLOBAL.Recipe
 local TECH = GLOBAL.TECH
 local deepcopy = GLOBAL.deepcopy
+local TheInput = GLOBAL.TheInput
 local ThePlayer = GLOBAL.ThePlayer
 local AllPlayers = GLOBAL.AllPlayers
 local Ingredient = GLOBAL.Ingredient
@@ -13,6 +14,7 @@ local RECIPETABS = GLOBAL.RECIPETABS
 local TechTree = require("techtree")
 local containers = require("containers")
 local curse = require("curse_monkey_util")
+local resolvefilepath = GLOBAL.resolvefilepath
 
 modimport("fhl_util/fhl_util.lua")
 
@@ -501,6 +503,51 @@ AddPrefabPostInit("cursed_monkey_token", function(inst)
     inst.components.deployable.restrictedtag = "fhl"
     inst.components.deployable:SetDeployMode(GLOBAL.DEPLOYMODE.PLANT)
     inst.components.deployable:SetDeploySpacing(GLOBAL.DEPLOYSPACING.LESS)
+end)
+
+----------------------------------------------------------------------------------------
+for i, player in pairs({ "fhl", "wonkey" }) do
+    AddPrefabPostInit(player, function(inst)
+        local _SaveForReroll = inst.SaveForReroll
+        inst.SaveForReroll = function(inst)
+            local data = _SaveForReroll(inst) or {}
+            local fhl = {}
+            fhl.level = inst.level or 0
+            fhl.totalpoints = inst.totalpoints or 0
+            data.fhl = fhl
+            return data
+        end
+
+        local _LoadForReroll = inst.LoadForReroll
+        inst.LoadForReroll = function(inst, data)
+            if data.fhl then
+                inst.level = data.fhl.level or 0
+                inst.jnd = data.fhl.totalpoints or 0
+                inst.totalpoints = data.fhl.totalpoints or 0
+            end
+            _LoadForReroll(inst, data)
+        end
+    end)
+end
+
+AddPrefabPostInit("wonkey", function(inst)
+    local _OnSave = inst.OnSave
+    inst.OnSave = function(inst, data)
+        local fhl = {}
+        fhl.level = inst.level or 0
+        fhl.totalpoints = inst.totalpoints or 0
+        data.fhl = fhl
+        _OnSave(inst, data)
+    end
+
+    local _OnLoad = inst.OnLoad
+    inst.OnLoad = function(inst, data)
+        if data.fhl then
+            inst.level = data.fhl.level
+            inst.totalpoints = data.fhl.totalpoints
+        end
+        _OnLoad(inst, data)
+    end
 end)
 
 ----------------------------------------------------------------------------------------

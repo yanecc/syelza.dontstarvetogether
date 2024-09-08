@@ -225,6 +225,8 @@ local function OnDespawn(inst)
     local apple = inst.licking
     local bell = inst.lickingbone
 
+    inst.bellinv = bell and bell.components.inventoryitem:IsHeld() and
+        bell.components.inventoryitem:GetGrandOwner().components.inventory and true
     if apple and apple:IsValid() and apple.components.container then
         if GetGameModeProperty("drop_everything_on_despawn") then
             apple.components.container:DropEverything()
@@ -263,7 +265,6 @@ local function OnLoad(inst, data)
         inst.licking = SpawnSaveRecord(data.licking)
         if inst.licking then
             inst.lickingbone:RebindLicking(inst.licking)
-            inst.licking.components.named:SetName(inst.name .. "的铃铛")
         end
         if data.bellinv then
             inst:ReturnBell()
@@ -291,10 +292,9 @@ local function OnSave(inst, data)
     data.damagemultiplier = inst.components.combat.damagemultiplier
     data.inherentinsulation = inst.components.temperature.inherentinsulation
 
-    data.bellinv = inst.lickingbone and inst.lickingbone.components.inventoryitem:IsHeld() and
-        inst.lickingbone.components.inventoryitem:GetGrandOwner().components.inventory and true
     data.lickingbone = inst.lickingbone and inst.lickingbone:GetSaveRecord()
     data.licking = inst.licking and inst.licking:GetSaveRecord()
+    data.bellinv = inst.bellinv
 end
 
 -- 这对服务器和客户端初始化。可以添加标注。
@@ -374,7 +374,6 @@ local master_postinit = function(inst)
     inst.OnPreLoad = OnPreLoad
     inst.OnDespawn = OnDespawn
     inst.OnNewSpawn = OnNewSpawn
-    inst.LoadForReroll = OnNewSpawn
 
     -- 增加击杀掉落
     inst:ListenForEvent("killed", OnKillOther)
@@ -383,6 +382,7 @@ local master_postinit = function(inst)
     end
     inst:ListenForEvent("ms_playerreroll", inst.OnDespawn)
     inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
+    inst:ListenForEvent("ms_playerseamlessswaped", inst.OnNewSpawn)
 end
 
 return MakePlayerCharacter("fhl", prefabs, assets, common_postinit, master_postinit)

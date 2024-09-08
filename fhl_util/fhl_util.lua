@@ -1,6 +1,4 @@
-local ThePlayer = GLOBAL.ThePlayer
 local TheInput = GLOBAL.TheInput
-local TheNet = GLOBAL.TheNet
 
 local MajorKey = {
     KEY_A = 97,
@@ -33,7 +31,7 @@ local MajorKey = {
 
 -- local KEY_T = GLOBAL.KEY_T
 AddModRPCHandler(modname, "T", function(player)
-    if not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.level > 10 then player.level = 10 end
         if player.jnd and player.je then
             player.components.talker:Say("Current State: Lv " .. (player.level) .. "  Sp " .. player.jnd ..
@@ -50,7 +48,7 @@ end)
 
 local KEY_UP = GLOBAL.KEY_UP
 AddModRPCHandler(modname, "UP", function(player)
-    if not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.components.temperature.inherentinsulation < 230 then
             player.jnd = player.jnd - 1
             player.components.temperature.inherentinsulation = player.components.temperature.inherentinsulation + 30
@@ -65,7 +63,7 @@ end)
 
 local KEY_DOWN = GLOBAL.KEY_DOWN
 AddModRPCHandler(modname, "DOWN", function(player)
-    if not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.components.health.absorb < 0.8 then
             player.jnd = player.jnd - 1
             player.components.health.absorb = player.components.health.absorb + 0.05
@@ -80,7 +78,7 @@ end)
 
 local KEY_LEFT = GLOBAL.KEY_LEFT
 AddModRPCHandler(modname, "LEFT", function(player)
-    if not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.components.combat.damagemultiplier < 2 then
             player.jnd = player.jnd - 1
             player.components.combat.damagemultiplier = player.components.combat.damagemultiplier + 0.1
@@ -95,7 +93,7 @@ end)
 
 local KEY_RIGHT = GLOBAL.KEY_RIGHT
 AddModRPCHandler(modname, "RIGHT", function(player)
-    if not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.je then
             if player.components.hunger.hungerrate > 0.1 then
                 -- 最多8次，达到0.09375
@@ -114,7 +112,7 @@ end)
 
 -- local KEY_R = GLOBAL.KEY_R
 AddModRPCHandler(modname, "R", function(player)
-    if not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
         player.components.talker:Say("你还有" .. (player.jnd) .. "点技能点!" ..
             "\nyou have " .. (player.jnd) .. " skill points!" ..
             "\n向上键提升寒冷抗性,向下键提升伤害减免\n向左键提升输出伤害,向右键提升饥饿抗性" ..
@@ -128,7 +126,7 @@ AddPlayerPostInit(function(inst)
     inst:DoTaskInTime(0, function()
         -- We check if the character is ourselves
         -- So if another horo player joins, we don't get the handlers
-        if inst == ThePlayer then
+        if inst == GLOBAL.ThePlayer then
             -- If we are horo
             if inst.prefab == "fhl" then
                 -- We create and store the key handlers

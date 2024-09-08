@@ -224,10 +224,9 @@ local function ItemGet(inst, data)
         end
     end
     if inst.lickingState == "SNOW" and data.item and not data.item:HasTag("frozen") and
-        (data.item.components.perishable and data.item.components.equippable or
-            table.contains({ "icecream", "watermelonicle", "frozenbananadaiquiri" }, data.item.prefab)) then
-        data.item:AddTag("frozen")
+        data.item.components.perishable and data.item.components.equippable then
         data.item:AddTag("applefrozen")
+        data.item:AddTag("frozen")
     end
 end
 
@@ -237,8 +236,8 @@ local function ItemLose(inst, data)
         inst.RestoreTask = nil
     end
     if data.prev_item and data.prev_item:HasTag("applefrozen") then
-        data.prev_item:RemoveTag("frozen")
         data.prev_item:RemoveTag("applefrozen")
+        data.prev_item:RemoveTag("frozen")
     end
 end
 
