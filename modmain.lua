@@ -6,7 +6,6 @@ local TheNet = GLOBAL.TheNet
 local Recipe = GLOBAL.Recipe
 local TECH = GLOBAL.TECH
 local deepcopy = GLOBAL.deepcopy
-local TheInput = GLOBAL.TheInput
 local ThePlayer = GLOBAL.ThePlayer
 local AllPlayers = GLOBAL.AllPlayers
 local Ingredient = GLOBAL.Ingredient
@@ -14,7 +13,6 @@ local RECIPETABS = GLOBAL.RECIPETABS
 local TechTree = require("techtree")
 local containers = require("containers")
 local curse = require("curse_monkey_util")
-local resolvefilepath = GLOBAL.resolvefilepath
 
 modimport("fhl_util/fhl_util.lua")
 
@@ -435,10 +433,9 @@ end
 ----------------------------------------------------------------------------------------
 AddPrefabPostInit("world", function(inst)
     if TUNING.APPLESTORE then
-        local season = GLOBAL.TheWorld.state.season
         inst:WatchWorldState("cycles", function()
             for _, player in ipairs(AllPlayers) do
-                if season == "summer" then
+                if GLOBAL.TheWorld.state.issummer then
                     player:RemoveTag("firstorder")
                     player:AddTag("summerorder")
                 else
@@ -743,9 +740,6 @@ AddDeconstructRecipe("fhl_x", { Ingredient("berries", 2), Ingredient("lunarfrog"
 
 AddDeconstructRecipe("fhl_x2",
     { Ingredient("halloweenpotion_moon", 1), Ingredient("moonbutterfly", 2), Ingredient("petals_evil", 1) })
-
--- AddDeconstructRecipe("ancient_gem",
---     { Ingredient("ancient_soul", 10), Ingredient("nightmarefuel", 8), Ingredient("opalpreciousgem", 1) })
 
 -- ----BOOK----
 AddRecipe2("book_sleep", { Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2) }, TECH.NONE,

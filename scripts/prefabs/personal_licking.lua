@@ -311,13 +311,9 @@ local function create_licking()
     --inst.components.inspectable.getstatus = GetStatus
     inst.components.inspectable.nameoverride = "licking"
 
-    inst:AddComponent("locomotor")
-    inst.components.locomotor.walkspeed = 14
-    inst.components.locomotor.runspeed = 14
+    inst:AddComponent("embarker")
 
-    inst:AddComponent("follower")
-    inst:ListenForEvent("stopfollowing", OnStopFollowing)
-    inst:ListenForEvent("startfollowing", OnStartFollowing)
+    inst:AddComponent("drownable")
 
     inst:AddComponent("knownlocations")
 
@@ -325,6 +321,15 @@ local function create_licking()
         inst:AddComponent("prototyper")
         inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
     end
+
+    inst:AddComponent("locomotor")
+    inst.components.locomotor.walkspeed = 14
+    inst.components.locomotor.runspeed = 14
+    -- inst.components.locomotor:SetAllowPlatformHopping(true)
+
+    inst:AddComponent("follower")
+    inst:ListenForEvent("stopfollowing", OnStopFollowing)
+    inst:ListenForEvent("startfollowing", OnStartFollowing)
 
     inst:AddComponent("container")
     inst.components.container:WidgetSetup("chester")

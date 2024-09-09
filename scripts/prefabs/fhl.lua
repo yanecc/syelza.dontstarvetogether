@@ -70,19 +70,29 @@ local function FhlFire(inst)
 end
 
 --升级机制
-local function ApplyUpgrades(inst)
+local function ApplyUpgrades(inst, isupgrading)
     local maxLevel = 10
     local curLevel = math.min(inst.level, maxLevel)
     local pointsKey = TUNING.SKILL_POINT_KEY:sub(-1)
     local statusKey = TUNING.STATUS_KEY:sub(-1)
+    local hungerPercent = inst.components.hunger:GetPercent()
+    local healthPercent = inst.components.health:GetPercent()
+    local sanityPercent = inst.components.sanity:GetPercent()
 
-    inst.components.hunger.max = 150 + curLevel * 15                  --300
-    inst.components.health.maxhealth = 150 + curLevel * 15            --300
-    inst.components.sanity.max = 150 + curLevel * 15                  --300
+    inst.components.hunger.max = 150 + curLevel * 15       --300
+    inst.components.health.maxhealth = 150 + curLevel * 15 --300
+    inst.components.sanity.max = 150 + curLevel * 15       --300
+    if isupgrading then
+        inst.components.hunger:SetPercent(hungerPercent)
+        inst.components.health:SetPercent(healthPercent)
+        inst.components.sanity:SetPercent(sanityPercent)
+    end
+    inst.components.hunger:DoDelta(0)
+    inst.components.health:DoDelta(0)
+    inst.components.sanity:DoDelta(0)
 
     inst.components.locomotor.walkspeed = math.ceil(6 + curLevel / 3) --10
     inst.components.locomotor.runspeed = math.ceil(8 + curLevel / 3)  --12
-
 
     inst.components.talker:Say("QWQ Level now: " .. (inst.level) ..
         "\n你还有" .. (inst.jnd) .. "点技能点!" ..
@@ -144,7 +154,7 @@ local function OnEat(inst, food)
             end
             inst.level = inst.level + 1
             inst.berryenough = false
-            ApplyUpgrades(inst)
+            ApplyUpgrades(inst, true)
             inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
         else
             inst.berryenough = false
@@ -156,7 +166,6 @@ local function OnEat(inst, food)
     if food.prefab == "powcake" and inst.level > 0 then
         inst.level = 0
         inst.jnd = inst.totalpoints
-
         inst.je = 0
         inst.components.health.absorb = 0
         inst.components.combat.damagemultiplier = 1
@@ -165,13 +174,6 @@ local function OnEat(inst, food)
         ApplyUpgrades(inst)
         inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
     end
-end
-
--- 当这个角色从人类复活
-local function onbecamehuman(inst)
-    inst.components.locomotor.walkspeed = 6
-    inst.components.locomotor.runspeed = 8
-    ApplyUpgrades(inst)
 end
 
 local function GiveNewBell(inst)
@@ -245,8 +247,10 @@ local function OnPreLoad(inst, data)
     inst.level = data.level or 0
     inst.jnd = data.jnd or data.level
     inst.berrycount = data.berrycount or data.berryCount or 0
-    inst.totalpoints = data.totalpoints or data.totalPoints or math.max(inst.level, inst.jnd)
+    inst.totalpoints = data.totalpoints or data.totalPoints or 0
     inst.zzjFeedBack = data.zzjFeedBack or 0
+
+    ApplyUpgrades(inst)
 
     inst.components.health.absorb = data.absorb or 0.00
     inst.components.hunger.hungerrate = data.hungerrate or TUNING.WILSON_HUNGER_RATE
@@ -255,10 +259,6 @@ local function OnPreLoad(inst, data)
 end
 
 local function OnLoad(inst, data)
-    if not inst:HasTag("playerghost") then
-        onbecamehuman(inst)
-    end
-
     inst.lickingbone = data.lickingbone and SpawnSaveRecord(data.lickingbone)
     if inst.lickingbone and data.licking then
         inst.lickingbone.owner = inst
@@ -275,7 +275,7 @@ local function OnLoad(inst, data)
 end
 
 local function OnNewSpawn(inst)
-    onbecamehuman(inst)
+    ApplyUpgrades(inst)
     GiveNewBell(inst)
 end
 
@@ -381,7 +381,7 @@ local master_postinit = function(inst)
         inst:ListenForEvent("death", ondeath)
     end
     inst:ListenForEvent("ms_playerreroll", inst.OnDespawn)
-    inst:ListenForEvent("ms_respawnedfromghost", onbecamehuman)
+    inst:ListenForEvent("ms_respawnedfromghost", ApplyUpgrades)
     inst:ListenForEvent("ms_playerseamlessswaped", inst.OnNewSpawn)
 end
 

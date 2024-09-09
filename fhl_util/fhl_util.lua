@@ -1,37 +1,23 @@
 local TheInput = GLOBAL.TheInput
 
-local MajorKey = {
-    KEY_A = 97,
-    KEY_B = 98,
-    KEY_C = 99,
-    KEY_D = 100,
-    KEY_E = 101,
-    KEY_F = 102,
-    KEY_G = 103,
-    KEY_H = 104,
-    KEY_I = 105,
-    KEY_J = 106,
-    KEY_K = 107,
-    KEY_L = 108,
-    KEY_M = 109,
-    KEY_N = 110,
-    KEY_O = 111,
-    KEY_P = 112,
-    KEY_Q = 113,
-    KEY_R = 114,
-    KEY_S = 115,
-    KEY_T = 116,
-    KEY_U = 117,
-    KEY_V = 118,
-    KEY_W = 119,
-    KEY_X = 120,
-    KEY_Y = 121,
-    KEY_Z = 122,
-}
+local MajorKey = {}
+for i = 97, 122 do
+    MajorKey["KEY_" .. string.char(i):upper()] = i
+end
+
+local function IsDefaultScreen()
+    return GLOBAL.ThePlayer and GLOBAL.ThePlayer.HUD and
+        GLOBAL.TheFrontEnd and GLOBAL.TheFrontEnd:GetActiveScreen() and
+        GLOBAL.TheFrontEnd:GetActiveScreen().name == "HUD" and
+        not GLOBAL.ThePlayer.HUD:IsChatInputScreenOpen() and
+        not GLOBAL.ThePlayer.HUD:IsConsoleScreenOpen() and
+        not GLOBAL.ThePlayer.HUD:IsCraftingOpen() and
+        not GLOBAL.ThePlayer.HUD.writeablescreen
+end
 
 -- local KEY_T = GLOBAL.KEY_T
 AddModRPCHandler(modname, "T", function(player)
-    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if IsDefaultScreen() and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.level > 10 then player.level = 10 end
         if player.jnd and player.je then
             player.components.talker:Say("Current State: Lv " .. (player.level) .. "  Sp " .. player.jnd ..
@@ -48,7 +34,7 @@ end)
 
 local KEY_UP = GLOBAL.KEY_UP
 AddModRPCHandler(modname, "UP", function(player)
-    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if IsDefaultScreen() and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.components.temperature.inherentinsulation < 230 then
             player.jnd = player.jnd - 1
             player.components.temperature.inherentinsulation = player.components.temperature.inherentinsulation + 30
@@ -63,7 +49,7 @@ end)
 
 local KEY_DOWN = GLOBAL.KEY_DOWN
 AddModRPCHandler(modname, "DOWN", function(player)
-    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if IsDefaultScreen() and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.components.health.absorb < 0.8 then
             player.jnd = player.jnd - 1
             player.components.health.absorb = player.components.health.absorb + 0.05
@@ -78,7 +64,7 @@ end)
 
 local KEY_LEFT = GLOBAL.KEY_LEFT
 AddModRPCHandler(modname, "LEFT", function(player)
-    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if IsDefaultScreen() and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.components.combat.damagemultiplier < 2 then
             player.jnd = player.jnd - 1
             player.components.combat.damagemultiplier = player.components.combat.damagemultiplier + 0.1
@@ -93,7 +79,7 @@ end)
 
 local KEY_RIGHT = GLOBAL.KEY_RIGHT
 AddModRPCHandler(modname, "RIGHT", function(player)
-    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if IsDefaultScreen() and not player:HasTag("playerghost") and player.prefab == "fhl" then
         if player.jnd > 0 and player.je then
             if player.components.hunger.hungerrate > 0.1 then
                 -- 最多8次，达到0.09375
@@ -112,7 +98,7 @@ end)
 
 -- local KEY_R = GLOBAL.KEY_R
 AddModRPCHandler(modname, "R", function(player)
-    if GLOBAL.TheFrontEnd:GetActiveScreen() == GLOBAL.ThePlayer.HUD and not player:HasTag("playerghost") and player.prefab == "fhl" then
+    if IsDefaultScreen() and not player:HasTag("playerghost") and player.prefab == "fhl" then
         player.components.talker:Say("你还有" .. (player.jnd) .. "点技能点!" ..
             "\nyou have " .. (player.jnd) .. " skill points!" ..
             "\n向上键提升寒冷抗性,向下键提升伤害减免\n向左键提升输出伤害,向右键提升饥饿抗性" ..
