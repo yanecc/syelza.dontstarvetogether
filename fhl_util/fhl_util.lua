@@ -8,7 +8,7 @@ end
 local function IsDefaultScreen()
     return GLOBAL.ThePlayer and GLOBAL.ThePlayer.HUD and
         GLOBAL.TheFrontEnd and GLOBAL.TheFrontEnd:GetActiveScreen() and
-        GLOBAL.TheFrontEnd:GetActiveScreen().name == "HUD" and
+        GLOBAL.TheFrontEnd:GetActiveScreen().name:find("HUD") and
         not GLOBAL.ThePlayer.HUD:IsChatInputScreenOpen() and
         not GLOBAL.ThePlayer.HUD:IsConsoleScreenOpen() and
         not GLOBAL.ThePlayer.HUD:IsCraftingOpen() and

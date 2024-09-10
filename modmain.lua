@@ -5,6 +5,7 @@ local Vector3 = GLOBAL.Vector3
 local TheNet = GLOBAL.TheNet
 local Recipe = GLOBAL.Recipe
 local TECH = GLOBAL.TECH
+local next = GLOBAL.next
 local deepcopy = GLOBAL.deepcopy
 local ThePlayer = GLOBAL.ThePlayer
 local AllPlayers = GLOBAL.AllPlayers
@@ -502,47 +503,64 @@ AddPrefabPostInit("cursed_monkey_token", function(inst)
     inst.components.deployable:SetDeploySpacing(GLOBAL.DEPLOYSPACING.LESS)
 end)
 
-----------------------------------------------------------------------------------------
-for i, player in pairs({ "fhl", "wonkey" }) do
-    AddPrefabPostInit(player, function(inst)
-        local _SaveForReroll = inst.SaveForReroll
-        inst.SaveForReroll = function(inst)
-            local data = _SaveForReroll(inst) or {}
-            local fhl = {}
-            fhl.level = inst.level or 0
-            fhl.totalpoints = inst.totalpoints or 0
-            data.fhl = fhl
-            return data
-        end
-
-        local _LoadForReroll = inst.LoadForReroll
-        inst.LoadForReroll = function(inst, data)
-            if data.fhl then
-                inst.level = data.fhl.level or 0
-                inst.jnd = data.fhl.totalpoints or 0
-                inst.totalpoints = data.fhl.totalpoints or 0
-            end
-            _LoadForReroll(inst, data)
-        end
-    end)
+local function OnSpawnedForHunt(inst, data)
+    if GLOBAL.FindEntity(inst, 40, function(guy)
+            return guy.prefab == "personal_licking" and guy.lickingState == "SNOW"
+        end, { "fridge" }, { "spoiler" }) then
+        GLOBAL.ReplacePrefab(inst, "koalefant_winter")
+    end
 end
 
-AddPrefabPostInit("wonkey", function(inst)
-    local _OnSave = inst.OnSave
-    inst.OnSave = function(inst, data)
+AddPrefabPostInit("koalefant_summer", function(inst)
+    inst:ListenForEvent("spawnedforhunt", OnSpawnedForHunt)
+end)
+
+----------------------------------------------------------------------------------------
+AddPrefabPostInit("fhl", function(inst)
+    local _SaveForReroll = inst.SaveForReroll
+    inst.SaveForReroll = function(inst)
+        local data = _SaveForReroll(inst) or {}
         local fhl = {}
         fhl.level = inst.level or 0
         fhl.totalpoints = inst.totalpoints or 0
         data.fhl = fhl
+        return data
+    end
+
+    local _LoadForReroll = inst.LoadForReroll
+    inst.LoadForReroll = function(inst, data)
+        if type(data.fhl) == "table" then
+            inst.level = data.fhl.level or 0
+            inst.jnd = data.fhl.totalpoints or 0
+            inst.totalpoints = data.fhl.totalpoints or 0
+        end
+        _LoadForReroll(inst, data)
+    end
+end)
+
+AddPrefabPostInit("wonkey", function(inst)
+    local _SaveForReroll = inst.SaveForReroll
+    inst.SaveForReroll = function(inst)
+        local data = _SaveForReroll(inst) or {}
+        data.fhl = inst.fhl
+        return next(data) and data or nil
+    end
+
+    local _LoadForReroll = inst.LoadForReroll
+    inst.LoadForReroll = function(inst, data)
+        inst.fhl = data.fhl
+        _LoadForReroll(inst, data)
+    end
+
+    local _OnSave = inst.OnSave
+    inst.OnSave = function(inst, data)
+        data.fhl = inst.fhl
         _OnSave(inst, data)
     end
 
     local _OnLoad = inst.OnLoad
     inst.OnLoad = function(inst, data)
-        if data.fhl then
-            inst.level = data.fhl.level
-            inst.totalpoints = data.fhl.totalpoints
-        end
+        inst.fhl = data.fhl
         _OnLoad(inst, data)
     end
 end)
