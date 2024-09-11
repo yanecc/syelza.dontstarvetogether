@@ -12,15 +12,9 @@ local prefabs = {
 }
 
 local function OnGemBurnt(inst)
-    local opal = SpawnPrefab("opalpreciousgem")
-    opal.Transform:SetPosition(inst.Transform:GetWorldPosition())
-
-    if inst.components.stackable then
-        opal.components.stackable:SetStackSize(math.min(opal.components.stackable.maxsize,
-            inst.components.stackable.stacksize))
-    end
-
-    inst:Remove()
+    local size = inst.components.stackable and inst.components.stackable.stacksize or 1
+    local opal = ReplacePrefab(inst, "opalpreciousgem")
+    opal.components.stackable:SetStackSize(math.min(opal.components.stackable.maxsize, size))
 end
 
 local function fn()

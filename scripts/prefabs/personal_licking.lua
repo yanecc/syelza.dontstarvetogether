@@ -159,6 +159,15 @@ local function DoMorph(inst, fn)
     inst:RemoveEventCallback("onclose", CheckForMorph)
     fn(inst)
 end
+
+local function ForceMorph(inst, state)
+    if state == "SNOW" then
+        DoMorph(inst, MorphSnowlicking)
+    elseif state == "SHADOW" then
+        DoMorph(inst, MorphShadowlicking)
+    end
+end
+
 local function Morphlicking(inst)
     local canShadow, canSnow = CanMorph(inst)
     if not (canShadow or canSnow) then
@@ -350,6 +359,7 @@ local function create_licking()
     inst.sg:GoToState("idle")
 
     inst.lickingState = "NORMAL"
+    inst.ForceMorph = ForceMorph
     inst.MorphChester = Morphlicking
     inst:WatchWorldState("isfullmoon", CheckForMorph)
     inst:ListenForEvent("onclose", CheckForMorph)

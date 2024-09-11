@@ -6,8 +6,8 @@ for i = 97, 122 do
 end
 
 local function IsDefaultScreen()
-    return GLOBAL.ThePlayer and GLOBAL.ThePlayer.HUD and
-        GLOBAL.TheFrontEnd and GLOBAL.TheFrontEnd:GetActiveScreen() and
+    return GLOBAL.ThePlayer.HUD and GLOBAL.TheFrontEnd:GetActiveScreen() and
+        type(GLOBAL.TheFrontEnd:GetActiveScreen().name) == "string" and
         GLOBAL.TheFrontEnd:GetActiveScreen().name:find("HUD") and
         not GLOBAL.ThePlayer.HUD:IsChatInputScreenOpen() and
         not GLOBAL.ThePlayer.HUD:IsConsoleScreenOpen() and

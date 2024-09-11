@@ -393,6 +393,7 @@ ACTIONS.RUMMAGE.fn = function(act)
     end
 end
 
+----------------------------------------------------------------------------------------
 AddComponentPostInit("thief", function(self)
     local _StealItem = self.StealItem
     self.StealItem = function(self, victim, itemtosteal, attack)
@@ -465,6 +466,7 @@ for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
     end)
 end
 
+----------------------------------------------------------------------------------------
 local function OnDeploy(inst, pt, doer)
     local flower = GLOBAL.SpawnPrefab("flower_evil")
     if flower then
@@ -503,6 +505,24 @@ AddPrefabPostInit("cursed_monkey_token", function(inst)
     inst.components.deployable:SetDeploySpacing(GLOBAL.DEPLOYSPACING.LESS)
 end)
 
+----------------------------------------------------------------------------------------
+local function OnMinHealth(inst, data)
+    if data.afflicter and data.afflicter.prefab == "fhl" and not inst:HasTag("defeated") then
+        inst.components.lootdropper:SpawnLootPrefab("ancient_soul")
+        inst:AddTag("defeated")
+    end
+end
+
+for i, v in pairs({ "daywalker", "daywalker2", "sharkboi" }) do
+    AddPrefabPostInit(v, function(inst)
+        if inst.components.lootdropper == nil then
+            inst:AddComponent("lootdropper")
+        end
+        inst:ListenForEvent("minhealth", OnMinHealth)
+    end)
+end
+
+----------------------------------------------------------------------------------------
 local function OnSpawnedForHunt(inst, data)
     if GLOBAL.FindEntity(inst, 40, function(guy)
             return guy.prefab == "personal_licking" and guy.lickingState == "SNOW"
@@ -523,6 +543,7 @@ AddPrefabPostInit("fhl", function(inst)
         local fhl = {}
         fhl.level = inst.level or 0
         fhl.totalpoints = inst.totalpoints or 0
+        fhl.applestate = inst.licking and inst.licking.lickingState
         data.fhl = fhl
         return data
     end
@@ -533,6 +554,7 @@ AddPrefabPostInit("fhl", function(inst)
             inst.level = data.fhl.level or 0
             inst.jnd = data.fhl.totalpoints or 0
             inst.totalpoints = data.fhl.totalpoints or 0
+            inst.applestate = data.fhl.applestate or "NORMAL"
         end
         _LoadForReroll(inst, data)
     end

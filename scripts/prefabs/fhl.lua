@@ -242,12 +242,22 @@ local function OnDespawn(inst)
     end
 end
 
+local function OnNewSpawn(inst)
+    ApplyUpgrades(inst)
+    GiveNewBell(inst)
+    inst:DoTaskInTime(2, function()
+        if inst.licking and inst.applestate then
+            inst.licking:ForceMorph(inst.applestate)
+        end
+    end)
+end
+
 local function OnPreLoad(inst, data)
     inst.je = data.je or 0
     inst.level = data.level or 0
     inst.jnd = data.jnd or data.level
-    inst.berrycount = data.berrycount or data.berryCount or 0
-    inst.totalpoints = data.totalpoints or data.totalPoints or 0
+    inst.berrycount = data.berrycount or 0
+    inst.totalpoints = data.totalpoints or 0
     inst.zzjFeedBack = data.zzjFeedBack or 0
 
     ApplyUpgrades(inst)
@@ -272,11 +282,6 @@ local function OnLoad(inst, data)
     else
         GiveNewBell(inst)
     end
-end
-
-local function OnNewSpawn(inst)
-    ApplyUpgrades(inst)
-    GiveNewBell(inst)
 end
 
 local function OnSave(inst, data)
