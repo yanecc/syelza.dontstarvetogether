@@ -86,10 +86,11 @@ local function ApplyUpgrades(inst, isupgrading)
         inst.components.hunger:SetPercent(hungerPercent)
         inst.components.health:SetPercent(healthPercent)
         inst.components.sanity:SetPercent(sanityPercent)
+    else
+        inst.components.hunger:DoDelta(0)
+        inst.components.health:DoDelta(0)
+        inst.components.sanity:DoDelta(0)
     end
-    inst.components.hunger:DoDelta(0)
-    inst.components.health:DoDelta(0)
-    inst.components.sanity:DoDelta(0)
 
     inst.components.locomotor.walkspeed = math.ceil(6 + curLevel / 3) --10
     inst.components.locomotor.runspeed = math.ceil(8 + curLevel / 3)  --12
@@ -276,9 +277,11 @@ local function OnLoad(inst, data)
         if inst.licking then
             inst.lickingbone:RebindLicking(inst.licking)
         end
-        if data.bellinv then
-            inst:ReturnBell()
-        end
+        inst:DoTaskInTime(0, function(inst)
+            if data.bellinv or inst.lickingbone:IsNear(inst, 1) then
+                inst:ReturnBell()
+            end
+        end)
     else
         GiveNewBell(inst)
     end

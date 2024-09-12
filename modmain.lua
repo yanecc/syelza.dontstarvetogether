@@ -460,9 +460,8 @@ end)
 ----------------------------------------------------------------------------------------
 for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
     AddPrefabPostInit(v, function(inst)
-        if inst.components.combat ~= nil then
-            inst.components.combat:AddNoAggroTag("lunarprayer")
-        end
+        inst:AddComponent("combat")
+        inst.components.combat:AddNoAggroTag("lunarprayer")
     end)
 end
 
@@ -515,9 +514,7 @@ end
 
 for i, v in pairs({ "daywalker", "daywalker2", "sharkboi" }) do
     AddPrefabPostInit(v, function(inst)
-        if inst.components.lootdropper == nil then
-            inst:AddComponent("lootdropper")
-        end
+        inst:AddComponent("lootdropper")
         inst:ListenForEvent("minhealth", OnMinHealth)
     end)
 end
