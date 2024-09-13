@@ -479,6 +479,7 @@ local function OnDeploy(inst, pt, doer)
         doer.components.playerlightningtarget:SetHitChance(1)
         GLOBAL.TheWorld:PushEvent("ms_sendlightningstrike", doer:GetPosition())
         doer.components.playerlightningtarget:SetHitChance(0.3)
+        GLOBAL.TheWorld:PushEvent("ms_miniquake", { rad = 10, num = 20, duration = 2, target = doer })
     else
         local pos = GLOBAL.TheWorld.Map:FindRandomPointWithFilter(50, function(map, x, y, z)
             -- 远古档案馆除外
@@ -670,20 +671,22 @@ if TUNING.APPLESTORE then
         { product = "boat_ancient_item", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 古董船套装
     AddRecipe2("treasure_dragonboat_pack", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
         { product = "dragonboat_pack", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 豪华龙蝇船套装
-    AddRecipe2("raw_scrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "wagpunk_bits", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 废料
-    AddRecipe2("raw_emptybottle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "messagebottleempty", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 空瓶子
+    AddRecipe2("raw_horrorfuel", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "horrorfuel", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 纯粹恐惧
     AddRecipe2("raw_voidcloth", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
         { product = "voidcloth", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                   -- 暗影碎布
     AddRecipe2("raw_dreadstone", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
         { product = "dreadstone", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 绝望石
-    AddRecipe2("raw_horrorfuel", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
-        { product = "horrorfuel", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                  -- 纯粹恐惧
+    AddRecipe2("raw_infusedheart", { Ingredient("goldnugget", 40) }, TECH.APPLESTORE,
+        { product = "shadowheart_infused", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })         -- 附身暗影心房
+    AddRecipe2("raw_emptybottle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "messagebottleempty", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })          -- 空瓶子
+    AddRecipe2("raw_scrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
+        { product = "wagpunk_bits", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 废料
     AddRecipe2("raw_lunarplant_husk", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
         { product = "lunarplant_husk", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })             -- 亮茄外壳
     AddRecipe2("raw_moonglass_charged", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "moonglass_charged", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 充能月亮碎片
+        { product = "moonglass_charged", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })           -- 注能月亮碎片
     AddRecipe2("raw_purebrilliance", { Ingredient("goldnugget", 10) }, TECH.APPLESTORE,
         { product = "purebrilliance", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })              -- 纯粹辉煌
     AddRecipe2("raw_enlightened_shard", { Ingredient("goldnugget", 20) }, TECH.APPLESTORE,
