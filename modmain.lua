@@ -460,8 +460,9 @@ end)
 ----------------------------------------------------------------------------------------
 for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
     AddPrefabPostInit(v, function(inst)
-        inst:AddComponent("combat")
-        inst.components.combat:AddNoAggroTag("lunarprayer")
+        if inst.components.combat ~= nil then
+            inst.components.combat:AddNoAggroTag("lunarprayer")
+        end
     end)
 end
 
@@ -656,7 +657,7 @@ if TUNING.APPLESTORE then
     AddRecipe2("treasure_luckywhistle", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
         { product = "houndwhistle", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })                -- 幸运猎犬哨子
     AddRecipe2("treasure_giftwrap", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
-        { product = "giftwrap", numtogive = 2, nounlock = true, builder_tag = "bellholder", no_deconstruction = true })     -- 礼物包装
+        { product = "giftwrap", numtogive = 4, nounlock = true, builder_tag = "bellholder", no_deconstruction = true })     -- 礼物包装
     AddRecipe2("treasure_seedpacket_rare", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
         { product = "yotc_seedpacket_rare", nounlock = true, builder_tag = "bellholder", no_deconstruction = true })        -- 高级种子包
     AddRecipe2("treasure_surprisingseed", { Ingredient("goldnugget", 5) }, TECH.APPLESTORE,
