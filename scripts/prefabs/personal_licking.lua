@@ -320,21 +320,17 @@ local function create_licking()
     --inst.components.inspectable.getstatus = GetStatus
     inst.components.inspectable.nameoverride = "licking"
 
-    inst:AddComponent("embarker")
+    inst:AddComponent("knownlocations")
 
     inst:AddComponent("drownable")
 
-    inst:AddComponent("knownlocations")
-
-    if TUNING.APPLESTORE then
-        inst:AddComponent("prototyper")
-        inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
-    end
+    inst:AddComponent("embarker")
+    inst.components.embarker.embark_speed = 14
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = 14
     inst.components.locomotor.runspeed = 14
-    -- inst.components.locomotor:SetAllowPlatformHopping(true)
+    inst.components.locomotor:SetAllowPlatformHopping(true)
 
     inst:AddComponent("follower")
     inst:ListenForEvent("stopfollowing", OnStopFollowing)
@@ -352,6 +348,11 @@ local function create_licking()
     inst.components.sleeper:SetWakeTest(ShouldWakeUp)
 
     inst:AddComponent("named")
+
+    if TUNING.APPLESTORE then
+        inst:AddComponent("prototyper")
+        inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.APPLESTORE
+    end
 
     local brain = require "brains/lickingbrain"
     inst:SetBrain(brain)

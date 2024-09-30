@@ -69,7 +69,7 @@ local function OnEquip(inst, owner)
     if TUNING.BUFFGO then
         inst.consumefn = function(owner, data)
             if data.amount < 0 then
-                local fuelrate = TUNING.SKILL_TREE and owner:HasTag("fhl") and 0.02 or 0.025
+                local fuelrate = TUNING.SKILL_TREE and owner:HasTag("fhl") and 0.015 or 0.02
                 inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
             end
         end
