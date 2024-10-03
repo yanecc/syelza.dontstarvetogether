@@ -54,16 +54,24 @@ local function LevitateHeavy(inst, owner, isworking)
     end
 end
 
+local function ResistSlip(inst, owner, isworking)
+    inst._onoceanice = owner.components.slipperyfeet.OnOceanIce
+    owner.components.slipperyfeet.OnOceanIce = function(owner, onice)
+        onice = onice and not isworking
+        inst._onoceanice(owner, onice)
+    end
+end
+
 local function OnEquip(inst, owner)
     inst.components.fueled:StartConsuming()
     owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
     if inst.components.container:Has("purebrilliance", 1) then
-        owner:AddTag("lunarprayer")
+        ResistGrogginess(inst, owner, true)
     elseif inst.components.container:Has("horrorfuel", 1) then
         AvoidShadowAggro(inst, owner, true)
     elseif inst.components.container:Has("glommerwings", 1) then
-        ResistGrogginess(inst, owner, true)
         LevitateHeavy(inst, owner, true)
+        ResistSlip(inst, owner, true)
     end
 
     if TUNING.BUFFGO then
@@ -88,11 +96,11 @@ local function OnUnequip(inst, owner)
 
     inst.components.container:Close()
     inst.components.fueled:StopConsuming()
+    owner.AnimState:ClearOverrideSymbol("swap_hat")
     AvoidShadowAggro(inst, owner, false)
     ResistGrogginess(inst, owner, false)
     LevitateHeavy(inst, owner, false)
-    owner:RemoveTag("lunarprayer")
-    owner.AnimState:ClearOverrideSymbol("swap_hat")
+    ResistSlip(inst, owner, false)
 end
 
 local function OnEquipToModel(inst, owner)
@@ -140,28 +148,32 @@ local function UpdateHSFAddon(inst)
     local item = inst.components.container:GetItemInSlot(1)
     local owner = inst.components.inventoryitem:GetGrandOwner()
     if item == nil then
+        inst:RemoveTag("acidrainimmune")
+        inst:RemoveTag("gestaltprotection")
         inst.components.equippable.dapperness = 1
         inst.components.planardefense:SetBaseDefense(0)
         if owner ~= nil then
-            owner:RemoveTag("lunarprayer")
+            ResistSlip(inst, owner, false)
             LevitateHeavy(inst, owner, false)
             AvoidShadowAggro(inst, owner, false)
             ResistGrogginess(inst, owner, false)
         end
     elseif item.prefab == "horrorfuel" then
+        inst:AddTag("acidrainimmune")
         inst.components.equippable.dapperness = -2
         if inst.components.equippable:IsEquipped() and owner ~= nil then
             AvoidShadowAggro(inst, owner, true)
         end
     elseif item.prefab == "purebrilliance" then
+        inst:AddTag("gestaltprotection")
         inst.components.planardefense:SetBaseDefense(20)
         if inst.components.equippable:IsEquipped() and owner ~= nil then
-            owner:AddTag("lunarprayer")
+            ResistGrogginess(inst, owner, true)
         end
     elseif item.prefab == "glommerwings" then
         if inst.components.equippable:IsEquipped() and owner ~= nil then
-            ResistGrogginess(inst, owner, true)
             LevitateHeavy(inst, owner, true)
+            ResistSlip(inst, owner, true)
         end
     end
 end
@@ -211,6 +223,8 @@ local function fn()
     inst.components.equippable:SetOnEquipToModel(OnEquipToModel)
 
     inst:AddComponent("planardefense")
+
+    inst:AddComponent("resistance")
 
     inst:AddComponent("hauntable")
     if TUNING.HSF_RESPAWN == 1 then -- 复活1次后消失

@@ -458,15 +458,6 @@ AddPrefabPostInit("world", function(inst)
 end)
 
 ----------------------------------------------------------------------------------------
-for i, v in pairs({ "gestalt", "gestalt_guard", "lunar_grazer" }) do
-    AddPrefabPostInit(v, function(inst)
-        if inst.components.combat ~= nil then
-            inst.components.combat:AddNoAggroTag("lunarprayer")
-        end
-    end)
-end
-
-----------------------------------------------------------------------------------------
 local function OnDeploy(inst, pt, doer)
     local flower = GLOBAL.SpawnPrefab("flower_evil")
     if flower then
