@@ -55,10 +55,12 @@ local function LevitateHeavy(inst, owner, isworking)
 end
 
 local function ResistSlip(inst, owner, isworking)
-    inst._onoceanice = owner.components.slipperyfeet.OnOceanIce
-    owner.components.slipperyfeet.OnOceanIce = function(owner, onice)
-        onice = onice and not isworking
-        inst._onoceanice(owner, onice)
+    if isworking then
+        inst._slipthreshold = owner.components.slipperyfeet.threshold
+        owner.components.slipperyfeet.threshold = 100000
+    else
+        owner.components.slipperyfeet.slippiness = 0
+        owner.components.slipperyfeet.threshold = inst._slipthreshold
     end
 end
 
@@ -151,6 +153,7 @@ local function UpdateHSFAddon(inst)
         inst:RemoveTag("acidrainimmune")
         inst:RemoveTag("gestaltprotection")
         inst.components.equippable.dapperness = 1
+        cleartable(inst.components.resistance.tags)
         inst.components.planardefense:SetBaseDefense(0)
         if owner ~= nil then
             ResistSlip(inst, owner, false)
@@ -171,6 +174,11 @@ local function UpdateHSFAddon(inst)
             ResistGrogginess(inst, owner, true)
         end
     elseif item.prefab == "glommerwings" then
+        inst.components.resistance:AddResistance("coconut")
+        inst.components.resistance:AddResistance("stonefruit")
+        inst.components.resistance:AddResistance("quakedebris")
+        inst.components.resistance:AddResistance("caveindebris")
+        inst.components.resistance:AddResistance("lunarhaildebris")
         if inst.components.equippable:IsEquipped() and owner ~= nil then
             LevitateHeavy(inst, owner, true)
             ResistSlip(inst, owner, true)
@@ -180,7 +188,6 @@ end
 
 local function fn()
     local inst = CreateEntity()
-
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()

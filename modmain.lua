@@ -513,6 +513,11 @@ for i, v in pairs({ "daywalker", "daywalker2", "sharkboi" }) do
 end
 
 ----------------------------------------------------------------------------------------
+AddPrefabPostInit("rock_avocado_fruit", function(inst)
+    inst:AddTag("stonefruit")
+end)
+
+----------------------------------------------------------------------------------------
 local function OnSpawnedForHunt(inst, data)
     if GLOBAL.FindEntity(inst, 40, function(guy)
             return guy.prefab == "personal_licking" and guy.lickingState == "SNOW"

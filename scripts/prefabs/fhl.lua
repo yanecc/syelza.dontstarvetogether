@@ -346,6 +346,7 @@ local master_postinit = function(inst)
     inst.components.eater:SetOnEatFn(OnEat)
     inst.components.locomotor.walkspeed = 6
     inst.components.locomotor.runspeed = 8
+    inst.components.slipperyfeet.threshold = 48
     inst.components.health.absorb = 0.00
     inst.components.combat.damagemultiplier = 1.00
     inst.components.temperature.inherentinsulation = 0
