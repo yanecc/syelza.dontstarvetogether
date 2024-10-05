@@ -12,15 +12,15 @@ local prefabs = {
 }
 
 local function SleepAttack(inst, attacker, target)
-    if not target:IsValid() or not target.components.combat or target.components.combat.defaultdamage == 0 then
-        --target killed or removed in combat damage phase
+    if not TUNING.SKILL_TREE or not target:IsValid() or
+        target.components.combat == nil or target.components.combat.defaultdamage == 0 then
         return
     end
-    if target.SoundEmitter ~= nil then
-        target.SoundEmitter:PlaySound("dontstarve/wilson/blowdart_impact_sleep")
-    end
 
-    target:DoTaskInTime(math.max(math.random(),math.random()), function(target)
+    target:DoTaskInTime(math.max(0.5, math.random()), function(target)
+        if target.SoundEmitter ~= nil then
+            target.SoundEmitter:PlaySound("dontstarve/wilson/blowdart_impact_sleep")
+        end
         if target.components.sleeper ~= nil then
             target.components.sleeper:AddSleepiness(10, 5, inst)
         elseif target.components.grogginess ~= nil then
