@@ -82,4 +82,5 @@ local function fn()
 end
 
 return Prefab("common/inventory/ancient_gem", fn, assets, prefabs),
-    MakePlacer("common/ancient_gem_placer", "crafting_table", "crafting_table", "idle_full")
+    MakePlacer("common/ancient_gem_placer", "crafting_table", "crafting_table", "idle_full"),
+    MakePlacer("common/cursed_monkey_token_placer", "flowers_evil", "flowers_evil", "f2")
