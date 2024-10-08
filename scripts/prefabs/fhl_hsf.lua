@@ -64,6 +64,23 @@ local function ResistSlip(inst, owner, isworking)
     end
 end
 
+local function ReduceDamage(inst, owner, isworking)
+    if isworking then
+        inst._deltamodifierfn = owner.components.health.deltamodifierfn
+        owner.components.health.deltamodifierfn = function(owner, amount, overtime, cause, ig_inv, afflicter, ig_abs)
+            if amount < 0 and not (overtime or cause == "acidrain" or cause == "poison") then
+                local fuelrate = TUNING.SKILL_TREE and owner:HasTag("fhl") and 0.015 or 0.02
+                inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
+                amount = amount / 2
+            end
+            return inst._deltamodifierfn == nil and amount or
+                inst._deltamodifierfn(owner, amount, overtime, cause, ig_inv, afflicter, ig_abs)
+        end
+    else
+        owner.components.health.deltamodifierfn = inst._deltamodifierfn
+    end
+end
+
 local function OnEquip(inst, owner)
     inst.components.fueled:StartConsuming()
     owner.AnimState:OverrideSymbol("swap_hat", "fhl_hsf", "swap_hat")
@@ -77,23 +94,15 @@ local function OnEquip(inst, owner)
     end
 
     if TUNING.BUFFGO then
-        inst.consumefn = function(owner, data)
-            if data.amount < 0 then
-                local fuelrate = TUNING.SKILL_TREE and owner:HasTag("fhl") and 0.015 or 0.02
-                inst.components.fueled:DoDelta(-fuelrate * inst.components.fueled.maxfuel)
-            end
-        end
+        ReduceDamage(inst, owner, true)
         inst:AddTag("bramble_resistant")
         inst:AddTag("foodharm_resistant")
-        inst:ListenForEvent("healthdelta", inst.consumefn, owner)
-        owner.components.health.externalabsorbmodifiers:SetModifier(inst, 0.5)
     end
 end
 
 local function OnUnequip(inst, owner)
     if TUNING.BUFFGO then
-        inst:RemoveEventCallback("healthdelta", inst.consumefn, owner)
-        owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
+        ReduceDamage(inst, owner, false)
     end
 
     inst.components.container:Close()
@@ -106,12 +115,8 @@ local function OnUnequip(inst, owner)
 end
 
 local function OnEquipToModel(inst, owner)
-    if TUNING.BUFFGO then
-        inst:RemoveEventCallback("healthdelta", inst.consumefn, owner)
-        owner.components.health.externalabsorbmodifiers:RemoveModifier(inst)
-    end
-
     inst.components.fueled:StopConsuming()
+    owner.components.health.deltamodifierfn = nil
 end
 
 local function CanAddFuel(inst, item, doer)
@@ -141,7 +146,7 @@ local function OnDepleted(inst)
             inst.components.fueled:TakeFuelItem(item)
         else
             inst.components.container:DropEverything()
-            inst:Remove()
+            inst:DoTaskInTime(0, inst.Remove)
         end
     end
 end
@@ -238,7 +243,8 @@ local function fn()
         inst.components.hauntable:SetOnHauntFn(function(inst, haunter)
             if haunter:HasTag("playerghost") then
                 haunter:PushEvent("respawnfromghost", { source = inst })
-                inst:Remove()
+                inst.components.container:DropEverything()
+                inst:DoTaskInTime(0, inst.Remove)
                 return true
             end
             return false
