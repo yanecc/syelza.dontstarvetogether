@@ -17,7 +17,7 @@ local function SleepAttack(inst, attacker, target)
         return
     end
 
-    target:DoTaskInTime(math.max(0.5, math.random()), function(target)
+    target:DoTaskInTime(math.max(0.6, math.random()), function(target)
         if target.SoundEmitter ~= nil then
             target.SoundEmitter:PlaySound("dontstarve/wilson/blowdart_impact_sleep")
         end

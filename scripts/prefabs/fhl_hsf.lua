@@ -146,7 +146,7 @@ local function OnDepleted(inst)
             inst.components.fueled:TakeFuelItem(item)
         else
             inst.components.container:DropEverything()
-            inst:DoTaskInTime(0, inst.Remove)
+            inst:Remove()
         end
     end
 end
@@ -244,7 +244,7 @@ local function fn()
             if haunter:HasTag("playerghost") then
                 haunter:PushEvent("respawnfromghost", { source = inst })
                 inst.components.container:DropEverything()
-                inst:DoTaskInTime(0, inst.Remove)
+                inst:Remove()
                 return true
             end
             return false
