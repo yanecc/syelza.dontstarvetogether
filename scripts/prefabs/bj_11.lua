@@ -127,7 +127,7 @@ local function fn()
     inst.components.weapon:SetOnAttack(SleepAttack)
 
     inst:AddComponent("planardamage")
-    inst.components.planardamage:SetBaseDamage(15)
+    inst.components.planardamage:SetBaseDamage(TUNING.BJ_11_PLANAR_DAMAGE)
 
     return inst
 end

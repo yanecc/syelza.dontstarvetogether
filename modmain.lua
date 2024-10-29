@@ -281,6 +281,7 @@ Assets = {
 }
 
 TUNING.FHL = {}
+TUNING.FHL_GROWTH = 15
 TUNING.FHL_HEALTH = 150
 TUNING.FHL_HUNGER = 150
 TUNING.FHL_SANITY = 150
@@ -467,20 +468,24 @@ local function OnDeploy(inst, pt, doer)
             doer.SoundEmitter:PlaySound("dontstarve/common/plant")
         end
     end
-    if math.random() < 0.8 then
-        doer.components.playerlightningtarget:SetHitChance(1)
-        GLOBAL.TheWorld:PushEvent("ms_sendlightningstrike", doer:GetPosition())
-        doer.components.playerlightningtarget:SetHitChance(0.3)
-        GLOBAL.TheWorld:PushEvent("ms_miniquake", { rad = 10, num = 20, duration = 2, target = doer })
-    else
-        local pos = GLOBAL.TheWorld.Map:FindRandomPointWithFilter(50, function(map, x, y, z)
-            -- 远古档案馆除外
-            return map:IsLandTileAtPoint(x, y, z) and not map:NodeAtPointHasTag(x, y, z, "nocavein")
-        end)
-        if pos ~= nil then
-            doer.Physics:Teleport(pos.x, 0, pos.z)
-            doer:ResetMinimapOffset()
-            doer:SnapCamera()
+    if GLOBAL.FindEntity(inst, 10, function(guy)
+            return guy.prefab == "personal_licking" and guy.lickingState == "SHADOW"
+        end, { "spoiler" }, { "fridge" }) == nil then
+        if math.random() < 0.8 then
+            doer.components.playerlightningtarget:SetHitChance(1)
+            GLOBAL.TheWorld:PushEvent("ms_sendlightningstrike", doer:GetPosition())
+            doer.components.playerlightningtarget:SetHitChance(0.3)
+            GLOBAL.TheWorld:PushEvent("ms_miniquake", { rad = 10, num = 20, duration = 2, target = doer })
+        else
+            local pos = GLOBAL.TheWorld.Map:FindRandomPointWithFilter(50, function(map, x, y, z)
+                -- 远古档案馆除外
+                return map:IsLandTileAtPoint(x, y, z) and not map:NodeAtPointHasTag(x, y, z, "nocavein")
+            end)
+            if pos ~= nil then
+                doer.Physics:Teleport(pos.x, 0, pos.z)
+                doer:ResetMinimapOffset()
+                doer:SnapCamera()
+            end
         end
     end
     if doer.components.cursable ~= nil then

@@ -79,9 +79,9 @@ local function ApplyUpgrades(inst, isupgrading)
     local healthPercent = inst.components.health:GetPercent()
     local sanityPercent = inst.components.sanity:GetPercent()
 
-    inst.components.hunger.max = 150 + curLevel * 15       --300
-    inst.components.health.maxhealth = 150 + curLevel * 15 --300
-    inst.components.sanity.max = 150 + curLevel * 15       --300
+    inst.components.hunger.max = TUNING.FHL_HUNGER + curLevel * TUNING.FHL_GROWTH       --300
+    inst.components.health.maxhealth = TUNING.FHL_HEALTH + curLevel * TUNING.FHL_GROWTH --300
+    inst.components.sanity.max = TUNING.FHL_SANITY + curLevel * TUNING.FHL_GROWTH       --300
     if isupgrading then
         inst.components.hunger:SetPercent(hungerPercent)
         inst.components.health:SetPercent(healthPercent)
