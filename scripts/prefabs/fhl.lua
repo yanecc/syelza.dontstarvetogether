@@ -70,47 +70,31 @@ local function FhlFire(inst)
 end
 
 --升级机制
-local function ApplyUpgrades(inst, isupgrading)
-    local maxLevel = 10
-    local curLevel = math.min(inst.level, maxLevel)
+local function ApplyUpgrades(inst)
+    inst.level = math.min(inst.level, 10)
+    local growth = inst.level * TUNING.FHL_GROWTH
     local pointsKey = TUNING.SKILL_POINT_KEY:sub(-1)
     local statusKey = TUNING.STATUS_KEY:sub(-1)
-    local hungerPercent = inst.components.hunger:GetPercent()
-    local healthPercent = inst.components.health:GetPercent()
-    local sanityPercent = inst.components.sanity:GetPercent()
 
-    inst.components.hunger.max = TUNING.FHL_HUNGER + curLevel * TUNING.FHL_GROWTH       --300
-    inst.components.health.maxhealth = TUNING.FHL_HEALTH + curLevel * TUNING.FHL_GROWTH --300
-    inst.components.sanity.max = TUNING.FHL_SANITY + curLevel * TUNING.FHL_GROWTH       --300
-    if isupgrading then
-        inst.components.hunger:SetPercent(hungerPercent)
-        inst.components.health:SetPercent(healthPercent)
-        inst.components.sanity:SetPercent(sanityPercent)
-    else
-        inst.components.hunger:DoDelta(0)
-        inst.components.health:DoDelta(0)
-        inst.components.sanity:DoDelta(0)
-    end
+    inst.components.hunger.max = TUNING.FHL_HUNGER + growth       --300
+    inst.components.health.maxhealth = TUNING.FHL_HEALTH + growth --300
+    inst.components.sanity.max = TUNING.FHL_SANITY + growth       --300
+    inst.components.hunger:DoDelta(0)
+    inst.components.health:DoDelta(0)
+    inst.components.sanity:DoDelta(0)
 
-    inst.components.locomotor.walkspeed = math.ceil(6 + curLevel / 3) --10
-    inst.components.locomotor.runspeed = math.ceil(8 + curLevel / 3)  --12
+    inst.components.locomotor.walkspeed = math.ceil(6 + inst.level / 3) --10
+    inst.components.locomotor.runspeed = math.ceil(8 + inst.level / 3)  --12
 
-    inst.components.talker:Say("QWQ Level now: " .. (inst.level) ..
-        "\n你还有" .. (inst.jnd) .. "点技能点!" ..
+    local message = inst.level == 10 and "W.W Level Max!" or "QWQ Level now: " .. inst.level
+    inst.components.talker:Say(message ..
+        "\n你还有" .. inst.jnd .. "点技能点!" ..
         "\n加点帮助请按" .. pointsKey .. ",当前状态请按" .. statusKey .. "!" ..
-        "\nyou have " .. (inst.jnd) .. " skill points!" ..
-        "\nClick " .. pointsKey .. " for help, Click " .. statusKey .. " for State!")
-
-    if inst.level >= 10 then
-        inst.components.talker:Say("W.W Level Max!\n" ..
-            "\n你还有" .. (inst.jnd) .. "点技能点!" ..
-            "\n加点帮助请按" .. pointsKey .. ",当前状态请按" .. statusKey .. "!" ..
-            "\nyou have " .. (inst.jnd) .. " skill points!" ..
-            "\nClick " .. pointsKey .. " for help, Click " .. statusKey .. " for State!")
-    end
+        "\nyou have " .. inst.jnd .. " skill points!" ..
+        "\nClick " .. pointsKey .. " for HELP, Click " .. statusKey .. " for STATE!")
 end
 
-local function OnEat(inst, food)
+local function OnEat(inst, health_delta, hunger_delta, sanity_delta, food, feeder)
     local berryUp = TUNING.JGEAT                        -- 吃浆果升级
     local berryLimit = TUNING.JGEATSL                   -- 吃浆果升级的临界值
     local levelmax = inst.level == 10                   -- 是否已满级
@@ -134,7 +118,7 @@ local function OnEat(inst, food)
     if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or inst.berryenough then
         local hasGoodLuck = math.random() > failureFactor * math.tan(inst.level * 0.1)
         -- 满级以后再吃浆果inst.berryenough不会为true
-        if (levelmax) then
+        if levelmax then
             if inst.totalpoints < 42 and hasGoodLuck then
                 -- inst.jnd 技能点
                 local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
@@ -155,7 +139,7 @@ local function OnEat(inst, food)
             end
             inst.level = inst.level + 1
             inst.berryenough = false
-            ApplyUpgrades(inst, true)
+            ApplyUpgrades(inst)
             inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
         else
             inst.berryenough = false
@@ -175,6 +159,8 @@ local function OnEat(inst, food)
         ApplyUpgrades(inst)
         inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
     end
+
+    return health_delta, hunger_delta, sanity_delta
 end
 
 local function GiveNewBell(inst)
@@ -343,7 +329,7 @@ local master_postinit = function(inst)
     inst.components.hunger:SetMax(TUNING.FHL_HUNGER)
     inst.components.sanity:SetMax(TUNING.FHL_SANITY)
 
-    inst.components.eater:SetOnEatFn(OnEat)
+    inst.components.eater.custom_stats_mod_fn = OnEat
     inst.components.locomotor.walkspeed = 6
     inst.components.locomotor.runspeed = 8
     inst.components.slipperyfeet.threshold = 48
