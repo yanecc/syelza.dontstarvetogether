@@ -378,5 +378,17 @@ configuration_options = {
         },
 
         default = false,
+    },
+
+    {
+        name = "insight_compatibility",
+        label = "兼容Insight mod（详细说明见描述）",
+        hover = "Force compatibility with Insight mod?",
+        options = {
+            { description = "off", data = false, hover = "Default" },
+            { description = "on",  data = true },
+        },
+
+        default = false,
     }
 }

@@ -94,7 +94,7 @@ local function ApplyUpgrades(inst)
         "\nClick " .. pointsKey .. " for HELP, Click " .. statusKey .. " for STATE!")
 end
 
-local function OnEat(inst, health_delta, hunger_delta, sanity_delta, food, feeder)
+local function EatBonus(inst, health_delta, hunger_delta, sanity_delta, food, feeder)
     local berryUp = TUNING.JGEAT                        -- 吃浆果升级
     local berryLimit = TUNING.JGEATSL                   -- 吃浆果升级的临界值
     local levelmax = inst.level == 10                   -- 是否已满级
@@ -328,11 +328,17 @@ local master_postinit = function(inst)
     inst.components.health:SetMaxHealth(TUNING.FHL_HEALTH)
     inst.components.hunger:SetMax(TUNING.FHL_HUNGER)
     inst.components.sanity:SetMax(TUNING.FHL_SANITY)
-
-    inst.components.eater.custom_stats_mod_fn = OnEat
     inst.components.locomotor.walkspeed = 6
     inst.components.locomotor.runspeed = 8
     inst.components.slipperyfeet.threshold = 48
+    if TUNING.INSIGHT_COMPATIBILITY and KnownModIndex:IsModEnabled("workshop-2189004162") then
+        inst.components.eater.oneatfn = function(inst, food, feeder)
+            EatBonus(inst, nil, nil, nil, food, feeder)
+        end
+    else
+        inst.components.eater.custom_stats_mod_fn = EatBonus
+    end
+
     inst.components.health.absorb = 0.00
     inst.components.combat.damagemultiplier = 1.00
     inst.components.temperature.inherentinsulation = 0
