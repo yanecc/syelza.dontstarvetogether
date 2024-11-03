@@ -317,7 +317,6 @@ TUNING.HSF_POS_X = GetModConfigData("hsf_position")  -- 护身符格子位置
 TUNING.BB_HJOPEN = GetModConfigData("bb_hjopen")
 TUNING.BB_DURABILITY = GetModConfigData("bb_durability")
 TUNING.BB_WATERPROOFNESS = GetModConfigData("bb_waterproofness")
-TUNING.INSIGHT_COMPATIBILITY = GetModConfigData("insight_compatibility")
 
 TUNING.SKILL_TREE = GetModConfigData("skill_tree")
 
