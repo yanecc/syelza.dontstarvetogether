@@ -41,7 +41,6 @@ local prefabs = {
     "ancient_soul"
 }
 
--- 自定义启动项
 local start_inv = {
     "fhl_bz",
     "fhl_cake",
@@ -69,7 +68,6 @@ local function FhlFire(inst)
     end
 end
 
---升级机制
 local function ApplyUpgrades(inst)
     inst.level = math.min(inst.level, 10)
     local growth = inst.level * TUNING.FHL_GROWTH
@@ -100,7 +98,7 @@ local function EatBonus(inst, health_delta, hunger_delta, sanity_delta, food, fe
     local levelmax = inst.level == 10                   -- 是否已满级
     local failureFactor = TUNING.LEVELUP_FAILURE_FACTOR -- 升级失败的概率
 
-    -- 浆果 烤浆果 多汁浆果 烤多汁浆果
+    -- 浆果、烤浆果、多汁浆果、烤多汁浆果
     -- 吃浆果可以升级，满级以后获取技能点只能吃火龙果
     if berryUp and table.contains({ "berries", "berries_cooked", "berries_juicy", "berries_juicy_cooked" }, food.prefab) then
         inst.berrycount = inst.berrycount + 1
@@ -161,6 +159,79 @@ local function EatBonus(inst, health_delta, hunger_delta, sanity_delta, food, fe
     end
 
     return health_delta, hunger_delta, sanity_delta
+end
+
+local function EatFn(self, food, feeder)
+    feeder = feeder or self.inst
+    if self:PrefersToEat(food) then
+        local stack_mult = self.eatwholestack and food.components.stackable ~= nil and
+            food.components.stackable:StackSize() or 1
+        local base_mult = self.inst.components.foodmemory ~= nil and
+            self.inst.components.foodmemory:GetFoodMultiplier(food.prefab) or 1
+
+        local health_delta, hunger_delta, sanity_delta = 0, 0, 0
+
+        if self.inst.components.health ~= nil and (food.components.edible.healthvalue >= 0 or self:DoFoodEffects(food)) then
+            health_delta = food.components.edible:GetHealth(self.inst) * base_mult * self.healthabsorption
+        end
+
+        if self.inst.components.hunger ~= nil then
+            hunger_delta = food.components.edible:GetHunger(self.inst) * base_mult * self.hungerabsorption
+        end
+
+        if self.inst.components.sanity ~= nil and (food.components.edible.sanityvalue >= 0 or self:DoFoodEffects(food)) then
+            sanity_delta = food.components.edible:GetSanity(self.inst) * base_mult * self.sanityabsorption
+        end
+
+        EatBonus(self.inst, health_delta, hunger_delta, sanity_delta, food, feeder)
+
+        if self.custom_stats_mod_fn ~= nil then
+            health_delta, hunger_delta, sanity_delta = self.custom_stats_mod_fn(self.inst,
+                health_delta, hunger_delta, sanity_delta, food, feeder)
+        end
+
+        if health_delta ~= 0 then
+            self.inst.components.health:DoDelta(health_delta * stack_mult, nil, food.prefab)
+        end
+        if hunger_delta ~= 0 then
+            self.inst.components.hunger:DoDelta(hunger_delta * stack_mult)
+        end
+        if sanity_delta ~= 0 then
+            self.inst.components.sanity:DoDelta(sanity_delta * stack_mult)
+        end
+
+        if feeder ~= self.inst and self.inst.components.inventoryitem ~= nil then
+            local owner = self.inst.components.inventoryitem:GetGrandOwner()
+            if owner and (owner == feeder or (owner.components.container and owner.components.container:IsOpenedBy(feeder))) then
+                feeder:PushEvent("feedincontainer")
+            end
+        end
+
+        self.inst:PushEvent("oneat", { food = food, feeder = feeder })
+        if self.oneatfn ~= nil then
+            self.oneatfn(self.inst, food, feeder)
+        end
+
+        if food.components.edible ~= nil then
+            food.components.edible:OnEaten(self.inst)
+        end
+
+        if food:IsValid() then
+            if not self.eatwholestack and food.components.stackable ~= nil then
+                food.components.stackable:Get():Remove()
+            else
+                food:Remove()
+            end
+        end
+
+        self.lasteattime = GetTime()
+
+        if self.inst.components.foodmemory ~= nil and not food:HasTag("potion") then
+            self.inst.components.foodmemory:RememberFood(food.prefab)
+        end
+
+        return true
+    end
 end
 
 local function GiveNewBell(inst)
@@ -242,10 +313,10 @@ end
 local function OnPreLoad(inst, data)
     inst.je = data.je or 0
     inst.level = data.level or 0
-    inst.jnd = data.jnd or data.level
+    inst.jnd = data.jnd or inst.level
     inst.berrycount = data.berrycount or 0
-    inst.totalpoints = data.totalpoints or 0
     inst.zzjFeedBack = data.zzjFeedBack or 0
+    inst.totalpoints = data.totalpoints or inst.jnd
 
     ApplyUpgrades(inst)
 
@@ -291,7 +362,7 @@ local function OnSave(inst, data)
     data.bellinv = inst.bellinv
 end
 
--- 这对服务器和客户端初始化。可以添加标注。
+-- 服务器和客户端初始化，添加标签
 local common_postinit = function(inst)
     -- 小地图图标
     inst.MiniMapEntity:SetIcon("fhl.tex")
@@ -300,7 +371,7 @@ local common_postinit = function(inst)
     inst:AddTag("bookbuilder")
 end
 
--- 这对于服务器初始化。组件被添加。
+-- 服务器端初始化，添加组件
 local master_postinit = function(inst)
     inst.je = 0
     inst.jnd = 0
@@ -312,7 +383,6 @@ local master_postinit = function(inst)
 
     inst.licking = nil
     inst.lickingbone = nil
-    -- Debug function to return the Bell
     inst.ReturnBell = ReturnBell
 
     inst:AddComponent("reader")
@@ -332,80 +402,7 @@ local master_postinit = function(inst)
     inst.components.locomotor.runspeed = 8
     inst.components.slipperyfeet.threshold = 48
     if KnownModIndex:IsModEnabled("workshop-2189004162") then
-        inst.components.eater.Eat = function(self, food, feeder)
-            feeder = feeder or self.inst
-            if self:PrefersToEat(food) then
-                local stack_mult = self.eatwholestack and food.components.stackable ~= nil and
-                    food.components.stackable:StackSize() or 1
-                local base_mult = self.inst.components.foodmemory ~= nil and
-                    self.inst.components.foodmemory:GetFoodMultiplier(food.prefab) or 1
-
-                local health_delta, hunger_delta, sanity_delta = 0, 0, 0
-
-                if self.inst.components.health ~= nil and
-                    (food.components.edible.healthvalue >= 0 or self:DoFoodEffects(food)) then
-                    health_delta = food.components.edible:GetHealth(self.inst) * base_mult * self.healthabsorption
-                end
-
-                if self.inst.components.hunger ~= nil then
-                    hunger_delta = food.components.edible:GetHunger(self.inst) * base_mult * self.hungerabsorption
-                end
-
-                if self.inst.components.sanity ~= nil and
-                    (food.components.edible.sanityvalue >= 0 or self:DoFoodEffects(food)) then
-                    sanity_delta = food.components.edible:GetSanity(self.inst) * base_mult * self.sanityabsorption
-                end
-
-                EatBonus(self.inst, health_delta, hunger_delta, sanity_delta, food, feeder)
-
-                if self.custom_stats_mod_fn ~= nil then
-                    health_delta, hunger_delta, sanity_delta = self.custom_stats_mod_fn(self.inst, health_delta,
-                        hunger_delta, sanity_delta, food, feeder)
-                end
-
-                if health_delta ~= 0 then
-                    self.inst.components.health:DoDelta(health_delta * stack_mult, nil, food.prefab)
-                end
-                if hunger_delta ~= 0 then
-                    self.inst.components.hunger:DoDelta(hunger_delta * stack_mult)
-                end
-                if sanity_delta ~= 0 then
-                    self.inst.components.sanity:DoDelta(sanity_delta * stack_mult)
-                end
-
-                if feeder ~= self.inst and self.inst.components.inventoryitem ~= nil then
-                    local owner = self.inst.components.inventoryitem:GetGrandOwner()
-                    if owner ~= nil and (owner == feeder or (owner.components.container ~= nil and owner.components.container:IsOpenedBy(feeder))) then
-                        feeder:PushEvent("feedincontainer")
-                    end
-                end
-
-                self.inst:PushEvent("oneat", { food = food, feeder = feeder })
-                if self.oneatfn ~= nil then
-                    self.oneatfn(self.inst, food, feeder)
-                end
-
-                if food.components.edible ~= nil then
-                    food.components.edible:OnEaten(self.inst)
-                end
-
-                if food:IsValid() then
-                    if not self.eatwholestack and food.components.stackable ~= nil then
-                        food.components.stackable:Get():Remove()
-                    else
-                        food:Remove()
-                    end
-                end
-
-                self.lasteattime = GetTime()
-
-                if self.inst.components.foodmemory ~= nil and not food:HasTag("potion") then
-                    self.inst.components.foodmemory:RememberFood(food.prefab)
-                end
-
-                return true
-            end
-        end
+        inst.components.eater.Eat = EatFn
     else
         inst.components.eater.custom_stats_mod_fn = EatBonus
     end
@@ -415,13 +412,6 @@ local master_postinit = function(inst)
     inst.components.temperature.inherentinsulation = 0
     inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
 
-    -- food affinity multipliers to add 15 calories
-    -- AFFINITY_15_CALORIES_TINY = 2.6
-    -- AFFINITY_15_CALORIES_SMALL = 2.2
-    -- AFFINITY_15_CALORIES_MED = 1.6
-    -- AFFINITY_15_CALORIES_LARGE = 1.4
-    -- AFFINITY_15_CALORIES_HUGE = 1.2
-    -- AFFINITY_15_CALORIES_SUPERHUGE = 1.1
     -- 香蕉奶昔 至少两个(烤)香蕉，不能有鱼度、肉度、怪物度、冰 8,25+15,33
     inst.components.foodaffinity:AddPrefabAffinity("bananajuice", TUNING.AFFINITY_15_CALORIES_MED)
 
