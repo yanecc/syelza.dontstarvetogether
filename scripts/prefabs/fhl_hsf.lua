@@ -196,7 +196,9 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
+
     MakeInventoryPhysics(inst)
+    inst.Transform:SetScale(1.2, 1.2, 1.2)
 
     inst:AddTag("sharp")
     inst:AddTag("cattoy")

@@ -223,6 +223,7 @@ local function fn()
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
+    inst.Transform:SetScale(1.2, 1.2, 1.2)
 
     inst:AddTag("_named")
     inst:AddTag("nosteal")

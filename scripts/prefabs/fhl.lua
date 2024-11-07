@@ -93,145 +93,74 @@ local function ApplyUpgrades(inst)
 end
 
 local function EatBonus(inst, health_delta, hunger_delta, sanity_delta, food, feeder)
-    local berryUp = TUNING.JGEAT                        -- 吃浆果升级
-    local berryLimit = TUNING.JGEATSL                   -- 吃浆果升级的临界值
-    local levelmax = inst.level == 10                   -- 是否已满级
-    local failureFactor = TUNING.LEVELUP_FAILURE_FACTOR -- 升级失败的概率
+    if debugstack():rfind_plain("scripts/components/eater.lua") then
+        local berryUp = TUNING.JGEAT                        -- 吃浆果升级
+        local berryLimit = TUNING.JGEATSL                   -- 吃浆果升级的临界值
+        local levelmax = inst.level == 10                   -- 是否已满级
+        local failureFactor = TUNING.LEVELUP_FAILURE_FACTOR -- 升级失败的概率
 
-    -- 浆果、烤浆果、多汁浆果、烤多汁浆果
-    -- 吃浆果可以升级，满级以后获取技能点只能吃火龙果
-    if berryUp and table.contains({ "berries", "berries_cooked", "berries_juicy", "berries_juicy_cooked" }, food.prefab) then
-        inst.berrycount = inst.berrycount + 1
-        if inst.berrycount % 5 == 0 then
-            inst.components.talker:Say("已经吃了: " .. inst.berrycount .. " / " .. berryLimit .. " 个浆果" ..
-                "\nHave eaten " .. inst.berrycount .. " / " .. berryLimit .. " berries")
+        -- 浆果、烤浆果、多汁浆果、烤多汁浆果
+        -- 吃浆果可以升级，满级以后获取技能点只能吃火龙果
+        if berryUp and table.contains({ "berries", "berries_cooked", "berries_juicy", "berries_juicy_cooked" }, food.prefab) then
+            inst.berrycount = inst.berrycount + 1
+            if inst.berrycount % 5 == 0 then
+                inst.components.talker:Say("已经吃了: " .. inst.berrycount .. " / " .. berryLimit .. " 个浆果" ..
+                    "\nHave eaten " .. inst.berrycount .. " / " .. berryLimit .. " berries")
+            end
+            if not levelmax and inst.berrycount >= berryLimit then
+                inst.berryenough = true
+                inst.berrycount = inst.berrycount - berryLimit
+            end
         end
-        if not levelmax and inst.berrycount >= berryLimit then
-            inst.berryenough = true
-            inst.berrycount = inst.berrycount - berryLimit
-        end
-    end
 
-    -- 火龙果、烤火龙果、火龙果派、辣龙椒沙拉
-    if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or inst.berryenough then
-        local hasGoodLuck = math.random() > failureFactor * math.tan(inst.level * 0.1)
-        -- 满级以后再吃浆果inst.berryenough不会为true
-        if levelmax then
-            if inst.totalpoints < 42 and hasGoodLuck then
+        -- 火龙果、烤火龙果、火龙果派、辣龙椒沙拉
+        if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or inst.berryenough then
+            local hasGoodLuck = math.random() > failureFactor * math.tan(inst.level * 0.1)
+            -- 满级以后再吃浆果inst.berryenough不会为true
+            if levelmax then
+                if inst.totalpoints < 42 and hasGoodLuck then
+                    -- inst.jnd 技能点
+                    local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
+                    inst.totalpoints = points
+                    inst.jnd = inst.jnd + 1
+                    ApplyUpgrades(inst)
+                    inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+                else
+                    inst.components.talker:Say("QWQ 满级了! 没获得技能点!\nQWQ level Max! Got no skill point!")
+                end
+            elseif hasGoodLuck then
                 -- inst.jnd 技能点
-                local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
-                inst.totalpoints = points
-                inst.jnd = inst.jnd + 1
+                -- inst.totalpoints 总技能点42可以将全部方向点满 抗寒8 减伤16 增伤10 抗饿8
+                if inst.totalpoints < 42 then
+                    local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
+                    inst.totalpoints = points
+                    inst.jnd = inst.jnd + 1
+                end
+                inst.level = inst.level + 1
+                inst.berryenough = false
                 ApplyUpgrades(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
             else
-                inst.components.talker:Say("QWQ 满级了! 没获得技能点!\nQWQ level Max! Got no skill point!")
+                inst.berryenough = false
+                inst.components.talker:Say("QWQ 升级失败了!\nlevel up failed!")
             end
-        elseif hasGoodLuck then
-            -- inst.jnd 技能点
-            -- inst.totalpoints 总技能点42可以将全部方向点满 抗寒8 减伤16 增伤10 抗饿8
-            if inst.totalpoints < 42 then
-                local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
-                inst.totalpoints = points
-                inst.jnd = inst.jnd + 1
-            end
-            inst.level = inst.level + 1
-            inst.berryenough = false
+        end
+
+        -- 吃芝士蛋糕会重置等级和技能点，必须等级大于0才能洗点
+        if food.prefab == "powcake" and inst.level > 0 then
+            inst.level = 0
+            inst.jnd = inst.totalpoints
+            inst.je = 0
+            inst.components.health.absorb = 0
+            inst.components.combat.damagemultiplier = 1
+            inst.components.temperature.inherentinsulation = 0
+            inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
             ApplyUpgrades(inst)
             inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
-        else
-            inst.berryenough = false
-            inst.components.talker:Say("QWQ 升级失败了!\nlevel up failed!")
         end
-    end
-
-    -- 吃芝士蛋糕会重置等级和技能点，必须等级大于0才能洗点
-    if food.prefab == "powcake" and inst.level > 0 then
-        inst.level = 0
-        inst.jnd = inst.totalpoints
-        inst.je = 0
-        inst.components.health.absorb = 0
-        inst.components.combat.damagemultiplier = 1
-        inst.components.temperature.inherentinsulation = 0
-        inst.components.hunger.hungerrate = TUNING.WILSON_HUNGER_RATE
-        ApplyUpgrades(inst)
-        inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
     end
 
     return health_delta, hunger_delta, sanity_delta
-end
-
-local function EatFn(self, food, feeder)
-    feeder = feeder or self.inst
-    if self:PrefersToEat(food) then
-        local stack_mult = self.eatwholestack and food.components.stackable ~= nil and
-            food.components.stackable:StackSize() or 1
-        local base_mult = self.inst.components.foodmemory ~= nil and
-            self.inst.components.foodmemory:GetFoodMultiplier(food.prefab) or 1
-
-        local health_delta, hunger_delta, sanity_delta = 0, 0, 0
-
-        if self.inst.components.health ~= nil and (food.components.edible.healthvalue >= 0 or self:DoFoodEffects(food)) then
-            health_delta = food.components.edible:GetHealth(self.inst) * base_mult * self.healthabsorption
-        end
-
-        if self.inst.components.hunger ~= nil then
-            hunger_delta = food.components.edible:GetHunger(self.inst) * base_mult * self.hungerabsorption
-        end
-
-        if self.inst.components.sanity ~= nil and (food.components.edible.sanityvalue >= 0 or self:DoFoodEffects(food)) then
-            sanity_delta = food.components.edible:GetSanity(self.inst) * base_mult * self.sanityabsorption
-        end
-
-        EatBonus(self.inst, health_delta, hunger_delta, sanity_delta, food, feeder)
-
-        if self.custom_stats_mod_fn ~= nil then
-            health_delta, hunger_delta, sanity_delta = self.custom_stats_mod_fn(self.inst,
-                health_delta, hunger_delta, sanity_delta, food, feeder)
-        end
-
-        if health_delta ~= 0 then
-            self.inst.components.health:DoDelta(health_delta * stack_mult, nil, food.prefab)
-        end
-        if hunger_delta ~= 0 then
-            self.inst.components.hunger:DoDelta(hunger_delta * stack_mult)
-        end
-        if sanity_delta ~= 0 then
-            self.inst.components.sanity:DoDelta(sanity_delta * stack_mult)
-        end
-
-        if feeder ~= self.inst and self.inst.components.inventoryitem ~= nil then
-            local owner = self.inst.components.inventoryitem:GetGrandOwner()
-            if owner and (owner == feeder or (owner.components.container and owner.components.container:IsOpenedBy(feeder))) then
-                feeder:PushEvent("feedincontainer")
-            end
-        end
-
-        self.inst:PushEvent("oneat", { food = food, feeder = feeder })
-        if self.oneatfn ~= nil then
-            self.oneatfn(self.inst, food, feeder)
-        end
-
-        if food.components.edible ~= nil then
-            food.components.edible:OnEaten(self.inst)
-        end
-
-        if food:IsValid() then
-            if not self.eatwholestack and food.components.stackable ~= nil then
-                food.components.stackable:Get():Remove()
-            else
-                food:Remove()
-            end
-        end
-
-        self.lasteattime = GetTime()
-
-        if self.inst.components.foodmemory ~= nil and not food:HasTag("potion") then
-            self.inst.components.foodmemory:RememberFood(food.prefab)
-        end
-
-        return true
-    end
 end
 
 local function GiveNewBell(inst)
@@ -401,11 +330,7 @@ local master_postinit = function(inst)
     inst.components.locomotor.walkspeed = 6
     inst.components.locomotor.runspeed = 8
     inst.components.slipperyfeet.threshold = 48
-    if KnownModIndex:IsModEnabled("workshop-2189004162") then
-        inst.components.eater.Eat = EatFn
-    else
-        inst.components.eater.custom_stats_mod_fn = EatBonus
-    end
+    inst.components.eater.custom_stats_mod_fn = EatBonus
 
     inst.components.health.absorb = 0.00
     inst.components.combat.damagemultiplier = 1.00

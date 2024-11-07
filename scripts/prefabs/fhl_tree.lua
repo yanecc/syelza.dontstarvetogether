@@ -29,6 +29,7 @@ local function fn()
 
     MakeInventoryPhysics(inst)
     RemovePhysicsColliders(inst)
+    inst.Transform:SetScale(3, 3, 3)
 
     inst:AddTag("plant")
     inst:AddTag("cattoy")

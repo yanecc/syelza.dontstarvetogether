@@ -16,7 +16,9 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
+
     MakeInventoryPhysics(inst)
+    inst.Transform:SetScale(1.5, 1.5, 1.5)
 
     inst.AnimState:SetBank("fhl_x")
     inst.AnimState:SetBuild("fhl_x")
