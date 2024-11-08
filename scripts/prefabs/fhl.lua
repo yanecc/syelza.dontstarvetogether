@@ -114,12 +114,12 @@ local function EatBonus(inst, health_delta, hunger_delta, sanity_delta, food, fe
         end
 
         -- 火龙果、烤火龙果、火龙果派、辣龙椒沙拉
-        if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or inst.berryenough then
+        if table.contains({ "dragonfruit", "dragonfruit_cooked", "dragonpie", "dragonchilisalad" }, food.prefab) or
+            food.prefab:find("dragonpie_spice") or food.prefab:find("dragonchilisalad_spice") or inst.berryenough then
             local hasGoodLuck = math.random() > failureFactor * math.tan(inst.level * 0.1)
             -- 满级以后再吃浆果inst.berryenough不会为true
             if levelmax then
                 if inst.totalpoints < 42 and hasGoodLuck then
-                    -- inst.jnd 技能点
                     local points = math.max(inst.totalpoints + 1, inst.level, inst.jnd)
                     inst.totalpoints = points
                     inst.jnd = inst.jnd + 1
