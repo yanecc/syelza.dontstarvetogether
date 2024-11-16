@@ -574,13 +574,13 @@ AddPrefabPostInit("wonkey", function(inst)
         _LoadForReroll(inst, data)
     end
 
-    local _OnSave = inst.OnSave
+    local _OnSave = inst.OnSave or function() end
     inst.OnSave = function(inst, data)
         data.fhl = inst.fhl
         _OnSave(inst, data)
     end
 
-    local _OnLoad = inst.OnLoad
+    local _OnLoad = inst.OnLoad or function() end
     inst.OnLoad = function(inst, data)
         inst.fhl = data.fhl
         _OnLoad(inst, data)
