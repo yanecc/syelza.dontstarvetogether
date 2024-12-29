@@ -410,6 +410,43 @@ AddComponentPostInit("thief", function(self)
 end)
 
 ----------------------------------------------------------------------------------------
+AddPrefabPostInitAny(function(inst)
+    if inst and inst:HasTag("heavy") and inst.components.equippable then
+        _GetWalkSpeedMult = inst.components.equippable.GetWalkSpeedMult
+        inst.components.equippable.GetWalkSpeedMult = function(self)
+            local owner = self.inst.components.inventoryitem and self.inst.components.inventoryitem.owner
+            return owner and owner:HasTag("glommerprayer") and 1.0 or _GetWalkSpeedMult(self)
+        end
+
+        inst._glommerup = function(owner)
+            if inst.replica.inventoryitem ~= nil then
+                inst.replica.inventoryitem:SetWalkSpeedMult(1)
+            end
+        end
+        inst._glommerdown = function(owner)
+            if inst.replica.inventoryitem ~= nil then
+                inst.replica.inventoryitem:SetWalkSpeedMult(inst.components.equippable.walkspeedmult or 1)
+            end
+        end
+
+        inst:ListenForEvent("equipped", function(inst, data)
+            if data.owner and data.owner:HasTag("glommerprayer") and inst.replica.inventoryitem then
+                inst.replica.inventoryitem:SetWalkSpeedMult(1)
+            end
+            inst:ListenForEvent("glommerup", inst._glommerup, data.owner)
+            inst:ListenForEvent("glommerdown", inst._glommerdown, data.owner)
+        end)
+        inst:ListenForEvent("unequipped", function(inst, data)
+            if inst.replica.inventoryitem ~= nil then
+                inst.replica.inventoryitem:SetWalkSpeedMult(inst.components.equippable.walkspeedmult or 1)
+            end
+            inst:RemoveEventCallback("glommerup", inst._glommerup, data.owner)
+            inst:RemoveEventCallback("glommerdown", inst._glommerdown, data.owner)
+        end)
+    end
+end)
+
+----------------------------------------------------------------------------------------
 local function UseFullMoonRecipe()
     AddRecipePostInit("fhl_x_1", function(recipe)
         recipe.product = "fhl_x2"

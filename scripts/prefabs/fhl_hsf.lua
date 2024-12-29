@@ -32,25 +32,12 @@ local function ResistGrogginess(inst, owner, isworking)
 end
 
 local function LevitateHeavy(inst, owner, isworking)
-    inst._onownerequip = function(owner, data)
-        if owner ~= nil and data ~= nil and data.item:HasTag("heavy") then
-            data.item.components.equippable.GetWalkSpeedMult = function(self)
-                return not owner:HasTag("glommerprayer") and self.walkspeedmult or 1.0
-            end
-        end
-    end
     if isworking then
+        owner:PushEvent("glommerup")
         owner:AddTag("glommerprayer")
-        inst:ListenForEvent("equip", inst._onownerequip, owner)
-        owner.components.inventory:ForEachEquipment(function(equip)
-            if not equip:HasTag("heavy") then return end
-            equip.components.equippable.GetWalkSpeedMult = function(self)
-                return not owner:HasTag("glommerprayer") and self.walkspeedmult or 1.0
-            end
-        end)
     else
+        owner:PushEvent("glommerdown")
         owner:RemoveTag("glommerprayer")
-        inst:RemoveEventCallback("equip", inst._onownerequip, owner)
     end
 end
 
