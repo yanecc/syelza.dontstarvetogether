@@ -5,6 +5,17 @@ for i = 97, 122 do
     MajorKey["KEY_" .. string.char(i):upper()] = i
 end
 
+local function IsDefaultScreen()
+    return GLOBAL.ThePlayer and GLOBAL.TheFrontEnd and GLOBAL.TheFrontEnd:GetActiveScreen() and
+        GLOBAL.ThePlayer.HUD and GLOBAL.TheFrontEnd:GetActiveScreen().name and
+        GLOBAL.TheFrontEnd:GetActiveScreen().name:find("HUD") and
+        not GLOBAL.ThePlayer.HUD:IsChatInputScreenOpen() and
+        not GLOBAL.ThePlayer.HUD:IsConsoleScreenOpen() and
+        not GLOBAL.ThePlayer.HUD:IsCraftingOpen() and
+        not GLOBAL.ThePlayer.HUD:HasInputFocus() and
+        not GLOBAL.ThePlayer.HUD.writeablescreen
+end
+
 -- local KEY_T = GLOBAL.KEY_T
 AddModRPCHandler(modname, "T", function(player)
     if not player:HasTag("playerghost") and player.prefab == "fhl" then
@@ -91,50 +102,37 @@ AddModRPCHandler(modname, "R", function(player)
     if not player:HasTag("playerghost") and player.prefab == "fhl" then
         player.components.talker:Say("你还有" .. (player.jnd) .. "点技能点!" ..
             "\nyou have " .. (player.jnd) .. " skill points!" ..
-            "\n向上键提升寒冷抗性,向下键提升伤害减免\n向左键提升输出伤害,向右键提升饥饿抗性" ..
-            "\nUsing KEY_UP to up The cold resistance, Using KEY_DOWN to up The Damage reduction\nUsing KEY_LEFT to up The Damage ascension, Using KEY_RIGHT to up The Hunger resistance.")
+            "\n向上键提升寒冷抗性,向下键提升伤害减免" ..
+            "\n向左键提升输出伤害,向右键提升饥饿抗性" ..
+            "\nUsing KEY_UP to up The cold resistance, Using KEY_DOWN to up The Damage reduction" ..
+            "\nUsing KEY_LEFT to up The Damage ascension, Using KEY_RIGHT to up The Hunger resistance.")
     end
 end)
 
-local fhl_handlers = {}
 AddPlayerPostInit(function(inst)
     -- We hack
     inst:DoTaskInTime(0, function()
         -- We check if the character is ourselves
         -- So if another horo player joins, we don't get the handlers
         if inst == GLOBAL.ThePlayer then
-            -- If we are horo
-            if inst.prefab == "fhl" then
-                -- We create and store the key handlers
-                fhl_handlers[0] = TheInput:AddKeyDownHandler(MajorKey[TUNING.STATUS_KEY], function()
-                    SendModRPCToServer(MOD_RPC[modname]["T"])
-                end)
-                fhl_handlers[1] = TheInput:AddKeyDownHandler(KEY_UP, function()
-                    SendModRPCToServer(MOD_RPC[modname]["UP"])
-                end)
-                fhl_handlers[2] = TheInput:AddKeyDownHandler(KEY_DOWN, function()
-                    SendModRPCToServer(MOD_RPC[modname]["DOWN"])
-                end)
-                fhl_handlers[3] = TheInput:AddKeyDownHandler(KEY_LEFT, function()
-                    SendModRPCToServer(MOD_RPC[modname]["LEFT"])
-                end)
-                fhl_handlers[4] = TheInput:AddKeyDownHandler(KEY_RIGHT, function()
-                    SendModRPCToServer(MOD_RPC[modname]["RIGHT"])
-                end)
-                fhl_handlers[5] = TheInput:AddKeyDownHandler(MajorKey[TUNING.SKILL_POINT_KEY], function()
-                    SendModRPCToServer(MOD_RPC[modname]["R"])
-                end)
-            else
-                -- If not, we go to the handlerslist and empty it
-                -- This is to avoid having the handlers if we switch characters in wilderness
-                -- If it's already empty, nothing changes
-                fhl_handlers[0] = nil
-                fhl_handlers[1] = nil
-                fhl_handlers[2] = nil
-                fhl_handlers[3] = nil
-                fhl_handlers[4] = nil
-                fhl_handlers[5] = nil
-            end
+            TheInput:AddKeyDownHandler(MajorKey[TUNING.STATUS_KEY], function()
+                if IsDefaultScreen() then SendModRPCToServer(MOD_RPC[modname]["T"]) end
+            end)
+            TheInput:AddKeyDownHandler(KEY_UP, function()
+                if IsDefaultScreen() then SendModRPCToServer(MOD_RPC[modname]["UP"]) end
+            end)
+            TheInput:AddKeyDownHandler(KEY_DOWN, function()
+                if IsDefaultScreen() then SendModRPCToServer(MOD_RPC[modname]["DOWN"]) end
+            end)
+            TheInput:AddKeyDownHandler(KEY_LEFT, function()
+                if IsDefaultScreen() then SendModRPCToServer(MOD_RPC[modname]["LEFT"]) end
+            end)
+            TheInput:AddKeyDownHandler(KEY_RIGHT, function()
+                if IsDefaultScreen() then SendModRPCToServer(MOD_RPC[modname]["RIGHT"]) end
+            end)
+            TheInput:AddKeyDownHandler(MajorKey[TUNING.SKILL_POINT_KEY], function()
+                if IsDefaultScreen() then SendModRPCToServer(MOD_RPC[modname]["R"]) end
+            end)
         end
     end)
 end)

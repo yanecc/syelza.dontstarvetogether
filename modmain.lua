@@ -827,10 +827,7 @@ AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespo
 AddRecipe2("book_silviculture", { Ingredient("papyrus", 2), Ingredient("livinglog", 1) }, TECH.SCIENCE_TWO,
     { product = "book_silviculture", builder_tag = "bookbuilder" })
 
-AddRecipe2("book_brimstone", { Ingredient("papyrus", 2), Ingredient("redgem", 1) }, TECH.MAGIC_TWO,
-    { product = "book_brimstone", builder_tag = "bookbuilder" })
-
------------创建地图图标和角色基础属性
+-----------创建地图图标和角色
 AddMinimapAtlas("images/map_icons/fhl_data.xml")
 AddMinimapAtlas("images/map_icons/fhl.xml")
 AddModCharacter("fhl", "FEMALE")
