@@ -412,7 +412,7 @@ end)
 ----------------------------------------------------------------------------------------
 AddPrefabPostInitAny(function(inst)
     if inst and inst:HasTag("heavy") and inst.components.equippable then
-        _GetWalkSpeedMult = inst.components.equippable.GetWalkSpeedMult
+        local _GetWalkSpeedMult = inst.components.equippable.GetWalkSpeedMult
         inst.components.equippable.GetWalkSpeedMult = function(self)
             local owner = self.inst.components.inventoryitem and self.inst.components.inventoryitem.owner
             return owner and owner:HasTag("glommerprayer") and 1.0 or _GetWalkSpeedMult(self)
@@ -821,14 +821,14 @@ AddDeconstructRecipe("fhl_x2",
     { Ingredient("halloweenpotion_moon", 1), Ingredient("moonbutterfly", 2), Ingredient("petals_evil", 1) })
 
 -- ----BOOK----
-AddRecipe2("book_sleep", { Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2) }, TECH.NONE,
-    { product = "book_sleep", builder_tag = "bookbuilder" })
-
-AddRecipe2("book_brimstone", { Ingredient("papyrus", 2), Ingredient("redgem", 1) }, TECH.NONE,
-    { product = "book_brimstone", builder_tag = "bookbuilder" })
-
-AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespots", 1) }, TECH.NONE,
+AddRecipe2("book_tentacles", { Ingredient("papyrus", 2), Ingredient("tentaclespots", 1) }, TECH.SCIENCE_TWO,
     { product = "book_tentacles", builder_tag = "bookbuilder" })
+
+AddRecipe2("book_silviculture", { Ingredient("papyrus", 2), Ingredient("livinglog", 1) }, TECH.SCIENCE_TWO,
+    { product = "book_silviculture", builder_tag = "bookbuilder" })
+
+AddRecipe2("book_brimstone", { Ingredient("papyrus", 2), Ingredient("redgem", 1) }, TECH.MAGIC_TWO,
+    { product = "book_brimstone", builder_tag = "bookbuilder" })
 
 -----------创建地图图标和角色基础属性
 AddMinimapAtlas("images/map_icons/fhl_data.xml")
